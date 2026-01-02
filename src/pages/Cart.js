@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import CartItem from '../components/CartItem';
@@ -8,10 +8,8 @@ import './Cart.css';
 const Cart = () => {
   const { items, getTotalPrice, clearCart } = useCart();
   const navigate = useNavigate();
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleCheckout = () => {
-    // Navigate to checkout page with cart items
     navigate('/checkout', { state: { items, fromBuyNow: false } });
   };
 
@@ -41,16 +39,6 @@ const Cart = () => {
             Vérifiez vos articles avant de finaliser votre commande
           </p>
         </div>
-
-        {showSuccessMessage && (
-          <div className="success-message">
-            <div className="success-content">
-              <span className="success-icon">✅</span>
-              <h3>Commande Passée avec Succès !</h3>
-              <p>Merci pour votre achat. Votre commande a été confirmée.</p>
-            </div>
-          </div>
-        )}
 
         <div className="cart-content">
           <div className="cart-items">

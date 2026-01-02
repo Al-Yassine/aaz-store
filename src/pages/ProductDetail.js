@@ -21,7 +21,7 @@ const ProductDetail = () => {
   const defaultSize = product ? getDefaultSize(product.category) : 'M';
 
   const [selectedSize, setSelectedSize] = useState(defaultSize);
-  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || (product?.images?.[0] || product?.image));
+  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || product?.image);
 
   if (!product) {
     return (
@@ -41,12 +41,10 @@ const ProductDetail = () => {
       return;
     }
     
-    // Add product with selected size and color to cart
     addToCart({
       ...product,
       selectedSize,
       selectedColor,
-      // Create unique ID for cart item based on product, size, and color
       cartItemId: `${product.id}-${selectedSize}-${selectedColor}`
     });
     
@@ -59,7 +57,6 @@ const ProductDetail = () => {
       return;
     }
     
-    // Navigate to checkout with product details
     const checkoutItem = {
       ...product,
       selectedSize,
@@ -71,8 +68,7 @@ const ProductDetail = () => {
     navigate('/checkout', { state: { items: [checkoutItem], fromBuyNow: true } });
   };
 
-  // normalize images path casing
-  const displayImages = (product.images || [product.image]).map(img => img.replace(/^\/images\//i, '/Images/'));
+  const displayImages = (product.images || [product.image]).map(img => img.replace(/^\/\/?images\//i, '/Images/'));
 
   return (
     <div className="product-detail page">

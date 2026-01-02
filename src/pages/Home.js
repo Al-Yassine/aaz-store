@@ -11,7 +11,6 @@ const Home = () => {
 
   return (
     <div className="home">
-      {/* Hero Section */}
       <section className="hero">
         <div className="hero-image" style={{ backgroundImage: `url(${heroImage})` }}>
           <div className="hero-overlay">
@@ -28,7 +27,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Products Section */}
       <section className="featured-products">
         <div className="container">
           <h2 className="section-title">Collection Vedette</h2>
@@ -48,7 +46,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="features">
         <div className="container">
           <div className="features-grid">

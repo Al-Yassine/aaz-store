@@ -25,7 +25,6 @@ const Footer = () => {
           <div className="footer-section">
             <h4>Informations de Contact</h4>
 
-            {/* Required order: Facebook, Gmail, Phone */}
             <p>
               <a
                 className="footer-link footer-contact-link"

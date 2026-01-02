@@ -19,7 +19,6 @@ const About = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulate form submission
     alert('Merci pour votre message ! Nous vous répondrons très bientôt.');
     setFormData({
       name: '',
@@ -32,7 +31,6 @@ const About = () => {
   return (
     <div className="about-page">
       <div className="container">
-        {/* About Section */}
         <section className="about-section">
           <div className="about-content">
             <h1 className="page-title">À propos de AAZ Store</h1>
@@ -66,7 +64,6 @@ Chaque vêtement, chaussure et accessoire est soigneusement sélectionné pour o
           </div>
         </section>
 
-        {/* Contact Section */}
         <section className="contact-section">
           <div className="contact-content">
             <h2>Contactez-nous</h2>

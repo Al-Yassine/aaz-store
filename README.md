@@ -1,173 +1,150 @@
-# ModernStore - React Online Store
+# AAZ Store - Boutique en Ligne
 
-A modern, responsive online store built with React, featuring a clean UI, shopping cart functionality, and multiple pages.
+Une boutique en ligne moderne et élégante spécialisée dans les vêtements masculins de luxe, les costumes sur mesure et les accessoires de mode.
 
-## 🚀 Features
+## 🚀 Fonctionnalités
 
-- **Modern UI/UX**: Clean, responsive design with smooth animations
-- **Product Catalog**: Browse products with category filtering
-- **Shopping Cart**: Add/remove items, update quantities, view totals
-- **Multiple Pages**: Home, Products, Cart, and About/Contact pages
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- **Context API**: Global state management for cart functionality
-- **React Router**: Client-side routing between pages
+- **Interface Moderne**: Design épuré et responsive avec animations fluides
+- **Catalogue Produits**: Navigation par catégories avec filtres et recherche
+- **Panier d'Achat**: Ajout/suppression d'articles, gestion des quantités, calcul des totaux
+- **Pages Multiples**: Accueil, Produits, Panier, À Propos, Commande
+- **Design Responsive**: Expérience optimale sur ordinateur, tablette et mobile
+- **Gestion d'État**: Context API pour la fonctionnalité du panier
+- **Routage Client**: React Router pour la navigation entre pages
 
-## 🛠️ Tech Stack
+## 🛠️ Stack Technique
 
-- **React 18** with functional components and hooks
-- **React Router DOM** for navigation
-- **Context API** for state management
-- **CSS3** with modern features (Grid, Flexbox, animations)
-- **Google Fonts** (Poppins) for typography
+- **React 18** avec composants fonctionnels et hooks
+- **React Router v6** pour la navigation
+- **Context API** pour la gestion d'état
+- **CSS3** moderne (Grid, Flexbox, animations)
+- **Google Fonts** (Playfair Display, Roboto)
 
-## 📁 Project Structure
+## 📁 Structure du Projet
 
 ```
 src/
-├── components/          # Reusable components
-│   ├── Navbar.js       # Navigation bar with cart icon
-│   ├── Footer.js       # Footer with store info
-│   ├── ProductCard.js  # Product display card
-│   └── CartItem.js     # Cart item component
-├── pages/              # Page components
-│   ├── Home.js         # Homepage with hero and featured products
-│   ├── Products.js     # Product listing with filters
-│   ├── Cart.js         # Shopping cart page
-│   └── About.js        # About and contact page
-├── context/            # Context providers
-│   └── CartContext.js  # Cart state management
-├── data/               # Mock data
-│   └── products.js     # Product data array
-└── App.js             # Main app component
+├── components/          # Composants réutilisables
+│   ├── Navbar.js       # Barre de navigation avec icône panier
+│   ├── Footer.js       # Pied de page avec informations
+│   ├── ProductCard.js  # Carte d'affichage produit
+│   ├── CartItem.js     # Composant article panier
+│   ├── PhotoSlider.js  # Galerie d'images avec navigation
+│   └── ProductReviews.js # Système d'avis clients
+├── pages/              # Composants de pages
+│   ├── Home.js         # Page d'accueil avec hero et produits vedettes
+│   ├── Products.js     # Liste de produits avec filtres
+│   ├── ProductDetail.js # Détail produit avec sélection taille
+│   ├── Cart.js         # Page panier d'achat
+│   ├── Checkout.js     # Page de commande
+│   └── About.js        # Page à propos et contact
+├── context/            # Providers de contexte
+│   └── CartContext.js  # Gestion d'état du panier
+├── data/               # Données
+│   └── products.js     # Données produits
+├── utils/              # Utilitaires
+│   ├── formatPrice.js  # Formatage des prix
+│   └── getSizesByCategory.js # Gestion des tailles
+└── App.js             # Composant principal
 ```
 
-## 🎨 Design Features
+## 🚀 Installation et Démarrage
 
-- **Gradient Backgrounds**: Modern gradient designs throughout
-- **Card-based Layout**: Clean white cards with shadows
-- **Hover Effects**: Smooth transitions and animations
-- **Mobile-first**: Responsive design that works on all devices
-- **Accessibility**: Proper focus states and semantic HTML
-
-## 🛒 Cart Functionality
-
-- Add products to cart from product pages
-- Update item quantities
-- Remove items from cart
-- Real-time total calculation
-- Simulated checkout process
-- Empty cart state handling
-
-## 🚀 Getting Started
-
-1. **Install Dependencies**
+1. **Installer les Dépendances**
    ```bash
    npm install
    ```
 
-2. **Start Development Server**
+2. **Démarrer le Serveur de Développement**
    ```bash
    npm start
    ```
 
-3. **Open in Browser**
-   Navigate to `http://localhost:3000`
+3. **Ouvrir dans le Navigateur**
+   Accéder à `http://localhost:3000`
 
-## 📱 Pages Overview
+## 📱 Pages
 
-### Home Page
-- Hero section with call-to-action
-- Featured products grid
-- Store features showcase
+### Page d'Accueil
+- Section hero avec appel à l'action
+- Grille de produits vedettes
+- Présentation des fonctionnalités
 
-### Products Page
-- All products in a responsive grid
-- Category filtering
-- Product search functionality
+### Page Produits
+- Tous les produits dans une grille responsive
+- Filtrage par catégorie
+- Barre de recherche avec suggestions
+- Compteur de résultats
 
-### Cart Page
-- Shopping cart with item management
-- Order summary with totals
-- Simulated checkout process
+### Page Panier
+- Gestion du panier avec contrôles de quantité
+- Résumé de commande avec totaux
+- Processus de commande simulé
 
-### About Page
-- Store information and mission
-- Contact form (simulated submission)
-- Company statistics
+### Page Détail Produit
+- Galerie d'images interactive
+- Sélection de taille
+- Boutons "Ajouter au Panier" et "Acheter Maintenant"
+- Avis clients
+- Produits similaires
 
-## 🎯 Key Components
+### Page Commande
+- Formulaire d'informations de livraison
+- Calcul des frais de livraison selon la ville
+- Options de paiement (Paiement à la livraison / NITA)
+- Récapitulatif de commande
 
-### ProductCard
-- Displays product image, name, price
-- Hover effects with "Add to Cart" button
-- Responsive design
+### Page À Propos
+- Information sur la boutique
+- Formulaire de contact
+- Statistiques de l'entreprise
 
-### CartItem
-- Shows cart item details
-- Quantity controls (+/- buttons)
-- Remove item functionality
-- Price calculations
+## 🎨 Fonctionnalités du Design
 
-### Navbar
-- Responsive navigation
-- Cart icon with item count
-- Smooth hover effects
+- **Thème Élégant**: Couleurs noir et or pour un look haut de gamme
+- **Mise en Page par Cartes**: Cartes blanches épurées avec ombres
+- **Effets au Survol**: Transitions et animations fluides
+- **Mobile-First**: Design responsive sur tous les appareils
+- **Accessibilité**: États de focus appropriés et HTML sémantique
 
-## 🔧 Customization
+## 🛒 Fonctionnalité Panier
 
-### Adding New Products
-Edit `src/data/products.js` to add new products:
+- Ajouter des produits au panier depuis les pages produits
+- Mettre à jour les quantités d'articles
+- Supprimer des articles du panier
+- Calcul du total en temps réel
+- Gestion des articles avec taille et couleur
+- Processus de commande
+- Gestion de l'état panier vide
 
-```javascript
-{
-  id: 13,
-  name: "New Product",
-  price: 99.99,
-  image: "https://example.com/image.jpg",
-  category: "Electronics"
-}
+## 📦 Déploiement
+
+### Vercel (Recommandé)
+1. Connecter votre dépôt GitHub à Vercel
+2. Vercel détectera automatiquement Create React App
+3. Déployer avec les paramètres par défaut
+
+### Build Manuel
+```bash
+npm run build
 ```
+Cela créera un dossier `build` optimisé pour la production.
 
-### Styling
-- Global styles in `src/App.css`
-- Component-specific styles in individual CSS files
-- Uses CSS custom properties for consistent theming
+## 🌐 Configuration Vercel
 
-## 📦 Deployment
+Le fichier `vercel.json` est déjà configuré pour gérer correctement le routage React Router lors du rafraîchissement de page.
 
-This project can be deployed to:
-- **Vercel**: `npm run build` then deploy the `build` folder
-- **Netlify**: Drag and drop the `build` folder
-- **GitHub Pages**: Use `gh-pages` package
+## 📞 Contact
 
-## 🎨 Color Scheme
+- **Email**: aazstore.niam@gmail.com
+- **Téléphone**: +227 89 60 94 97
+- **Facebook**: Aaz Store
+- **Adresse**: 2e arrondissement, Soni, Niamey
 
-- Primary: `#667eea` to `#764ba2` (gradient)
-- Secondary: `#2c3e50`
-- Success: `#27ae60`
-- Danger: `#e74c3c`
-- Background: `#f8f9fa`
+## 📄 Licence
 
-## 📱 Responsive Breakpoints
-
-- Mobile: `< 768px`
-- Tablet: `768px - 1024px`
-- Desktop: `> 1024px`
-
-## 🚀 Future Enhancements
-
-- User authentication
-- Product search functionality
-- Product reviews and ratings
-- Wishlist functionality
-- Payment integration
-- Order history
-- Admin dashboard
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+© 2025 Aaz Store. Tous droits réservés.
 
 ---
 
-Built with ❤️ using React
+Construit avec ❤️ utilisant React

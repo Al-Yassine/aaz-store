@@ -13,19 +13,15 @@ const ProductReviews = ({ productId }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Load reviews from localStorage on mount
   useEffect(() => {
     const storedReviews = localStorage.getItem(`product_reviews_${productId}`);
     if (storedReviews) {
       try {
         setReviews(JSON.parse(storedReviews));
-      } catch (error) {
-        // Silently handle localStorage parse errors
-      }
+      } catch (error) {}
     }
   }, [productId]);
 
-  // Save reviews to localStorage whenever reviews change
   useEffect(() => {
     if (reviews.length > 0) {
       localStorage.setItem(`product_reviews_${productId}`, JSON.stringify(reviews));
@@ -82,7 +78,6 @@ const ProductReviews = ({ productId }) => {
     setShowSuccess(true);
     setErrors({});
     
-    // Hide success message after 5 seconds
     setTimeout(() => {
       setShowSuccess(false);
     }, 5000);

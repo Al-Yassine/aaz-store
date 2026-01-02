@@ -28,7 +28,6 @@ const Products = () => {
     const names = productsByCategory
       .filter(p => p.name.toLowerCase().includes(term))
       .map(p => p.name);
-    // unique, top 8
     return Array.from(new Set(names)).slice(0, 8);
   }, [productsByCategory, searchInput]);
 
@@ -87,7 +86,6 @@ const Products = () => {
           </div>
         </div>
 
-        {/* Category Filter */}
         <div className="category-filter">
           <h3>Filtrer par Catégorie :</h3>
           <div className="category-buttons">
@@ -103,7 +101,6 @@ const Products = () => {
           </div>
         </div>
 
-        {/* Products Grid */}
         <div className="products-grid">
           {filteredProducts.length > 0 ? (
             filteredProducts.map(product => (
@@ -116,7 +113,6 @@ const Products = () => {
           )}
         </div>
 
-        {/* Results Count */}
         <div className="results-info">
           <p>
             Affichage de {filteredProducts.length} produit{filteredProducts.length !== 1 ? 's' : ''}

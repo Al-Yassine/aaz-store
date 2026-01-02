@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './PhotoSlider.css';
 
-// Multi-image gallery with thumbnails and next/prev controls.
 const PhotoSlider = ({ images = [], productName, compact = false }) => {
   const unique = Array.from(new Set(images.map(i => i.replace(/^\/images\//i, '/Images/'))));
   const [index, setIndex] = useState(0);

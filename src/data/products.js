@@ -1,4 +1,3 @@
-// Données Produits Magasin de Mode Haut de Gamme
 export const products = [
   {
     id: 1,

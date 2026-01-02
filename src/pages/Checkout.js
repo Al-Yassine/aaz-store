@@ -9,7 +9,6 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { items: cartItems, clearCart } = useCart();
   
-  // Get items from either "Buy Now" or cart
   const checkoutItems = location.state?.items || cartItems;
   const fromBuyNow = location.state?.fromBuyNow || false;
 
@@ -21,30 +20,24 @@ const Checkout = () => {
     phone: ''
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('cod'); // 'cod' or 'nita'
+  const [paymentMethod, setPaymentMethod] = useState('cod');
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Check if city is Niamey
   const isNiamey = formData.city === 'Niamey';
 
-  // Calculate delivery fees and time
   const deliveryFee = isNiamey ? 1000 : 2000;
-  const deliveryTime = isNiamey ? 1 : 2;
   const deliveryTimeText = isNiamey ? '1 jour' : '2 jours';
 
-  // Calculate totals
   const subtotal = checkoutItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const total = subtotal + deliveryFee;
 
-  // Update payment method when city changes (if outside Niamey, force NITA)
   useEffect(() => {
     if (!isNiamey && paymentMethod === 'cod') {
       setPaymentMethod('nita');
     }
   }, [formData.city, isNiamey, paymentMethod]);
 
-  // Redirect if no items
   if (!checkoutItems || checkoutItems.length === 0) {
     return (
       <div className="checkout-page page">
@@ -67,7 +60,6 @@ const Checkout = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error for this field
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -94,7 +86,6 @@ const Checkout = () => {
       newErrors.phone = 'Numéro de téléphone invalide';
     }
 
-    // Validate payment method based on city
     if (!isNiamey && paymentMethod === 'cod') {
       newErrors.paymentMethod = 'Le paiement à la livraison n\'est disponible que pour Niamey. Veuillez sélectionner le paiement via NITA.';
     }
@@ -110,10 +101,8 @@ const Checkout = () => {
       return;
     }
     
-    // Show confirmation message
     setOrderConfirmed(true);
     
-    // Clear cart if not from "Buy Now"
     if (!fromBuyNow) {
       setTimeout(() => {
         clearCart();

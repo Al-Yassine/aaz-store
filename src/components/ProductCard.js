@@ -15,17 +15,14 @@ const ProductCard = ({ product }) => {
   };
 
   const handleImageClick = (e) => {
-    // Don't navigate if clicking on slider controls
     if (e.target.closest('.slider-arrow') || 
         e.target.closest('.slider-dot')) {
       return;
     }
     
-    // Navigate to product detail
     navigate(`/product/${product.id}`);
   };
 
-  // Keep full images array (deduped) and normalize paths
   const displayImages = Array.from(new Set((product.images && product.images.length ? product.images : [product.image]).map(img => (img || '').replace(/^\/\/?images\//i, '/Images/'))));
 
   return (

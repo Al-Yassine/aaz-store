@@ -1,4 +1,3 @@
-// Get size options based on product category
 export const getSizesByCategory = (category) => {
   const categoryLower = (category || '').toLowerCase();
   
@@ -23,9 +22,7 @@ export const getSizesByCategory = (category) => {
   return ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 };
 
-// Get default size based on category
 export const getDefaultSize = (category) => {
   const sizes = getSizesByCategory(category);
-  // Return middle size as default
   return sizes[Math.floor(sizes.length / 2)];
 };
