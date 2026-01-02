@@ -1,0 +1,365 @@
+.photo-slider {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Compact slider for product cards */
+.photo-slider-compact {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.photo-slider-compact:active {
+  cursor: grabbing;
+}
+
+.slider-track {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider-images-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  will-change: transform;
+}
+
+.slider-image-wrapper {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slider-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.3;
+  transition: all 0.2s ease;
+  z-index: 10;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.photo-slider-compact:hover .slider-arrow {
+  opacity: 1;
+}
+
+.slider-arrow:hover {
+  opacity: 1;
+}
+
+.slider-arrow:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-50%) scale(1.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.slider-arrow:active {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.product-card:hover .slider-arrow {
+  opacity: 1;
+}
+
+.slider-arrow-left {
+  left: 12px;
+}
+
+.slider-arrow-right {
+  right: 12px;
+}
+
+.slider-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+.slider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.slider-dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+.slider-dot.active {
+  background: white;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.single-image-container {
+  width: 100%;
+  max-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 6px;
+  position: relative;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.single-image-container:active {
+  cursor: grabbing;
+}
+
+.slider-track-full {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider-images-container-full {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  will-change: transform;
+}
+
+.slider-image-wrapper-full {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.single-image {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}
+
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.slider-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.slider-btn:active {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.prev-btn {
+  left: 12px;
+}
+
+.next-btn {
+  right: 12px;
+}
+
+.image-counter {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.thumbnails {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.thumb-btn {
+  width: 56px;
+  height: 56px;
+  padding: 3px;
+  border-radius: 6px;
+  background: transparent;
+  border: 2px solid transparent;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.thumb-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.thumb-btn.active { border-color: #000000; box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1); }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Give images more vertical space on tablets/smaller screens */
+  .single-image-container { 
+    max-height: 50vh; 
+    padding: 4px; 
+  }
+  
+  .single-image { 
+    max-height: 50vh; 
+  }
+  
+  /* Slightly smaller controls so they don't overlap important parts */
+  .slider-btn { 
+    width: 36px; 
+    height: 36px; 
+    font-size: 18px; 
+  }
+  
+  /* Compact slider adjustments */
+  .slider-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    opacity: 1;
+  }
+  
+  .slider-dots {
+    bottom: 8px;
+  }
+  
+  .slider-dot {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .slider-dot.active {
+    width: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* On small phones, use viewport height so the image dominates the screen */
+  .single-image-container { 
+    max-height: 60vh; 
+    padding: 2px; 
+  }
+  
+  .single-image { 
+    max-height: 60vh; 
+  }
+  
+  /* Hide thumbnails to free up space */
+  .thumbnails { 
+    display: none; 
+  }
+  
+  .slider-btn { 
+    width: 36px; 
+    height: 36px; 
+    font-size: 18px; 
+  }
+  
+  /* Compact slider - always show arrows on mobile */
+  .slider-arrow {
+    opacity: 1;
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+  }
+  
+  .slider-arrow-left {
+    left: 4px;
+  }
+  
+  .slider-arrow-right {
+    right: 4px;
+  }
+  
+  .slider-dots {
+    bottom: 6px;
+    gap: 4px;
+  }
+  
+  .slider-dot {
+    width: 5px;
+    height: 5px;
+  }
+  
+  .slider-dot.active {
+    width: 15px;
+  }
+}
