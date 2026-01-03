@@ -43,7 +43,7 @@ export default function CGV() {
       </ul>
       <p><strong>4.2 Modalités de Paiement</strong></p>
       <ul>
-        <li>Carte bancaire (Visa, Mastercard, American Express)</li>
+        <li>Nita transfert d'argent, Amana transfert d'argent</li>
         <li>Paiement sécurisé via passerelle certifiée PCI-DSS Level 1</li>
         <li>Le paiement doit intervenir avant la confirmation finale</li>
         <li>Aaz Store se réserve le droit de refuser un paiement en cas de doute sur la sécurité</li>
@@ -52,14 +52,13 @@ export default function CGV() {
       <h2>5. Livraison</h2>
       <p><strong>5.1 Délais de Livraison</strong></p>
       <ul>
-        <li>Délai standard de livraison en France métropolitaine : 5 à 7 jours ouvrés à partir de la confirmation de commande</li>
-        <li>Livraisons vers la Corse, DOM-TOM et Europe : délais spécifiques communiqués au moment de la commande</li>
+        <li>Délai standard de livraison au Niger : 1 à 2 jours ouvrés à partir de la confirmation de commande</li>
         <li>Ces délais sont donnés à titre informatif et non garantis. Aaz Store ne pourra être tenu responsable des retards imputables aux transporteurs</li>
       </ul>
       <p><strong>5.2 Frais de Port</strong></p>
       <ul>
         <li>Les frais de port sont calculés selon la destination et le poids du colis</li>
-        <li>La livraison est gratuite pour les commandes supérieures à [à définir]</li>
+        <li>La livraison est gratuite pour les commandes supérieures à [200 000 Fcfa]</li>
         <li>Les frais sont affichés avant finalisation du paiement</li>
       </ul>
       <p><strong>5.3 Propriété et Risques</strong></p>

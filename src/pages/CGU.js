@@ -51,7 +51,7 @@ export default function CGU() {
       <p>Aaz Store s'engage à protéger vos données personnelles conformément au RGPD et à la Loi Informatique et Libertés de 1978. Consultez notre Politique de Confidentialité pour plus d'informations sur la collecte, l'utilisation et la protection de vos données.</p>
       
       <h2>10. Droit Applicable et Juridiction</h2>
-      <p>Les présentes CGU sont régies par la loi française. En cas de litige, vous êtes libre de recourir à la procédure de résolution alternative des différends (médiation) avant action en justice. Les tribunaux compétents seront les tribunaux français, conformément aux règles applicables.</p>
+      <p>Les présentes CGU sont régies par la loi française et nigerienne. En cas de litige, vous êtes libre de recourir à la procédure de résolution alternative des différends (médiation) avant action en justice. Les tribunaux compétents seront les tribunaux français, conformément aux règles applicables.</p>
       
       <h2>11. Contact</h2>
       <p>Pour toute question concernant les présentes CGU, contactez-nous à l'adresse : <strong>contact@aazstore.com</strong></p>

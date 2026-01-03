@@ -55,7 +55,7 @@ export default function Privacy() {
       </ul>
       <p>Tous nos prestataires sont tenus par des obligations contractuelles de confidentialité et de sécurité équivalentes aux nôtres.</p>
       
-      <h2>6. Droits des Utilisateurs (Articles 15-22 du RGPD)</h2>
+      <h2>6. Droits des Utilisateurs</h2>
       <p>Vous disposez des droits suivants concernant vos données personnelles :</p>
       <ul>
         <li><strong>Droit d'accès :</strong> Obtenir une copie de vos données</li>
