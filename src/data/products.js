@@ -767,11 +767,11 @@ export const products = [
         stock: 3,
       },
       {
-        color: "#765227ff",
-        sizes: ["M", "XL"],
+        color: "#765227ff"
+        sizes: ["M", "XL",]
         stock: 2,
       },
-    ],
+   ]
     category: "T-shirt-Polo"
   },
   {
@@ -782,8 +782,8 @@ export const products = [
     image: "/Images/polo/tshirts/tshirts-3.jpg",
     variants: [
       {
-        color: "#ffffff",
-        sizes: ["M","L","2XL"],
+        color: "#ffffff",,
+        sizes: ["M","L","2XL",],
         stock: 3,
       },
       {
@@ -796,7 +796,7 @@ export const products = [
         sizes: "M",
         stock: 1,
       },
-    ],
+   ]
     category: "T-shirt-Polo"
   },
   {
@@ -805,9 +805,9 @@ export const products = [
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-4.jpg",
-    variants: [
+     variants: [
       {
-        color: "#ffffff",
+        color: "#ffffff",,
         sizes: "M",
         stock: 1,
       },
@@ -817,11 +817,10 @@ export const products = [
         stock: 2,
       },
       {
-        color: "#060153ff",
+        color: #060153ff",
         sizes: ["M", "L"],
         stock: 2,
       },
-    ],
     category: "T-shirt-Polo"
   },
   {
@@ -832,16 +831,15 @@ export const products = [
     image: "/Images/polo/tshirts/tshirts-5.jpg",
     variants: [
       {
-        color: "#f1de10ff",
+        color: "#f1de10ff",,
         sizes: "L",
         stock: 1,
       },
       {
         color: "#ffffff",
-        sizes: ["M", "L","XL"],
+        sizes: ["M", "L","XL",],
         stock: 3,
       },
-    ],
     category: "T-shirt-Polo"
   },
   {
@@ -849,7 +847,7 @@ export const products = [
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
-    image: "/Images/polo/tshirts/tshirts-6.jpg",
+    "/Images/polo/tshirts/tshirts-6.jpg",
     variants: [
       {
         color: "#ffffff",
@@ -866,7 +864,6 @@ export const products = [
         sizes: "M",
         stock: 2,
       },
-    ],
     category: "T-shirt-Polo"
   },
   {
@@ -895,8 +892,9 @@ export const products = [
         color: "#360404ff",
         sizes: ["M","L","XL"],
         stock: 3,
+      }, 
+
       },
-    ],
     category: "T-shirt-Polo"
   },
   {
@@ -953,7 +951,6 @@ export const products = [
         sizes: ["M", "L"],
         stock: 1,
       },
-    ],
     category: "T-shirt-Polo",
   },
 
@@ -986,8 +983,8 @@ export const products = [
       },
       {
         color: "#360404ff",
-        sizes: ["M", "L", "2XL"],
-        stock: 4,
+        sizes: ["M", "2XL"], stock: 2,
+        sizes: "L", stock 2,
       },
       {
         color: "#010101",
@@ -1010,11 +1007,11 @@ export const products = [
         stock: 3,
       },
       {
-        color: "#765227ff",
-        sizes: ["M","L","XL"],
-        stock: 4,
+        color: "#765227ff"
+        sizes: ["M","L"], stock: 2,
+        sizes: "XL", stock: 2,
       },
-    ],
+   ]
     category: "T-shirt-Polo"
   },
   {
@@ -1023,58 +1020,97 @@ export const products = [
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-10.jpg",
-    variants: [
+    variants [
       {
-        color: "#FFFFFF",
-        sizes: ["2XL", "3XL", "4XL", "5XL"],
-        stock: 4,
-      },
-      {
-        color: "#6b1f2a",
-        sizes: ["2XL", "4XL"],
-        stock: 2,
-      },
-      {
-        color: "#243447",
-        sizes: ["4XL", "5XL"],
-        stock: 2,
-      },
-      {
-        color: "#1f3a5f",
-        sizes: ["4XL"],
-        stock: 1,
-      },
-      {
-        color: "#7a7268",
-        sizes: ["M", "L", "XL", "2XL", "3XL", "4XL"],
-        stock: 6,
-      },
-      {
-        color: "#b5b5b5",
-        sizes: ["M", "L", "XL", "2XL", "3XL"],
-        stock: 5,
-      },
-      {
-        color: "#1a1a1a",
-        sizes: ["M", "L", "2XL", "3XL", "4XL"],
-        stock: 6,
-      },
-      {
-        color: "#b37a3c",
-        sizes: ["M", "L", "XL", "2XL", "4XL", "5XL"],
-        stock: 7,
-      },
-      {
-        color: "#6b7a4a",
-        sizes: ["2XL", "4XL", "5XL"],
-        stock: 4,
-      },
+          color: "#FFFFFF", 
+          sizes: [
+           { value: "2XL", stock: 1 },
+           { value: "3XL", stock: 1 },
+           { value: "4XL", stock: 1 },
+           { value: "5XL", stock: 1 }, 
+          ],
+
+          color: "#6b1f2a", 
+          sizes: [
+           { value: "2XL", stock: 1 },
+           { value: "4XL", stock: 1 },
+           
+           color:  "#243447",
+          sizes: [
+           { value: "4XL", stock: 1 },
+           { value: "5XL", stock: 1 },
+
+           color: "#1f3a5f", 
+          sizes: [
+           { value: "4XL", stock: 1 },
+
+         },
+        ],
+
+          color: "#7a7268", 
+          sizes: [
+           { value: "M", stock: 1 },
+           { value: "L", stock: 1 },
+           { value: "XL", stock: 1 },
+           { value: "2XL", stock: 1 },
+           { value: "3XL", stock: 1 },
+           { value: "4XL", stock: 1 },
+          ],
+
+          
+
+          color: "#b5b5b5", 
+          sizes: [
+           { value: "M", stock: 1 },
+           { value: "L", stock: 1 },
+           { value: "XL", stock: 1 },
+           { value: "2XL", stock: 1 },
+           { value: "3XL", stock: 1 },
+          ],
+
+          color: "#1a1a1a", 
+          sizes: [
+           { value: "M", stock: 1 },
+           { value: "L", stock: 1 },
+           { value: "2XL", stock: 2 },
+           { value: "3XL", stock: 1 },
+           { value: "4XL", stock: 1 },
+          ],
+
+          
+
+          color: "#b37a3c" 
+          sizes: [
+           { value: "M", stock: 1 },
+           { value: "L", stock: 1 },
+           { value: "XL", stock: 1 },
+           { value: "2XL", stock: 2 },
+           { value: "4XL", stock: 1 },
+           { value: "5XL", stock: 1 },
+          ],
+
+          color:  "#243447",
+          sizes: [
+           { value: "M", stock: 1 },
+           { value: "L", stock: 1 },
+           { value: "2XL", stock: 2 },
+           { value: "3XL", stock: 1 },
+           { value: "4XL", stock: 1 },
+           { value: "5XL", stock: 1 },
+          ],
+
+          color:  "#6b7a4a",
+          sizes: [
+           { value: "2XL", stock: 1 },
+           { value: "4XL", stock: 2 },
+           { value: "5XL", stock: 1 },
+      }
     ],
     category: "T-shirt-Polo"
   },
   
   {
-    id: 53,
+    id: 52,
     name: "T-shirt Polo Manche Longue",
     price: 17000.00,
     originalPrice: 20000.00,
