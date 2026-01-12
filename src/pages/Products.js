@@ -1,12 +1,16 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { products } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import './Products.css';
 
 const Products = () => {
-  const [selectedCategory, setSelectedCategory] = useState('Tous');
-  const [searchInput, setSearchInput] = useState('');
-  const [activeSearch, setActiveSearch] = useState('');
+  // Keep filters in URL so they survive navigation and browser Back
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get('category') || 'Tous');
+  const [searchInput, setSearchInput] = useState(() => searchParams.get('q') || '');
+  const [activeSearch, setActiveSearch] = useState(() => searchParams.get('q') || '');
   const [showSuggestions, setShowSuggestions] = useState(false);
   
   const categories = ['Tous', ...new Set(products.map(product => product.category))];
@@ -31,16 +35,45 @@ const Products = () => {
     return Array.from(new Set(names)).slice(0, 8);
   }, [productsByCategory, searchInput]);
 
+  // Sync local state when the URL search params change (e.g. when user clicks Back)
+  useEffect(() => {
+    const cat = searchParams.get('category') || 'Tous';
+    if (cat !== selectedCategory) setSelectedCategory(cat);
+    const q = searchParams.get('q') || '';
+    if (q !== activeSearch) {
+      setActiveSearch(q);
+      setSearchInput(q);
+    }
+  }, [searchParams]);
+
+  const applyCategory = (category) => {
+    setSelectedCategory(category);
+    const newParams = new URLSearchParams(searchParams);
+    if (category && category !== 'Tous') newParams.set('category', category);
+    else newParams.delete('category');
+    setSearchParams(newParams);
+  };
+
+  // Update URL search params and local state for category/search so Back preserves them
+  const applySearch = (value) => {
+    const q = value && value.trim() ? value.trim() : '';
+    setActiveSearch(q);
+    setSearchInput(q);
+    const newParams = new URLSearchParams(searchParams);
+    if (q) newParams.set('q', q);
+    else newParams.delete('q');
+    setSearchParams(newParams);
+  };
+
   const handleSearchKeyDown = (e) => {
     if (e.key === 'Enter') {
-      setActiveSearch(searchInput);
+      applySearch(searchInput);
       setShowSuggestions(false);
     }
   };
 
   const handleSuggestionClick = (name) => {
-    setSearchInput(name);
-    setActiveSearch(name);
+    applySearch(name);
     setShowSuggestions(false);
   };
 
@@ -93,14 +126,7 @@ const Products = () => {
               <button
                 key={category}
                 className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(category)}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
-
+                onClick={() => applyCategory(category)}
         <div className="products-grid">
           {filteredProducts.length > 0 ? (
             filteredProducts.map(product => (
