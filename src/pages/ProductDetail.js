@@ -55,6 +55,25 @@ const ProductDetail = () => {
   fullSizes.forEach(sz => { if (!displayedSizes.includes(sz)) displayedSizes.push(sz); });
   variantSizes.forEach(sz => { if (!displayedSizes.includes(sz)) displayedSizes.push(sz); });
 
+  // Build color-specific size stock map: { color: { size: stock } }
+  const colorSizeStock = {};
+  variants.forEach(v => {
+    const c = v.color || null;
+    if (!c) return; // colorless variants handled by aggregated sizeStockMap
+    if (!colorSizeStock[c]) colorSizeStock[c] = {};
+    if (v.size) {
+      colorSizeStock[c][v.size] = (colorSizeStock[c][v.size] || 0) + (v.stock || 0);
+    } else if (v.sizes) {
+      if (Array.isArray(v.sizes)) {
+        v.sizes.forEach(sz => {
+          colorSizeStock[c][sz] = (colorSizeStock[c][sz] || 0) + (v.stock || 0);
+        });
+      } else {
+        colorSizeStock[c][v.sizes] = (colorSizeStock[c][v.sizes] || 0) + (v.stock || 0);
+      }
+    }
+  });
+
   // default to the first available size in the displayed sizes list (if any)
   const defaultSize = displayedSizes.find(sz => (sizeStockMap[sz] || 0) > 0) || null;
 
@@ -65,8 +84,28 @@ const ProductDetail = () => {
   const colorsFromProduct = Array.isArray(product?.colors) && product.colors.length > 0
     ? product.colors
     : Array.from(new Set(variants.map(v => v.color).filter(Boolean)));
-  const [selectedColor, setSelectedColor] = useState(colorsFromProduct[0] || product?.image || null);
+  const [selectedColor, setSelectedColor] = useState(colorsFromProduct[0] || null);
   const colors = colorsFromProduct;
+
+  // Helper to get stock for a size, preferring the selected color if it has data
+  const getStockForSize = (size) => {
+    if (selectedColor && colorSizeStock[selectedColor]) {
+      return colorSizeStock[selectedColor][size] || 0;
+    }
+    return (sizeStockMap[size] || 0);
+  };
+
+  // When color changes we should ensure selected size is available for that color; keep it disabled if not
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+    const colorStocks = color && colorSizeStock[color] ? colorSizeStock[color] : null;
+    const currentSizeStock = selectedSize ? (colorStocks ? (colorStocks[selectedSize] || 0) : (sizeStockMap[selectedSize] || 0)) : 0;
+    if (!selectedSize || currentSizeStock <= 0) {
+      // pick first size available for this color; prefer color-specific then global
+      const newSize = displayedSizes.find(sz => (colorStocks ? (colorStocks[sz] || 0) > 0 : (sizeStockMap[sz] || 0) > 0)) || null;
+      setSelectedSize(newSize);
+    }
+  };
 
   const isProductInStock = (product?.customStatus !== 'Out Of Stock') && Object.values(sizeStockMap).some(n => n > 0);
 
@@ -173,10 +212,10 @@ const ProductDetail = () => {
                     <button 
                       key={size} 
                       className={`option-btn size-btn ${selectedSize === size ? 'active' : ''}`} 
-                      onClick={() => (sizeStockMap[size] || 0) > 0 && setSelectedSize(size)}
-                      disabled={!((sizeStockMap[size] || 0) > 0)}
-                      aria-disabled={!((sizeStockMap[size] || 0) > 0)}
-                      title={!((sizeStockMap[size] || 0) > 0) ? 'Rupture de stock' : `Taille ${size}`}
+                      onClick={() => getStockForSize(size) > 0 && setSelectedSize(size)}
+                      disabled={!(getStockForSize(size) > 0)}
+                      aria-disabled={!(getStockForSize(size) > 0)}
+                      title={!(getStockForSize(size) > 0) ? 'Rupture de stock' : `Taille ${size}`}
                     >
                       <span className="size-label">{size}</span>
                     </button>
@@ -192,7 +231,7 @@ const ProductDetail = () => {
               <div className="options colors">
                 {(colors && colors.length > 0) ? (
                   colors.map(color => (
-                    <button key={color} className={`color-swatch ${selectedColor===color? 'active':''}`} style={{background: color}} onClick={() => setSelectedColor(color)} aria-label={`Select color ${color}`} />
+                    <button key={color} className={`color-swatch ${selectedColor===color? 'active':''}`} style={{background: color}} onClick={() => handleColorSelect(color)} aria-label={`Select color ${color}`} />
                   ))
                 ) : (
                   <p className="muted">No color variants</p>
