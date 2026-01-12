@@ -3768,9 +3768,9 @@ export const products = [
     "id": 72,
     "name": "Sneakers Classiques",
     "price": 45000,
-    "image": "/Images/chaussures/sneakers/derimod/derimod-2.jpg",
+    "image": "/Images/chaussures/sneakers/derimod/derimod-1.jpg",
     "images": [
-      "/Images/chaussures/sneakers/derimod/derimod-2.jpg",
+      "/Images/chaussures/sneakers/derimod/derimod-1.jpg",
       "/Images/chaussures/sneakers/derimod/derimod-2.jpg"
     ],
     "variants": [
