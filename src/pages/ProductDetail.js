@@ -28,9 +28,18 @@ const ProductDetail = () => {
     sizeStockMap = { ...sizeInventory[productId] };
   } else {
     variants.forEach(v => {
-      (v.sizes || []).forEach(sz => {
-        sizeStockMap[sz] = (sizeStockMap[sz] || 0) + (v.stock || 0);
-      });
+      // support both singular `size` and plural `sizes` formats
+      if (v.size) {
+        sizeStockMap[v.size] = (sizeStockMap[v.size] || 0) + (v.stock || 0);
+      } else if (v.sizes) {
+        if (Array.isArray(v.sizes)) {
+          v.sizes.forEach(sz => {
+            sizeStockMap[sz] = (sizeStockMap[sz] || 0) + (v.stock || 0);
+          });
+        } else {
+          sizeStockMap[v.sizes] = (sizeStockMap[v.sizes] || 0) + (v.stock || 0);
+        }
+      }
     });
   }
 
