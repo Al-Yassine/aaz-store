@@ -49,13 +49,24 @@ const ProductDetail = () => {
   // ensure every full size is present in the map (0 if missing)
   fullSizes.forEach(sz => { if (!(sz in sizeStockMap)) sizeStockMap[sz] = 0; });
 
-  // default to the first available size in the full list (if any)
-  const defaultSize = fullSizes.find(sz => (sizeStockMap[sz] || 0) > 0) || null;
+  // Add sizes that appear in variants but not in the category list so everything in data is shown
+  const variantSizes = Object.keys(sizeStockMap);
+  const displayedSizes = [];
+  fullSizes.forEach(sz => { if (!displayedSizes.includes(sz)) displayedSizes.push(sz); });
+  variantSizes.forEach(sz => { if (!displayedSizes.includes(sz)) displayedSizes.push(sz); });
+
+  // default to the first available size in the displayed sizes list (if any)
+  const defaultSize = displayedSizes.find(sz => (sizeStockMap[sz] || 0) > 0) || null;
 
   const { addToCart, items } = useCart();
   const { showToast } = useToast();
   const [selectedSize, setSelectedSize] = useState(defaultSize);
-  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || product?.image);
+  // Derive colors: use product.colors if provided, otherwise collect unique variant colors
+  const colorsFromProduct = Array.isArray(product?.colors) && product.colors.length > 0
+    ? product.colors
+    : Array.from(new Set(variants.map(v => v.color).filter(Boolean)));
+  const [selectedColor, setSelectedColor] = useState(colorsFromProduct[0] || product?.image || null);
+  const colors = colorsFromProduct;
 
   const isProductInStock = (product?.customStatus !== 'Out Of Stock') && Object.values(sizeStockMap).some(n => n > 0);
 
@@ -157,8 +168,8 @@ const ProductDetail = () => {
             <div className="option-group">
               <label>Taille</label>
               <div className="options size-options">
-                {fullSizes && fullSizes.length > 0 ? (
-                  fullSizes.map(size => (
+                {displayedSizes && displayedSizes.length > 0 ? (
+                  displayedSizes.map(size => (
                     <button 
                       key={size} 
                       className={`option-btn size-btn ${selectedSize === size ? 'active' : ''}`} 
@@ -179,8 +190,8 @@ const ProductDetail = () => {
             <div className="option-group">
               <label>Color</label>
               <div className="options colors">
-                {(product.colors || []).length > 0 ? (
-                  product.colors.map(color => (
+                {(colors && colors.length > 0) ? (
+                  colors.map(color => (
                     <button key={color} className={`color-swatch ${selectedColor===color? 'active':''}`} style={{background: color}} onClick={() => setSelectedColor(color)} aria-label={`Select color ${color}`} />
                   ))
                 ) : (
