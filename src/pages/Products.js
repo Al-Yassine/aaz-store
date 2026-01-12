@@ -127,6 +127,13 @@ const Products = () => {
                 key={category}
                 className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
                 onClick={() => applyCategory(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="products-grid">
           {filteredProducts.length > 0 ? (
             filteredProducts.map(product => (
