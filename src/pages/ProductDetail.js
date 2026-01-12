@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { products } from '../data/products';
 import PhotoSlider from '../components/PhotoSlider';
@@ -81,12 +81,29 @@ const ProductDetail = () => {
   const { addToCart, items } = useCart();
   const { showToast } = useToast();
   const [selectedSize, setSelectedSize] = useState(defaultSize);
+  // Quantity state (default 1)
+  const [quantity, setQuantity] = useState(1);
+
+  // Clamp quantity when size or color changes or when stock changes
+  useEffect(() => {
+    const available = selectedSize ? getStockForSize(selectedSize) : 0;
+    // ensure at least 1 and no more than available stock
+    setQuantity(q => {
+      const minQ = 1;
+      const newQ = Math.min(Math.max(q, minQ), Math.max(available, 1));
+      return newQ;
+    });
+  }, [selectedSize, selectedColor]);
+
   // Derive colors: use product.colors if provided, otherwise collect unique variant colors
   const colorsFromProduct = Array.isArray(product?.colors) && product.colors.length > 0
     ? product.colors
     : Array.from(new Set(variants.map(v => v.color).filter(Boolean)));
   const [selectedColor, setSelectedColor] = useState(colorsFromProduct[0] || null);
   const colors = colorsFromProduct;
+
+  // available stock for current selection
+  const availableStockForSelection = selectedSize ? getStockForSize(selectedSize) : 0; 
 
   // Helper to get stock for a size, preferring the selected color if it has data
   const getStockForSize = (size) => {
@@ -128,20 +145,20 @@ const ProductDetail = () => {
       return;
     }
 
-    if (!isProductInStock || !sizeStockMap[selectedSize]) {
+    if (!isProductInStock || !availableStockForSelection) {
       showToast("La taille sélectionnée n'est pas disponible pour le moment.", 'warning');
       return;
     }
 
-    // determine available stock for this size (prefer sizeStockMap)
-    const availableStock = (sizeStockMap[selectedSize] || 0);
+    // determine available stock for this size (prefer color-specific via getStockForSize)
+    const availableStock = availableStockForSelection;
 
     const cartItemId = `${product.id}-${selectedSize}-${selectedColor}`;
     const existing = items.find(it => (it.cartItemId || it.id) === cartItemId);
     const existingQty = existing ? existing.quantity : 0;
 
-    if (existingQty >= availableStock) {
-      showToast("Vous ne pouvez pas ajouter plus d'articles de cette taille (stock épuisé)", 'error');
+    if (existingQty + quantity > availableStock) {
+      showToast("Vous ne pouvez pas ajouter autant d'articles (stock insuffisant)", 'error');
       return;
     }
 
@@ -149,10 +166,11 @@ const ProductDetail = () => {
       ...product,
       selectedSize,
       selectedColor,
-      cartItemId
+      cartItemId,
+      quantity
     });
 
-    showToast(`${product.name} (Taille: ${selectedSize}) ajouté au panier!`, 'success');
+    showToast(`${product.name} (Taille: ${selectedSize}) x${quantity} ajouté au panier!`, 'success');
   };
 
   const handleBuyNow = () => {
@@ -161,15 +179,15 @@ const ProductDetail = () => {
       return;
     }
 
-    if (!isProductInStock || !sizeStockMap[selectedSize]) {
+    if (!isProductInStock || !availableStockForSelection) {
       showToast("La taille sélectionnée n'est pas disponible pour le moment.", 'warning');
       return;
     }
 
-    const availableStock = (sizeStockMap[selectedSize] || 0);
+    const availableStock = availableStockForSelection;
 
-    if (availableStock <= 0) {
-      showToast('Stock insuffisant pour la taille sélectionnée', 'error');
+    if (quantity > availableStock) {
+      showToast('Quantité demandée supérieure au stock disponible', 'error');
       return;
     }
     
@@ -177,7 +195,7 @@ const ProductDetail = () => {
       ...product,
       selectedSize,
       selectedColor,
-      quantity: 1,
+      quantity,
       cartItemId: `${product.id}-${selectedSize}-${selectedColor}`
     };
     
@@ -251,6 +269,12 @@ const ProductDetail = () => {
             {!isProductInStock && (
               <p className="muted" style={{marginRight: '1rem'}}>Produit en rupture de stock</p>
             )}
+
+            <div className="quantity-control" role="group" aria-label="Quantity selector">
+              <button className="qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={!selectedSize || quantity <= 1} aria-label="Decrease quantity">−</button>
+              <div className="qty-display" aria-live="polite">{quantity}</div>
+              <button className="qty-btn" onClick={() => setQuantity(q => Math.min(availableStockForSelection || 1, q + 1))} disabled={!selectedSize || (availableStockForSelection <= quantity)} aria-label="Increase quantity">+</button>
+            </div>
 
             <button className="primary-btn" onClick={handleAddToCart} disabled={!isProductInStock}>
               Ajouter au Panier

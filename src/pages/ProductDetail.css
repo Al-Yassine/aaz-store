@@ -204,6 +204,39 @@
   flex-wrap: wrap;
 }
 
+/* Quantity control */
+.quantity-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 6px;
+  background: #fff;
+}
+
+.qty-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.qty-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.qty-display {
+  min-width: 36px;
+  text-align: center;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
 .primary-btn { 
   background: #000000; 
   color: #ffffff; 
