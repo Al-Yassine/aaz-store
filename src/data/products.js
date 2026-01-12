@@ -1694,3 +1694,30 @@ export const products = [
     ],
   },
 ];
+
+// 🔧 Ensure every product has all sizes for its category (preserve existing stocks)
+const CATEGORY_SIZES = {
+  Costumes: ["44","46","48","50","52","54","56","58","60"],
+  Blazers: ["44","46","48","50","52","54","56","58","60"],
+  Chemises: ["S","M","L","XL","XXL","3XL"],
+  "T-shirt-Polo": ["S","M","L","XL","XXL","3XL"],
+  Chaussures: ["40","41","42","43","44","45"],
+};
+
+products.forEach(product => {
+  const sizes = CATEGORY_SIZES[product.category];
+  if (!sizes) return;
+  product.variants = product.variants || [];
+  const existing = new Set();
+  product.variants.forEach(v => {
+    if (v.size) existing.add(String(v.size));
+    if (v.sizes) {
+      if (Array.isArray(v.sizes)) v.sizes.forEach(s => existing.add(String(s)));
+      else existing.add(String(v.sizes));
+    }
+  });
+  sizes.forEach(s => {
+    if (!existing.has(String(s))) product.variants.push({ size: String(s), stock: 0 });
+  });
+});
+
