@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 import { formatPrice } from '../utils/formatPrice';
 import './CartItem.css';
 
@@ -7,12 +8,28 @@ const CartItem = ({ item }) => {
   const { updateQuantity, removeFromCart } = useCart();
   const itemId = item.cartItemId || item.id;
 
+  // compute available stock for this cart item (based on selectedSize if present)
+  const variants = item.variants || [];
+  const availableStockForSize = item.selectedSize ? variants.reduce((sum, v) => (
+    (v.sizes || []).includes(item.selectedSize) ? sum + (v.stock || 0) : sum
+  ), 0) : variants.reduce((sum, v) => sum + (v.stock || 0), 0);
+
+  const isAtMax = availableStockForSize ? item.quantity >= availableStockForSize : false;
+
+  const { showToast } = useToast();
+
   const handleQuantityChange = (newQuantity) => {
     if (newQuantity <= 0) {
       removeFromCart(itemId);
-    } else {
-      updateQuantity(itemId, newQuantity);
+      return;
     }
+
+    if (availableStockForSize && newQuantity > availableStockForSize) {
+      showToast('Quantité demandée supérieure au stock disponible pour cet article', 'warning');
+      return;
+    }
+
+    updateQuantity(itemId, newQuantity);
   };
 
   return (
@@ -44,6 +61,7 @@ const CartItem = ({ item }) => {
           <button 
             className="quantity-btn"
             onClick={() => handleQuantityChange(item.quantity + 1)}
+            disabled={isAtMax}
           >
             +
           </button>

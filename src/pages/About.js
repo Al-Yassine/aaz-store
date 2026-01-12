@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useToast } from '../context/ToastContext';
 import './About.css';
 
 const About = () => {
@@ -17,9 +18,11 @@ const About = () => {
     }));
   };
 
+  const { showToast } = useToast();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Merci pour votre message ! Nous vous répondrons très bientôt.');
+    showToast('Merci pour votre message ! Nous vous répondrons très bientôt.', 'success');
     setFormData({
       name: '',
       email: '',

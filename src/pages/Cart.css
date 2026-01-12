@@ -118,6 +118,18 @@
   height: fit-content;
 }
 
+@media (max-width: 768px) {
+  /* Stack cart content on mobile */
+  .cart-content {
+    grid-template-columns: 1fr;
+  }
+  .cart-summary {
+    position: static;
+    top: auto;
+    margin-top: 1rem;
+  }
+}
+
 .summary-card {
   background: white;
   border-radius: 15px;

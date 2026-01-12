@@ -1,7 +1,24 @@
+:root {
+  /* Mobile-first variables */
+  --container-padding: 1rem;
+  --container-padding-lg: 2rem;
+  --max-width: 1200px;
+  --gap: 1rem;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --touch-target: 44px;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden; /* prevent horizontal scrolling */
 }
 
 body {
@@ -11,6 +28,24 @@ body {
   line-height: 1.6;
   color: #000000;
   background-color: #F7F7F7;
+}
+
+/* Make media elements responsive */
+img, picture, video, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Utility container updated to respect mobile-first padding */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+@media (min-width: 769px) {
+  .container { padding: 0 var(--container-padding-lg); }
 }
 
 .App {
@@ -36,6 +71,8 @@ body {
   cursor: pointer;
   text-align: center;
   font-family: inherit;
+  min-height: var(--touch-target);
+  line-height: 1;
 }
 
 .btn-primary {
@@ -147,6 +184,24 @@ textarea:focus,
 select:focus {
   outline: 2px solid #000000;
   outline-offset: 2px;
+}
+
+/* Make form controls touch-friendly and readable on mobile */
+input, textarea, select {
+  min-height: var(--touch-target);
+  padding: 10px 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+/* Improve clickable area for icon-like buttons */
+.icon-btn {
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
 }
 
 html {

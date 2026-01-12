@@ -12,9 +12,11 @@ export const getSizesByCategory = (category) => {
     return ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
   }
   
-  // Shoes
+  // Shoes (support English and French terms)
   if (categoryLower.includes('chaussure') || categoryLower.includes('shoe') || 
-      categoryLower.includes('sneaker') || categoryLower.includes('boot')) {
+      categoryLower.includes('sneaker') || categoryLower.includes('boot') ||
+      categoryLower.includes('mocassin') || categoryLower.includes('souliers') || categoryLower.includes('souliers')) {
+    // standard shoe EU sizes used by this store
     return ['40', '41', '42', '43', '44', '45', '46'];
   }
   

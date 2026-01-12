@@ -5,23 +5,50 @@ import PhotoSlider from '../components/PhotoSlider';
 import ProductCard from '../components/ProductCard';
 import ProductReviews from '../components/ProductReviews';
 import { formatPrice, hasDiscount } from '../utils/formatPrice';
-import { getSizesByCategory, getDefaultSize } from '../utils/getSizesByCategory';
+
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
+import { getSizesByCategory } from '../utils/getSizesByCategory';
+import sizeInventory from '../data/sizeInventory.json';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const productId = parseInt(id, 10);
   const product = products.find(p => p.id === productId);
-  const { addToCart } = useCart();
   const navigate = useNavigate();
 
-  // Get sizes based on product category
-  const availableSizes = product ? getSizesByCategory(product.category) : [];
-  const defaultSize = product ? getDefaultSize(product.category) : 'M';
+  // Derive sizes and stock availability from product variants (product-specific)
+  const variants = product?.variants || [];
 
+  // Build a size -> stock count map (prefer generated sizeInventory if available)
+  let sizeStockMap = {};
+
+  if (sizeInventory && sizeInventory[productId]) {
+    sizeStockMap = { ...sizeInventory[productId] };
+  } else {
+    variants.forEach(v => {
+      (v.sizes || []).forEach(sz => {
+        sizeStockMap[sz] = (sizeStockMap[sz] || 0) + (v.stock || 0);
+      });
+    });
+  }
+
+  // Full size list for this category (e.g. 46..60 or S..3XL)
+  const fullSizes = getSizesByCategory(product.category || '');
+
+  // ensure every full size is present in the map (0 if missing)
+  fullSizes.forEach(sz => { if (!(sz in sizeStockMap)) sizeStockMap[sz] = 0; });
+
+  // default to the first available size in the full list (if any)
+  const defaultSize = fullSizes.find(sz => (sizeStockMap[sz] || 0) > 0) || null;
+
+  const { addToCart, items } = useCart();
+  const { showToast } = useToast();
   const [selectedSize, setSelectedSize] = useState(defaultSize);
   const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || product?.image);
+
+  const isProductInStock = (product?.customStatus !== 'Out Of Stock') && Object.values(sizeStockMap).some(n => n > 0);
 
   if (!product) {
     return (
@@ -37,23 +64,52 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!selectedSize) {
-      alert('Veuillez sélectionner une taille');
+      showToast('Veuillez sélectionner une taille', 'warning');
       return;
     }
-    
+
+    if (!isProductInStock || !sizeStockMap[selectedSize]) {
+      showToast("La taille sélectionnée n'est pas disponible pour le moment.", 'warning');
+      return;
+    }
+
+    // determine available stock for this size (prefer sizeStockMap)
+    const availableStock = (sizeStockMap[selectedSize] || 0);
+
+    const cartItemId = `${product.id}-${selectedSize}-${selectedColor}`;
+    const existing = items.find(it => (it.cartItemId || it.id) === cartItemId);
+    const existingQty = existing ? existing.quantity : 0;
+
+    if (existingQty >= availableStock) {
+      showToast("Vous ne pouvez pas ajouter plus d'articles de cette taille (stock épuisé)", 'error');
+      return;
+    }
+
     addToCart({
       ...product,
       selectedSize,
       selectedColor,
-      cartItemId: `${product.id}-${selectedSize}-${selectedColor}`
+      cartItemId
     });
-    
-    alert(`${product.name} (Taille: ${selectedSize}) ajouté au panier!`);
+
+    showToast(`${product.name} (Taille: ${selectedSize}) ajouté au panier!`, 'success');
   };
 
   const handleBuyNow = () => {
     if (!selectedSize) {
-      alert('Veuillez sélectionner une taille');
+      showToast('Veuillez sélectionner une taille', 'warning');
+      return;
+    }
+
+    if (!isProductInStock || !sizeStockMap[selectedSize]) {
+      showToast("La taille sélectionnée n'est pas disponible pour le moment.", 'warning');
+      return;
+    }
+
+    const availableStock = (sizeStockMap[selectedSize] || 0);
+
+    if (availableStock <= 0) {
+      showToast('Stock insuffisant pour la taille sélectionnée', 'error');
       return;
     }
     
@@ -92,15 +148,22 @@ const ProductDetail = () => {
             <div className="option-group">
               <label>Taille</label>
               <div className="options size-options">
-                {availableSizes.map(size => (
-                  <button 
-                    key={size} 
-                    className={`option-btn size-btn ${selectedSize === size ? 'active' : ''}`} 
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
+                {fullSizes && fullSizes.length > 0 ? (
+                  fullSizes.map(size => (
+                    <button 
+                      key={size} 
+                      className={`option-btn size-btn ${selectedSize === size ? 'active' : ''}`} 
+                      onClick={() => (sizeStockMap[size] || 0) > 0 && setSelectedSize(size)}
+                      disabled={!((sizeStockMap[size] || 0) > 0)}
+                      aria-disabled={!((sizeStockMap[size] || 0) > 0)}
+                      title={!((sizeStockMap[size] || 0) > 0) ? 'Rupture de stock' : `Taille ${size}`}
+                    >
+                      <span className="size-label">{size}</span>
+                    </button>
+                  ))
+                ) : (
+                  <p className="muted">Aucune taille assignée pour ce produit</p>
+                )}
               </div>
             </div>
 
@@ -119,10 +182,14 @@ const ProductDetail = () => {
           </div>
 
           <div className="detail-actions">
-            <button className="primary-btn" onClick={handleAddToCart}>
+            {!isProductInStock && (
+              <p className="muted" style={{marginRight: '1rem'}}>Produit en rupture de stock</p>
+            )}
+
+            <button className="primary-btn" onClick={handleAddToCart} disabled={!isProductInStock}>
               Ajouter au Panier
             </button>
-            <button className="buy-now-btn" onClick={handleBuyNow}>
+            <button className="buy-now-btn" onClick={handleBuyNow} disabled={!isProductInStock}>
               Acheter maintenant
             </button>
           </div>

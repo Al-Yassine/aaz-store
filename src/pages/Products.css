@@ -186,3 +186,11 @@
     gap: 1rem;
   }
 }
+
+/* Force single column on small mobile devices to match requirement */
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

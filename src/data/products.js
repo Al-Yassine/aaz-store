@@ -11,7 +11,9 @@ export const products = [
     ],
     category: "Costumes",
     variants: [
-      {sizes: ["50","58","60"], stock: 3},
+      {size: "50", stock: 1},
+      {size: "58", stock: 1},
+      {size: "60", stock: 1},
     ],
   },
   {
@@ -26,7 +28,11 @@ export const products = [
     description: "Costume marron chic avec fines rayures, parfait pour un look professionnel et sophistiqué.",
     category: "Costumes",
     variants: [
-      {sizes: ["50","54","56","58","60"], stock: 5},
+      {size: "50", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
+      {size: "58", stock: 1},
+      {size: "60", stock: 1},
     ],
   },
   {
@@ -41,7 +47,11 @@ export const products = [
     description: "Sublimez votre tenue formelle avec ce costume noir à fines rayures distingué, élaboré avec expertise pour dégager sophistication. La coupe finement ajustée présente des revers crantés classiques et des épaules structurées, garantissant une silhouette raffinée pour toutes les occasions.",
     category: "Costumes",
     variants: [
-      {sizes: ["50","54","56","58","60"], stock: 5},
+      {size: "50", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
+      {size: "58", stock: 1},
+      {size: "60", stock: 1},
     ],
   },
   {
@@ -56,9 +66,11 @@ export const products = [
     description: "Costume business classique, coupe droite, idéal pour les réunions et événements professionnels.",
     category: "Costumes",
     variants: [
-      {sizes: ["50","52","54","58"], stock: 4},
+      {size: "50", stock: 1},
+      {size: "52", stock: 1},
+      {size: "54", stock: 1},
+      {size: "58", stock: 1},
     ],
-    
   },
   {
     id: 5,
@@ -72,9 +84,11 @@ export const products = [
     description: "Adoptez un look professionnel avec ce costume business classique, conçu pour allier confort et élégance lors de vos journées de travail.",
     category: "Costumes",
     variants: [
-      {sizes: ["44","46","48","50"], stock: 4},
+      {size: "44", stock: 1},
+      {size: "46", stock: 1},
+      {size: "48", stock: 1},
+      {size: "50", stock: 1},
     ],
-    
   },
   {
     id: 6,
@@ -88,7 +102,10 @@ export const products = [
     description: "Costume gris argent, coupe droite, idéal pour le travail et les occasions formelles.",
     category: "Costumes",
     variants: [
-      {sizes: ["50","54","56","58"], stock: 4},
+      {size: "50", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
+      {size: "58", stock: 1},
     ],
   },
   {
@@ -103,9 +120,10 @@ export const products = [
     description: "Costume bleu marine sobre et moderne, parfait pour réunions, cérémonies et événements professionnels.",
     category: "Costumes",
     variants: [
-      {sizes: ["46","48","52"], stock: 3},
-    ],
-    
+      {size: "46", stock: 1},
+      {size: "48", stock: 1},
+      {size: "52", stock: 1},
+    ], 
   },
   {
     id: 8,
@@ -119,9 +137,9 @@ export const products = [
     description: "Costume beige à fines rayures, style distingué, adapté aux occasions chic et formelles.",
     category: "Costumes",
     variants: [
-      {sizes: ["48","54"], stock: 2},
-    ],
-     
+      {size: "48", stock: 1},
+      {size: "54", stock: 1},
+    ],  
   },
   {
     id: 9,
@@ -135,9 +153,11 @@ export const products = [
     description: "Élevez votre garde-robe professionnelle avec notre costume élégant à carreaux bleus, conçu avec soin pour l'homme exigeant. Ce costume présente un motif à carreaux sophistiqué qui combine harmonieusement styles classique et contemporain, garantissant une impression durable en toute occasion.",
     category: "Costumes",
     variants: [
-      {sizes: ["44","50","52","54"], stock: 4},
+      {size: "44", stock: 1},
+      {size: "50", stock: 1},
+      {size: "52", stock: 1},
+      {size: "54", stock: 1},
     ],
-    
   },
   {
     id: 10,
@@ -151,7 +171,8 @@ export const products = [
     description: "Costume noir sobre et moderne, parfait pour réunions, cérémonies et événements professionnels.",
     category: "Costumes",
     variants: [
-      {sizes: ["48","54"], stock: 2},
+      {size: "48", stock: 1},
+      {size: "54", stock: 1},
     ],
   },
   {
@@ -166,7 +187,9 @@ export const products = [
     description: "Costume bleu nu classique et moderne, parfait pour réunions, cérémonies et événements professionnels.",
     category: "Costumes",
     variants: [
-      {sizes: ["46","48","50"], stock: 3},
+      {size: "46", stock: 1},
+      {size: "48", stock: 1},
+      {size: "50", stock: 1},
     ],
   },
   {
@@ -180,7 +203,7 @@ export const products = [
     ],
     category: "Costumes",
     variants: [
-      {sizes: ["56"], stock: 1},
+      {sizes: "56", stock: 1},
     ],
   },
   {
@@ -194,7 +217,9 @@ export const products = [
     ],
     category: "Costumes",
     variants: [
-      {sizes: ["50","54","56"], stock: 3},
+      {size: "50", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
     ],
   },
   {
@@ -208,9 +233,9 @@ export const products = [
     ],
     category: "Costumes",
     variants: [
-      {sizes: ["50","56"], stock: 2},
+      {size: "50", stock: 1},
+      {size: "56", stock: 1},
     ],
-    
   },
   {
     id: 15,
@@ -223,7 +248,11 @@ export const products = [
     ],
     category: "Costumes",
     variants: [
-      {sizes: ["48","50","54","56","58"], stock: 5},
+      {size: "48", stock: 1},
+      {size: "50", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
+      {size: "58", stock: 1},
     ],
   },
   {
@@ -237,7 +266,7 @@ export const products = [
     ],
     category: "Costumes",
     variants: [
-      {sizes: ["56"], stock: 1,},
+      {sizes: "56", stock: 1,},
     ],
   },
   {
@@ -251,7 +280,9 @@ export const products = [
     ],
     category: "Costumes",
     variants: [
-      {sizes: ["50","54","56"], stock: 3},
+      {size: "50", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
     ],
   },
   {
@@ -265,9 +296,9 @@ export const products = [
     ],
     category: "Costumes",
     variants: [
-      {sizes: ["54","56"], stock: 2,},
+      {size: "50", stock: 1},
+      {size: "56", stock: 1},
     ],
-    
   },
   {
     id: 19,
@@ -280,7 +311,8 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["54", "56"], stock: 2},
+      {size: "50", stock: 1},
+      {size: "56", stock: 1},
     ],
   },
   {
@@ -318,7 +350,9 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["48","50","52"], stock: 3},
+      {size: "48", stock: 1},
+      {size: "50", stock: 1},
+      {size: "52", stock: 1},
     ],
   },
   {
@@ -332,7 +366,7 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["56"], stock: 1},
+      {sizes: "56", stock: 1},
     ],
   },
   {
@@ -346,7 +380,11 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["48","50","54","56","58"], stock: 5},
+      {size: "48", stock: 1},
+      {size: "50", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
+      {size: "58", stock: 1},
     ],
   },
   {
@@ -372,7 +410,9 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["48","50","52"], stock: 3},
+      {size: "48", stock: 1},
+      {size: "50", stock: 1},
+      {size: "52", stock: 1},
     ],
   },
   {
@@ -386,7 +426,8 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["50","56"], stock: 2},
+      {size: "50", stock: 1},
+      {size: "56", stock: 1},
     ],
   },
   {
@@ -400,7 +441,10 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["48","54","56"], stock: 3},
+      {size: "46", stock: 1},
+      {size: "48", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
     ],
   },
   {
@@ -414,7 +458,9 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["52","54","56"], stock: 3},
+      {size: "52", stock: 1},
+      {size: "54", stock: 1},
+      {size: "56", stock: 1},
     ],
   },
   {
@@ -428,8 +474,8 @@ export const products = [
     ],
     category: "Blazers",
     variants: [
-      {sizes: ["54"], stock: 2},
-      {sizes: ["56"], stock: 1},
+      {sizes: "54", stock: 2},
+      {sizes: "56", stock: 1},
     ],
   },
   {
@@ -466,7 +512,7 @@ export const products = [
       "/Images/chemises/chemise-3.jpg",
     ],
     variants: [
-      {sizes: ["2XL"], stock: 1},
+      {sizes: "2XL", stock: 1},
     ],
     category: "Chemises"
   },
@@ -492,7 +538,7 @@ export const products = [
       "/Images/chemises/chemise-5.jpg",
     ],
     variants: [
-      {sizes: ["2XL"], stock: 1},
+      {sizes: "2XL", stock: 1},
     ],
     category: "Chemises"
   },
@@ -506,7 +552,8 @@ export const products = [
       "/Images/chemises/chemise-6.jpg",
     ],
     variants: [
-      {sizes: ["M", "S"], stock: 2},
+      {size: "S", stock: 1},
+      {size: "M", stock: 1},
     ],
     category: "Chemises"
   },
@@ -520,9 +567,9 @@ export const products = [
       "/Images/chemises/chemise-7.jpg",
     ],
     variants: [
-      {sizes: ["M"], stock: 2},
-      {sizes: ["XL"], stock: 3},
-      {sizes: ["2XL"], stock: 1},
+      {sizes: "M", stock: 2},
+      {sizes: "XL", stock: 3},
+      {sizes: "2XL", stock: 1},
     ],
     category: "Chemises"
   },
@@ -536,7 +583,7 @@ export const products = [
       "/Images/chemises/chemise-8.jpg",
     ],
     variants: [
-      {sizes: ["M"], stock: 1},
+      {sizes: "M", stock: 1},
     ],
     category: "Chemises"
   },
@@ -550,8 +597,8 @@ export const products = [
       "/Images/chemises/chemise-9.jpg",
     ],
     variants: [
-      {sizes: ["S"], stock: 2},
-      {sizes: ["XL"], stock: 3},
+      {sizes: "S", stock: 2},
+      {sizes: "XL", stock: 3},
     ],
     category: "Chemises"
   },
@@ -565,8 +612,10 @@ export const products = [
       "/Images/chemises/chemise-10.jpg",
     ],
     variants: [
-      {sizes: ["M", "L", "2XL"], stock: 3},
-      {sizes: ["XL"], stock: 2},
+      {size: "M", stock: 1},
+      {size: "L", stock: 1},
+      {size: "XL", stock: 1},
+      {size: "2XL", stock: 2},
     ],
     category: "Chemises"
   },
@@ -580,8 +629,8 @@ export const products = [
       "/Images/chemises/chemise-11.jpg",
     ],
     variants: [
-      {sizes: ["M"], stock: 1},
-      {sizes: ["XL"], stock: 1},
+      {sizes: "M", stock: 1},
+      {sizes: "XL", stock: 1},
     ],
     category: "Chemises"
   },
@@ -595,7 +644,7 @@ export const products = [
       "/Images/chemises/chemise-12.jpg",
     ],
     variants: [
-      {sizes: ["2XL"], stock: 3},
+      {sizes: "2XL", stock: 3},
     ],
     category: "Chemises"
   },
@@ -610,8 +659,10 @@ export const products = [
       "/Images/chaussures/souliers/marco_casseti_2.jpg",
     ],
     variants: [
-      {color: "#210202", sizes: ["42", "43", "45"], stock: 3},
-      {color: "#000000", sizes: ["43"], stock: 2},
+      {color: "#210202", sizes: "42", stock: 1},
+      {color: "#210202", sizes: "43", stock: 1},
+      {color: "#210202", sizes: "45", stock: 1},
+      {color: "#000000", sizes: "43", stock: 2},
     ],
     description: "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     category: "Chaussures",
@@ -625,7 +676,9 @@ export const products = [
       "/Images/chaussures/souliers/marco_casseti_2.jpg",
     ],
     variants: [
-      {color: "#000000", sizes: ["41","44"], stock: 2},
+      {color: "#000000", size: "41", stock: 1},
+      {color: "#000000", size: "43", stock: 1},
+      {color: "#000000", size: "44", stock: 1},
     ],
     description: "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     category: "Chaussures",
@@ -639,8 +692,10 @@ export const products = [
       "/Images/chaussures/souliers/marco_casseti_3.jpg",
     ],
     variants: [
-      {sizes: ["42"], stock: 2},
-      {sizes: ["43","44","45"], stock: 3},
+      {size: "42", stock: 2},
+      {size: "43", stock: 1},
+      {size: "44", stock: 1},
+      {size: "45", stock: 1},
     ],
     description: "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     category: "Chaussures",
@@ -654,7 +709,11 @@ export const products = [
       "/Images/chaussures/souliers/marco_casseti_4.jpg",
     ],
     variants: [
-      {sizes: ["40","41", "42","43","44"], stock: 3},
+      {size: "40", stock: 1},
+      {size: "41", stock: 1},
+      {size: "42", stock: 1},
+      {size: "43", stock: 1},
+      {size: "44", stock: 1},
     ],
     description: "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     category: "Chaussures",
@@ -668,7 +727,8 @@ export const products = [
       "/Images/chaussures/souliers/marco_casseti_5.jpg",
     ],
     variants: [
-      {sizes: ["41", "42"], stock: 2},
+      {size: "41", stock: 1},
+      {size: "42", stock: 1},
     ],
     description: "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     category: "Chaussures",
@@ -682,9 +742,9 @@ export const products = [
       "/Images/chaussures/souliers/marco_casseti_6.jpg",
     ],
     variants: [
-      {sizes: ["42"], stock: 2},
-      {sizes: ["45"], stock: 2},
-      {sizes: ["43"], stock: 1},
+      {sizes: "42", stock: 2},
+      {sizes: "45", stock: 2},
+      {sizes: "43", stock: 2},
     ],
     description: "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     category: "Chaussures",
@@ -698,10 +758,16 @@ export const products = [
       "/Images/chaussures/souliers/marco_casseti_7.jpg",
     ],
     variants: [
-      {color: "#210202", sizes: ["41", "42","44", "45"], stock: 4},
-      {color: "#210202", sizes: ["43"], stock: 2},
-      {color: "#000080", sizes: ["41", "42","44", "45"], stock: 4},
-      {color: "#000080", sizes: ["43"], stock: 2},
+      {color: "#210202", size: "41", stock: 1},
+      {color: "#210202", size: "42", stock: 1},
+      {color: "#210202", size: "43", stock: 2},
+      {color: "#210202", size: "44", stock: 1},
+      {color: "#210202", size: "45", stock: 1},
+      {color: "#04043c", size: "41", stock: 1},
+      {color: "#04043c", size: "42", stock: 1},
+      {color: "#04043c", size: "43", stock: 2},
+      {color: "#04043c", size: "44", stock: 1},
+      {color: "#04043c", size: "45", stock: 1},
     ],
     description: "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     category: "Chaussures",
@@ -715,7 +781,13 @@ export const products = [
       "/Images/chaussures/souliers/class_king_1.jpg",
       "/Images/chaussures/souliers/class_king_1_2.jpg",
     ],
-    customStatus: "Out Of Stock",
+    variants: [
+      {color: "#210202", size: "43", stock: 2},
+      {color: "#210202", size: "46", stock: 1},
+      {color: "#000000", size: "41", stock: 1},
+      {color: "#000000", size: "42", stock: 1},
+      {color: "#000000", size: "43", stock: 1},
+    ],
     category: "Chaussures"
   },
   {
@@ -723,29 +795,24 @@ export const products = [
     name: "Soulier Luxe, King Class",
     price: 50000.00,
     image: "/Images/chaussures/souliers/class_king_2.jpg",
-    images: [
-      "/Images/chaussures/souliers/class_king_2.jpg",
+    variants: [
+      {sizes: "43", stock: 1},
     ],
-    customStatus: "Out Of Stock",
     category: "Chaussures"
   },
   {
-    id: 43,
+    id: 52,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-1.jpg",
     variants: [
-      {
-        color: "#c1fdffff",
-        sizes: "M",
-        stock: 1,
-      },
-      {
-        color: "#e70b0bff",
-        sizes: ["M", "L","XL"],
-        stock: 3,
-      },
+      {color: "#c1fdffff", size: "M", stock: 1,},
+      
+      {color: "#e70b0bff", size: "M", stock: 1,},
+      {color: "#e70b0bff", size: "L", stock: 1,},
+      {color: "#e70b0bff", size: "XL", stock: 1,}
+    
       {
         color: "#0007e1ff",
         sizes: ["M", "XL"],
@@ -755,99 +822,92 @@ export const products = [
     category: "T-shirt-Polo"
   },
   {
-    id: 44,
+    id: 53,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-2.jpg",
     variants: [
-      {
-        color: "#e70b0bff",
-        sizes: ["M", "L","XL"],
-        stock: 3,
-      },
-      {
-        color: "#765227ff"
-        sizes: ["M", "XL",]
-        stock: 2,
-      },
-   ]
+
+      {color: "#e70b0bff", size: "M", stock: 1,},
+      {color: "#e70b0bff", size: "L", stock: 1,},
+      {color: "#e70b0bff", size: "XL", stock: 1,},
+      
+      {color: "#765227ff", size: "M", stock: 1,},
+      {color: "#765227ff", size: "XL", stock: 1,},
+      
+    ],
     category: "T-shirt-Polo"
   },
   {
-    id: 45,
+    id: 54,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-3.jpg",
     variants: [
-      {
-        color: "#ffffff",,
-        sizes: ["M","L","2XL",],
-        stock: 3,
-      },
-      {
-        color: "#e70b0bff",
-        sizes: ["M", "L"],
-        stock: 2,
-      },
+
+      {color: "#ffffff", size: "M", stock: 1,},
+      {color: "#ffffff", size: "L", stock: 1,},
+      {color: "#ffffff", size: "2XL", stock: 1,},
+      
+      {color: "#e70b0bff", size: "M", stock: 1,},
+      {color: "#e70b0bff", size: "L", stock: 1,},
+      
       {
         color: "#010101",
         sizes: "M",
         stock: 1,
       },
-   ]
-    category: "T-shirt-Polo"
+    ],
+    category: "T-shirt-Polo",
   },
   {
-    id: 46,
+    id: 55,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-4.jpg",
-     variants: [
+    variants: [
       {
-        color: "#ffffff",,
+        color: "#ffffff",
         sizes: "M",
         stock: 1,
       },
-      {
-        color: "#010101",
-        sizes: ["M", "L"],
-        stock: 2,
-      },
-      {
-        color: #060153ff",
-        sizes: ["M", "L"],
-        stock: 2,
-      },
+
+      {color: "#010101", size: "M", stock: 1,},
+      {color: "#010101", size: "L", stock: 1,},
+      
+      {color: "#060153ff", size: "M", stock: 1,},
+      {color: "#060153ff", size: "L", stock: 1,},
+    ],
     category: "T-shirt-Polo"
   },
   {
-    id: 47,
+    id: 56,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-5.jpg",
     variants: [
       {
-        color: "#f1de10ff",,
+        color: "#f1de10ff",
         sizes: "L",
         stock: 1,
       },
-      {
-        color: "#ffffff",
-        sizes: ["M", "L","XL",],
-        stock: 3,
-      },
+
+      {color: "#ffffff", size: "M", stock: 1,},
+      {color: "#ffffff", size: "L", stock: 1,},
+      {color: "#ffffff", size: "XL", stock: 1,},
+    ],
     category: "T-shirt-Polo"
   },
   {
-    id: 48,
+    id: 57,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
-    "/Images/polo/tshirts/tshirts-6.jpg",
+    image: "/Images/polo/tshirts/tshirts-6.jpg",
     variants: [
       {
         color: "#ffffff",
@@ -864,10 +924,11 @@ export const products = [
         sizes: "M",
         stock: 2,
       },
+    ],
     category: "T-shirt-Polo"
   },
   {
-    id: 49,
+    id: 58,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
@@ -878,239 +939,145 @@ export const products = [
         sizes: ["M", "L","XL","2XL"],
         stock: 0,
       },
-      {
-        color: "#ffffff",
-        sizes: ["M", "L","XL"],
-        stock: 3,
-      },
-      {
-        color: "#070794ff",
-        sizes: ["M","L"],
-        stock: 2,
-      }, 
-      {
-        color: "#360404ff",
-        sizes: ["M","L","XL"],
-        stock: 3,
-      }, 
 
-      },
+      {color: "#ffffff", size: "M", stock: 1,},
+      {color: "#ffffff", size: "L", stock: 1,},
+      {color: "#ffffff", size: "XL", stock: 1,},
+      
+      {color: "#070794ff", size: "M", stock: 1,},
+      {color: "#070794ff", size: "L", stock: 1,},
+
+      {color: "#360404ff", size: "L", stock: 1,},
+      {color: "#360404ff", size: "L", stock: 1,},
+      {color: "#360404ff", size: "XL", stock: 1,},
+,
+    ],
     category: "T-shirt-Polo"
   },
   {
-    id: 50,
+    id: 59,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-8.jpg",
     variants: [
-      {
-        color: "#ffffff",
-        sizes: ["M", "L","XL","2XL"],
-        stock: 4,
-      },
+      {color: "#ffffff", size: "M", stock: 1,},
+      {color: "#ffffff", size: "L", stock: 1,},
+      {color: "#ffffff", size: "XL", stock: 1,},
+      {color: "#ffffff", size: "2XL", stock: 1,},
+    
       {
         color: "#040124ff",
-        sizes: ["M", "L","XL","2XL"],
-        stock: 0,
+        customStatus: "Out Of Stock"
       },
       {
         color: "#f1de10ff",
-        customstatus: "out Of Stock"
+        customStatus: "Out Of Stock"
       }, 
-      {
-        color: "#070794ff",
-        sizes: ["L","XL",], stock: 2,
-      },
-      {
-        color: "#e70b0bff",
-        sizes: ["M", "L","XL"],
-        stock: 3,
-      },
+
+      {color: "#070794ff", size: "L", stock: 1,},
+      {color: "#070794ff", size: "XL", stock: 1,},
+      
+      {color: "#e70b0bff", size: "M", stock: 1,},
+      {color: "#e70b0bff", size: "L", stock: 1,},
+      {color: "#e70b0bff", size: "XL", stock: 1,},
+      
       {
         color: "#938effff",
-        sizes: ["M", "L"],
-        stock: 0,
+        customStatus: "Out Of Stock"
       },
-      {
-        color: "#765227ff",
-        sizes: ["L", "2XL"],
-        stock: 2,
-      },
+
+      {color: "#765227ff", size: "L", stock: 1,},
+      {color: "#765227ff", size: "2XL", stock: 1,},
+      
       {
         color: "#6b7a4a",
-        sizes: ["M", "L"],
-        stock: 0,
+        customStatus: "Out Of Stock"
       },
-      {
-        color: "#360404ff",
-        sizes: ["M","L"], stock: 2,
-      },
-      {
-        color: "#010101",
-        sizes: ["M", "L"],
-        stock: 1,
-      },
+
+       {color: "#360404ff", size: "M", stock: 1,},
+       {color: "#360404ff", size: "L", stock: 1,},
+      
+       {color: "#010101", size: "M", stock: 1,},
+       {color: "#010101", size: "L", stock: 1,},
+    ],
     category: "T-shirt-Polo",
   },
 
   {
-    id: 51,
+    id: 60,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-9.jpg",
-   variants: [
-      {
-        color: "#ffffff",
-        sizes: ["M", "L","XL" ],
-        stock: 3,
-      }, 
-      {
-        color: "#040124ff",
-        sizes: ["M", "L"],
-        stock: 2,
-      },
-      {
-        color: "#e70b0bff",
-        sizes: ["M","XL"],
-        stock: 2,
-      },
-      {
-        color: "#070794ff",
-        sizes: ["M", "L"],
-        stock: 2,
-      },
-      {
-        color: "#360404ff",
-        sizes: ["M", "2XL"], stock: 2,
-        sizes: "L", stock 2,
-      },
-      {
-        color: "#010101",
-        sizes: "L",
-        stock: 1,
-      },
-      {
-        color: "#6b7a4a",
-        sizes: ["M","XL"],
-        stock: 2,
-      },
-      {
-        color: "#f1de10ff",
-        sizes: ["M","L","XL"],
-        stock: 3,
-      },
-      {
-        color: "#938effff",
-        sizes: ["M","L","XL"],
-        stock: 3,
-      },
-      {
-        color: "#765227ff"
-        sizes: ["M","L"], stock: 2,
-        sizes: "XL", stock: 2,
-      },
-   ]
+    variants: [
+      
+        {color: "#ffffff", size: "M", stock: 1,},
+        {color: "#ffffff", size: "L", stock: 1,},
+        {color: "#ffffff", size: "XL", stock: 1,},
+        
+        {color: "#040124ff", size: "M", stock: 1,},
+        {color: "#040124ff", size: "L", stock: 1,},
+      
+      {color: "#e70b0bff", size: "M", stock: 1,},
+      {color: "#e70b0bff", size: "XL", stock: 1,},
+
+      {color: "#070794ff", size: "M", stock: 1,},
+      {color: "#070794ff", size: "L", stock: 1,},
+      
+      {color: "#360404ff", size: "M", stock: 1,},
+      {color: "#360404ff", size: "L", stock: 1,},
+      {color: "#360404ff", size: "2XL", stock: 1,},
+      
+      {color: "#010101", size: "L", stock: 1,},
+
+      {color: "#6b7a4a", size: "M", stock: 1,},
+      {color: "#6b7a4a", size: "XL", stock: 1,},
+
+      {color: "#f1de10ff", size: "M", stock: 1,},
+      {color: "#f1de10ff", size: "L", stock: 1,},
+      {color: "#f1de10ff", size: "XL", stock: 1,},
+      
+
+      {color: "#938effff", size: "M", stock: 1,},
+      {color: "#938effff", size: "L", stock: 1,},
+      {color: "#938effff", size: "XL", stock: 1,},
+      
+      {color: "#765227ff",size: "M", stock: 1,},
+      {color: "#765227ff",size: "L", stock: 1,},
+      {color: "#765227ff",size: "XL", stock: 2,},
+      
+    ],
     category: "T-shirt-Polo"
   },
   {
-    id: 52,
+    id: 61,
     name: "T-shirt Polo Sport",
     price: 13000.00,
     originalPrice: 14000.00,
     image: "/Images/polo/tshirts/tshirts-10.jpg",
-    variants [
-      {
-          color: "#FFFFFF", 
-          sizes: [
-           { value: "2XL", stock: 1 },
-           { value: "3XL", stock: 1 },
-           { value: "4XL", stock: 1 },
-           { value: "5XL", stock: 1 }, 
-          ],
+    variants: [
+      {color: "#FFFFFF", size: "2XL", stock: 1,},
+      {color: "#FFFFFF", size: "3XL", stock: 1,},
+      {color: "#FFFFFF", size: "4XL", stock: 1,},
+      {color: "#FFFFFF", size: "5XL", stock: 1,},
+      
+      {color: "#6b1f2a", size: "2XL", stock: 1,},
+      {color: "#6b1f2a", size: "4XL", stock: 1,},
+      
+      {color: "#244726", size: "3XL", stock: 1,},
+      {color: "#244726", size: "4XL", stock: 1,},
+      
+      {color: "#02066b", size: "4XL", stock: 1,},
 
-          color: "#6b1f2a", 
-          sizes: [
-           { value: "2XL", stock: 1 },
-           { value: "4XL", stock: 1 },
-           
-           color:  "#243447",
-          sizes: [
-           { value: "4XL", stock: 1 },
-           { value: "5XL", stock: 1 },
+      {color: "#010341", size: "4XL", stock: 1,},
+      {color: "#010341", size: "5XL", stock: 1,},
 
-           color: "#1f3a5f", 
-          sizes: [
-           { value: "4XL", stock: 1 },
-
-         },
-        ],
-
-          color: "#7a7268", 
-          sizes: [
-           { value: "M", stock: 1 },
-           { value: "L", stock: 1 },
-           { value: "XL", stock: 1 },
-           { value: "2XL", stock: 1 },
-           { value: "3XL", stock: 1 },
-           { value: "4XL", stock: 1 },
-          ],
-
-          
-
-          color: "#b5b5b5", 
-          sizes: [
-           { value: "M", stock: 1 },
-           { value: "L", stock: 1 },
-           { value: "XL", stock: 1 },
-           { value: "2XL", stock: 1 },
-           { value: "3XL", stock: 1 },
-          ],
-
-          color: "#1a1a1a", 
-          sizes: [
-           { value: "M", stock: 1 },
-           { value: "L", stock: 1 },
-           { value: "2XL", stock: 2 },
-           { value: "3XL", stock: 1 },
-           { value: "4XL", stock: 1 },
-          ],
-
-          
-
-          color: "#b37a3c" 
-          sizes: [
-           { value: "M", stock: 1 },
-           { value: "L", stock: 1 },
-           { value: "XL", stock: 1 },
-           { value: "2XL", stock: 2 },
-           { value: "4XL", stock: 1 },
-           { value: "5XL", stock: 1 },
-          ],
-
-          color:  "#243447",
-          sizes: [
-           { value: "M", stock: 1 },
-           { value: "L", stock: 1 },
-           { value: "2XL", stock: 2 },
-           { value: "3XL", stock: 1 },
-           { value: "4XL", stock: 1 },
-           { value: "5XL", stock: 1 },
-          ],
-
-          color:  "#6b7a4a",
-          sizes: [
-           { value: "2XL", stock: 1 },
-           { value: "4XL", stock: 2 },
-           { value: "5XL", stock: 1 },
-      }
-    ],
     category: "T-shirt-Polo"
   },
   
   {
-    id: 52,
+    id: 62,
     name: "T-shirt Polo Manche Longue",
     price: 17000.00,
     originalPrice: 20000.00,
@@ -1120,57 +1087,72 @@ export const products = [
       "/Images/polo/manches_longues/manches_longues-1-2.jpg",
     ],
     variants: [
-      {
-        color: "#e6ded4",
-        sizes: ["2XL", "3XL"],
-        stock: 2,
-      },
-      {
-        color: "#7a7268",
-        sizes: ["M", "L", "XL", "2XL", "3XL", "4XL"],
-        stock: 6,
-      },
-      {
-        color: "#1f3a5f",
-        sizes: ["M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
-        stock: 7,
-      },
-      {
-        color: "#b5b5b5",
-        sizes: ["M", "L", "XL", "2XL", "3XL"],
-        stock: 5,
-      },
-      {
-        color: "#1a1a1a",
-        sizes: ["M", "L", "2XL", "3XL", "4XL"],
-        stock: 5,
-      },
-      {
-        color: "#6b1f2a",
-        sizes: ["M", "XL", "2XL", "3XL", "4XL", "5XL"],
-        stock: 6,
-      },
-      {
-        color: "#b37a3c",
-        sizes: ["M", "L", "XL", "2XL", "4XL", "5XL"],
-        stock: 6,
-      },
-      {
-        color: "#243447",
-        sizes: ["M", "L", "2XL", "3XL", "4XL", "5XL"],
-        stock: 6,
-      },
-      {
-        color: "#6b7a4a",
-        sizes: ["2XL", "4XL", "5XL"],
-        stock: 3,
-      },
-    ],
-    category: "T-shirt-Polo",
-  },
 
+      {color: "#ffead0", size: "2XL", stock: 1,},
+      {color: "#ffead0", size: "3XL", stock: 1,},
+
+      
+      {color: "#3e301f", size: "M", stock: 1,},
+      {color: "#3e301f", size: "L", stock: 1,},
+      {color: "#3e301f", size: "XL", stock: 1,},
+      {color: "#3e301f", size: "2XL", stock: 1,},
+      {color: "#3e301f", size: "3XL", stock: 1,},
+      {color: "#3e301f", size: "4XL", stock: 1,},
+
+     {color: "#060d93", size: "M", stock: 1,},
+     {color: "#060d93", size: "L", stock: 1,},
+     {color: "#060d93", size: "XL", stock: 1,},
+     {color: "#060d93", size: "2XL", stock: 2,},
+     {color: "#060d93", size: "3XL", stock: 1,},
+     {color: "#060d93", size: "4XL", stock: 1,},
+     {color: "#060d93", size: "5XL", stock: 1,},
+      
+      {color: "#959494", size: "M", stock: 1,},
+      {color: "#959494", size: "L", stock: 1,},
+      {color: "#959494", size: "XL", stock: 1,},
+      {color: "#959494", size: "2XL", stock: 1,},
+      {color: "#959494", size: "3XL", stock: 1,},
+      
+      {color: "#1a1a1a", size: "M", stock: 1,},
+      {color: "#1a1a1a", size: "L", stock: 1,},
+      {color: "#1a1a1a", size: "2XL", stock: 2,},
+      {color: "#1a1a1a", size: "3XL", stock: 1,},
+      {color: "#1a1a1a", size: "4XL", stock: 1,},
+      {color: "#1a1a1a", size: "5XL", stock: 1,},
+
+      {color: "#6b1f2a", size: "M", stock: 1,},
+      {color: "#6b1f2a", size: "XL", stock: 1,},
+      {color: "#6b1f2a", size: "2XL", stock: 2,},
+      {color: "#6b1f2a", size: "3XL", stock: 1,},
+      {color: "#6b1f2a", size: "4XL", stock: 1,},
+      {color: "#6b1f2a", size: "5XL", stock: 1,},
+      
+      {color: "#b37a3c", size: "M", stock: 1,},
+      {color: "#b37a3c", size: "L", stock: 1,},
+      {color: "#b37a3c", size: "XL", stock: 1,},
+      {color: "#b37a3c", size: "2XL", stock: 2,},
+      {color: "#b37a3c", size: "3XL", stock: 1,},
+      {color: "#b37a3c", size: "4XL", stock: 1,},
+      
+      
+      {color: "#07014e", size: "M", stock: 1,},
+      {color: "#07014e", size: "L", stock: 1,},
+      {color: "#07014e", size: "2XL", stock: 2,},
+      {color: "#07014e", size: "3XL", stock: 1,},
+      {color: "#07014e", size: "4XL", stock: 1,},
+      {color: "#07014e", size: "5XL", stock: 1,},
+     
+  
+     {color: "#6b7a4a", size: "2XL", stock: 1,},
+     {color: "#6b7a4a", size: "4XL", stock: 2,},
+     {color: "#6b7a4a", size: "5XL", stock: 1,},
+      
+    ],
+    category: "T-shirt-Polo"
+  },
+  
   {
-    id: 53,
+    id: 63,
     name: "Mocassins élégants en cuir noir pour homme",
     price: 40000.00,
     image: "/Images/chaussures/mocassins/ozbek/ozbek-1.jpg",
@@ -1179,17 +1161,20 @@ export const products = [
       "/Images/chaussures/mocassins/ozbek/ozbek-2.jpg",
     ],
     variants: [
-      {color: "#210202", sizes: ["41","44"], stock: 2},
-      {color: "#210202", sizes: ["42"], stock: 2},
-      {color: "#210202", sizes: ["43"], stock: 3},
-      {color: "#000000", sizes: ["40","42"], stock: 2},
-      {color: "#000000", sizes: ["41"], stock: 2},
+      {color: "#210202", size: "41", stock: 1},
+      {color: "#210202", size: "42", stock: 2},
+      {color: "#210202", size: "43", stock: 3},
+      {color: "#210202", size: "44", stock: 1},
+
+      {color: "#000000", size: "40", stock: 1},
+      {color: "#000000", size: "41", stock: 2},
+      {color: "#000000", size: "42", stock: 1},
     ],
     description: "Sublimez votre collection de chaussures avec nos mocassins élégants en cuir noir pour homme, conçus pour allier sophistication et confort.",
     category: "Chaussures"
   },
   {
-    id: 54,
+    id: 64,
     name: "Mocassins Premium en cuir naturel",
     price: 40000.00,
     image: "/Images/chaussures/mocassins/abo_alward/abo_alward-1.jpg",
@@ -1198,14 +1183,23 @@ export const products = [
       "/Images/chaussures/mocassins/abo_alward/abo_alward-2.jpg",
     ],
     variants: [
-      {color: "#210202", sizes: ["40","42","43"], stock: 3},
-      {color: "#000080", sizes: ["40","41","42"], stock: 3},
+      {color: "#210202", sizes: "40", stock: 1},
+      {color: "#210202", sizes: "41", stock: 0},
+      {color: "#210202", sizes: "42", stock: 1},
+      {color: "#210202", sizes: "43", stock: 1},
+      {color: "#210202", sizes: "40", stock: 0},
+      
+      {color: "#000080", sizes: "40", stock: 1},
+      {color: "#000080", sizes: "41", stock: 1},
+      {color: "#000080", sizes: "42", stock: 1},
+      {color: "#000080", sizes: "43", stock: 0},
+      {color: "#000080", sizes: "44", stock: 0},
     ],
     description: "Sublimez votre collection de chaussures avec nos mocassins élégants en cuir naturel pour homme, conçus pour allier sophistication et confort.",
     category: "Chaussures"
   },
   {
-    id: 55,
+    id: 65,
     name: "Mocassins léger",
     price: 40000.00,
     image: "/Images/chaussures/mocassins/pierre_cardin/pierre_cardin.jpg",
@@ -1213,19 +1207,24 @@ export const products = [
       "/Images/chaussures/mocassins/pierre_cardin/pierre_cardin.jpg",
     ],
     variants: [
-      {color: "#000000", sizes: ["40","44"], stock: 2},
-      {color: "#000000", sizes: ["41"], stock: 2},
-      {color: "#000000", sizes: ["42"], stock: 2},
-      {color: "#000000", sizes: ["43"], stock: 2},
-      {color: "#210202", sizes: ["40","41","44"], stock: 2},
-      {color: "#210202", sizes: ["42"], stock: 2},
-      {color: "#210202", sizes: ["43"], stock: 3},
+      {color: "#000000", size: "40", stock: 1},
+      {color: "#000000", size: "41", stock: 2},
+      {color: "#000000", size: "42", stock: 2},
+      {color: "#000000", size: "43", stock: 2},
+      {color: "#000000", size: "44", stock: 1},
+      
+      {color: "#210202", size: "40", stock: 1},
+      {color: "#210202", size: "41", stock: 1},
+      {color: "#210202", size: "42", stock: 2},
+      {color: "#210202", size: "43", stock: 2},
+      {color: "#210202", size: "44", stock: 1},
+      
     ],
     description: "Sublimez votre collection de chaussures avec nos mocassins élégants en cuir naturel pour homme, conçus pour allier sophistication et confort.",
     category: "Chaussures"
   },
   {
-    id: 56,
+    id: 66,
     name: "Mocassin Simple en cuir noir",
     price: 25000.00,
     image: "/Images/chaussures/mocassins/simple/simple-1.jpg",
@@ -1233,13 +1232,17 @@ export const products = [
       "/Images/chaussures/mocassins/simple/simple-1.jpg",
     ],
     variants: [
-      {sizes: ["41"], stock: 1},
-      {sizes: ["42"], stock: 2},
+      {sizes: "41", stock: 1},
+      {sizes: "42", stock: 2},
+      {size: "40", stock: 0},
+      {size: "43", stock: 0},
+      {size: "41", stock: 0},
+      {size: "41", stock: 0},
     ],
     category: "Chaussures"
   },
   {
-    id: 57,
+    id: 67,
     name: "Mocassin Simple en cuir marron",
     price: 25000.00,
     image: "/Images/chaussures/mocassins/simple/simple-2.jpg",
@@ -1247,14 +1250,18 @@ export const products = [
       "/Images/chaussures/mocassins/simple/simple-2.jpg",
     ],
     variants: [
-      {sizes: ["40"], stock: 1},
-      {sizes: ["42"], stock: 2},
-      {sizes: ["43"], stock: 1},
+      {size: "40", stock: 1},
+      {size: "41", stock: 0},
+      {size: "42", stock: 2},
+      {size: "43", stock: 1},
+      {size: "44", stock: 0},
+      {size: "45", stock: 0},
+      
     ],
     category: "Chaussures"
   },
   {
-    id: 58,
+    id: 68,
     name: "Mocassin Simple en cuir bleu marine",
     price: 25000.00,
     image: "/Images/chaussures/mocassins/simple/simple-3.jpg",
@@ -1262,15 +1269,17 @@ export const products = [
       "/Images/chaussures/mocassins/simple/simple-3.jpg",
     ],
     variants: [
-      {sizes: ["40"], stock: 1},
-      {sizes: ["41"], stock: 1},
-      {sizes: ["42"], stock: 2},
-      {sizes: ["43"], stock: 3},
+      {size: "40", stock: 1},
+      {size: "41", stock: 1},
+      {size: "42", stock: 2},
+      {size: "43", stock: 2},
+      {size: "44", stock: 0},
+      {size: "45", stock: 0},
     ],
     category: "Chaussures"
   },
   {
-    id: 59,
+    id: 69,
     name: "Mocassins Simple, cuir naturel",
     price: 25000.00,
     image: "/Images/chaussures/mocassins/simple/simple-4.jpg",
@@ -1278,12 +1287,18 @@ export const products = [
       "/Images/chaussures/mocassins/simple/simple-4.jpg",
     ],
     variants: [
-      {color: "#7a7268", sizes: ["40","43"], stock: 1},
+      {color: "#311c02", size: "40", stock: 1},
+      {color: "#311c02", size: "41", stock: 0},
+      {color: "#311c02", size: "42", stock: 0},
+      {color: "#311c02", size: "43", stock: 1},
+      {color: "#311c02", size: "44", stock: 0},
+      {color: "#311c02", size: "45", stock: 0},
+      
     ],
     category: "Chaussures"
   },
   {
-    id: 60,
+    id: 70,
     name: "Mocassins Simple, cuir naturel",
     price: 25000.00,
     image: "/Images/chaussures/mocassins/simple/simple-5.jpg",
@@ -1291,15 +1306,25 @@ export const products = [
       "/Images/chaussures/mocassins/simple/simple-5.jpg",
     ],
     variants: [
-      {color: "#b37a3c", sizes: ["41"], stock: 1},
-      {color: "#b37a3c", sizes: ["42"], stock: 2},
-      {color: "#b37a3c", sizes: ["43"], stock: 1},
-      {color: "#1a1a1a", sizes: ["41"], stock: 1},
+      {color: "#b37a3c", size: "40", stock: 0},
+      {color: "#b37a3c", size: "41", stock: 1},
+      {color: "#b37a3c", size: "42", stock: 2},
+      {color: "#b37a3c", size: "43", stock: 1},
+      {color: "#b37a3c", size: "44", stock: 0},
+      {color: "#b37a3c", size: "45", stock: 0},
+      
+      
+      {color: "#1a1a1a", size: "40", stock: 1},
+      {color: "#1a1a1a", size: "41", stock: 0},
+      {color: "#1a1a1a", size: "42", stock: 0},
+      {color: "#1a1a1a", size: "43", stock: 0},
+      {color: "#1a1a1a", size: "44", stock: 0},
+      {color: "#1a1a1a", size: "45", stock: 0},
     ],
     category: "Chaussures",
   },
   {
-    id: 61,
+    id: 71,
     name: "Mocassins Simple, cuir naturel",
     price: 25000.00,
     image: "/Images/chaussures/mocassins/simple/simple-6.jpg",
@@ -1307,12 +1332,18 @@ export const products = [
       "/Images/chaussures/mocassins/simple/simple-6.jpg",
     ],
     variants: [
-      {sizes: ["40"], stock: 1},
+      {size: "40", stock: 1},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+      {size: "43", stock: 0},
+      {size: "44", stock: 0},
+      {size: "45", stock: 0},
+      {size: "46", stock: 0},
     ],
     category: "Chaussures",
   },
   {
-    id: 62,
+    id: 72,
     name: "Sneakers Classiques",
     price: 45000.00,
     image: "/Images/chaussures/sneakers/derimod/derimod-1.jpg",
@@ -1321,32 +1352,42 @@ export const products = [
       "/Images/chaussures/sneakers/derimod/derimod-2.jpg",
     ],
     variants: [
-      {color: "#210202", sizes: ["40"], stock: 1},
-      {color: "#210202", sizes: ["41"], stock: 2},
-      {color: "#210202", sizes: ["42"], stock: 2},
-      {color: "#210202", sizes: ["43"], stock: 2},
-      {color: "#000000", sizes: ["43"], stock: 2},
+      {color: "#210202", size: "40", stock: 1},
+      {color: "#210202", size: "41", stock: 1},
+      {color: "#210202", size: "42", stock: 1},
+      {color: "#210202", size: "43", stock: 2},
+      {color: "#210202", size: "44", stock: 0},
+      {color: "#210202", size: "45", stock: 0},
+      {color: "#210202", size: "46", stock: 0},
+
+      {color: "#000000", size: "40", stock: 0},
+      {color: "#000000", size: "41", stock: 0},
+      {color: "#000000", size: "42", stock: 0},
+      {color: "#000000", size: "43", stock: 1},
+      {color: "#000000", size: "44", stock: 0},
+      {color: "#000000", size: "45", stock: 0},
+      {color: "#000000", size: "46", stock: 0},
     ],
     category: "Chaussures",
   },
   {
-    id: 63,
+    id: 73,
     name: "Sneakers Classiques",
     price: 45000.00,
     image: "/Images/chaussures/sneakers/derimod-v/derimod-v-1.jpg",
-    images: [
-      "/Images/chaussures/sneakers/derimod-v/derimod-v-1.jpg",
-    ],
     variants: [
-      {sizes: ["40","44"], stock: 2},
-      {sizes: ["41"], stock: 2},
-      {sizes: ["42"], stock: 2},
-      {sizes: ["43"], stock: 2},
+      {size: "40", stock: 1},
+      {size: "41", stock: 2},
+      {size: "42", stock: 2},
+      {size: "43", stock: 2},
+      {size: "44", stock: 1},
+      {size: "45", stock: 0},
+      {size: "46", stock: 0},
     ],
     category: "Chaussures",
   },
   {
-    id: 64,
+    id: 74,
     name: "Sneakers Premium",
     price: 40000.00,
     image: "/Images/chaussures/sneakers/kemal_tanka-1.jpg",
@@ -1355,19 +1396,31 @@ export const products = [
       "/Images/chaussures/sneakers/kemal_tanka-2.jpg",
     ],
     variants: [
-      {color: "#000000", sizes: ["40","44"], stock: 2},
-      {color: "#000000", sizes: ["41"], stock: 2},
-      {color: "#000000", sizes: ["42"], stock: 2},
-      {color: "#000000", sizes: ["43"], stock: 2},
-      {color: "#000080", sizes: ["42","44"], stock: 2},
-      {color: "#000080", sizes: ["41"], stock: 2},
-      {color: "#000080", sizes: ["43"], stock: 2},
+      
+  
+      
+
+      {color: "#000000", size: "40", stock: 1},
+      {color: "#000000", size: "41", stock: 2},
+      {color: "#000000", size: "42", stock: 2},
+      {color: "#000000", size: "43", stock: 2},
+      {color: "#000000", size: "44", stock: 1},
+      {color: "#000000", size: "45", stock: 0},
+      {color: "#000000", size: "46", stock: 0},
+
+      {color: "#210202", size: "40", stock: 1},
+      {color: "#210202", size: "41", stock: 2},
+      {color: "#210202", size: "42", stock: 2},
+      {color: "#210202", size: "43", stock: 2},
+      {color: "#210202", size: "44", stock: 1},
+      {color: "#210202", size: "45", stock: 0},
+      {color: "#210202", size: "46", stock: 0},
     ],
     category: "Chaussures",
   },
   
   {
-    id: 65,
+    id: 75,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-1.jpg",
@@ -1376,12 +1429,17 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["41","42","43","44","45"], stock: 5},
-      {sizes: ["46"], stock: 2},
+      {size: "40", stock: 0},
+      {size: "41", stock: 1},
+      {size: "42", stock: 1},
+      {size: "43", stock: 1},
+      {size: "44", stock: 1},
+      {size: "45", stock: 1},
+      {size: "46", stock: 2},
     ],
   },
   {
-    id: 66,
+    id: 76,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-2.jpg",
@@ -1390,12 +1448,21 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["43","44"], stock: 2},
-      {sizes: ["46"], stock: 2},
+      {size: "43", stock: 1},
+      {size: "44", stock: 1},
+      {size: "46", stock: 2},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+    
+      {size: "45", stock: 0},
+      
+      
     ],
   },
   {
-    id: 67,
+    id: 77,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-3.jpg",
@@ -1404,13 +1471,22 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["41","42","44"], stock: 3},
-      {sizes: ["45"], stock: 2},
-      {sizes: ["46"], stock: 2},
+      {size: "41", stock: 1},
+      {size: "42", stock: 1},
+      {size: "44", stock: 2},
+      {size: "45", stock: 2},
+      {size: "46", stock: 2},
+
+      {size: "40", stock: 0},
+     
+      {size: "43", stock: 0},
+      
+      
+      
     ],
   },
   {
-    id: 68,
+    id: 78,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-4.jpg",
@@ -1419,13 +1495,20 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["44"], stock: 2},
-      {sizes: ["45"], stock: 1},
-      {sizes: ["46"], stock: 2},
+      {size: "44", stock: 2},
+      {size: "45", stock: 1},
+      {size: "46", stock: 2},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+      {size: "43", stock: 0},
+     
+      
     ],
   },
   {
-    id: 69,
+    id: 79,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-5.jpg",
@@ -1434,14 +1517,21 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["43"], stock: 1},
-      {sizes: ["44"], stock: 2},
-      {sizes: ["45"], stock: 2},
-      {sizes: ["46"], stock: 2},
+      {size: "43", stock: 1},
+      {size: "44", stock: 2},
+      {size: "45", stock: 2},
+      {size: "46", stock: 2},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+      
+      
+      
     ],
   },
   {
-    id: 70,
+    id: 80,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-6.jpg",
@@ -1450,12 +1540,20 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["43","44","45"], stock: 3},
-      {sizes: ["46"], stock: 2},
+      {size: "43", stock: 1},
+      {size: "44", stock: 1},
+      {size: "45", stock: 1},
+      {size: "46", stock: 2},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+
+      
     ],
   },
   {
-    id: 71,
+    id: 81,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-7.jpg",
@@ -1464,12 +1562,21 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["43"], stock: 1},
-      {sizes: ["46"], stock: 2},
+      {size: "43", stock: 1},
+      {size: "46", stock: 2},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+      
+      {size: "44", stock: 0},
+      {size: "45", stock: 0},
+      
+      
     ],
   },
   {
-    id: 72,
+    id: 82,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-8.jpg",
@@ -1478,12 +1585,24 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["42","43","44","46"], stock: 4},
-      {sizes: ["45"], stock: 2},
+      {size: "42", stock: 1},
+      {size: "43", stock: 1},
+      {size: "44", stock: 1},
+      {size: "45", stock: 2},
+      {size: "46", stock: 1},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      
+      
+      
+      
+      
+      
     ],
   },
   {
-    id: 73,
+    id: 83,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-9.jpg",
@@ -1492,13 +1611,22 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["43"], stock: 1},
-      {sizes: ["44"], stock: 2},
-      {sizes: ["46"], stock: 2},
+      {size: "43", stock: 1},
+      {size: "44", stock: 2},
+      {size: "46", stock: 2},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+      
+      
+      {size: "45", stock: 0},
+      
+      
     ],
   },
   {
-    id: 74,
+    id: 84,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-10.jpg",
@@ -1507,13 +1635,22 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["43"], stock: 1},
-      {sizes: ["44"], stock: 1},
-      {sizes: ["46"], stock: 2},
+      {size: "43", stock: 1},
+      {size: "44", stock: 1},
+      {size: "46", stock: 2},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+      
+      
+      {size: "45", stock: 0},
+
+      
     ],
   },
   {
-    id: 75,
+    id: 85,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-11.jpg",
@@ -1522,15 +1659,20 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["41","42"], stock: 2},
-      {sizes: ["43"], stock: 2},
-      {sizes: ["44"], stock: 2},
-      {sizes: ["45"], stock: 2},
-      {sizes: ["46"], stock: 2},
+      {size: "40", stock: 0},
+      {size: "41", stock: 1},
+      {size: "42", stock: 1},
+      {size: "43", stock: 2},
+      {size: "44", stock: 2},
+      {size: "45", stock: 2},
+      {size: "46", stock: 2},
+
+      
+      
     ],
   },
   {
-    id: 76,
+    id: 86,
     name: "Nue Pied en cuir naturel",
     price: 30000.00,
     image: "/Images/chaussures/nue-pieds/nue-pied-12.jpg",
@@ -1539,8 +1681,16 @@ export const products = [
     ],
     category: "Chaussures",
     variants: [
-      {sizes: ["43","45"], stock: 2},
-      {sizes: ["44"], stock: 2},
+
+      {size: "43", stock: 1},
+      {size: "44", stock: 2},
+      {size: "45", stock: 1},
+
+      {size: "40", stock: 0},
+      {size: "41", stock: 0},
+      {size: "42", stock: 0},
+      {size: "46", stock: 0},
+      
     ],
   },
 ];

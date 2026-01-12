@@ -18,13 +18,13 @@ const Navbar = () => {
           />
           <span className="navbar-logo-text">AAZ Store</span>
         </Link>
-        <button className="navbar-toggle" aria-label="Toggle navigation" onClick={() => setIsOpen(!isOpen)}>
+        <button className="navbar-toggle" aria-label="Toggle navigation" aria-expanded={isOpen} aria-controls="navbar-menu" onClick={() => setIsOpen(!isOpen)}>
           <span className="bar"></span>
           <span className="bar"></span>
           <span className="bar"></span>
         </button>
 
-        <ul className={`navbar-menu ${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(false)}>
+        <ul id="navbar-menu" className={`navbar-menu ${isOpen ? 'open' : ''}`} role="menu" onClick={() => setIsOpen(false)}>
           <li className="navbar-item">
             <Link to="/" className="navbar-link">
               Accueil

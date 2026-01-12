@@ -14,7 +14,7 @@ const Checkout = () => {
 
   const [formData, setFormData] = useState({
     fullName: '',
-    city: 'Niamey',
+    region: '',
     quartier: '',
     address: '',
     phone: ''
@@ -24,19 +24,19 @@ const Checkout = () => {
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const isNiamey = formData.city === 'Niamey';
+  const isNiameyRegion = formData.region === 'Niamey';
 
-  const deliveryFee = isNiamey ? 1000 : 2000;
-  const deliveryTimeText = isNiamey ? '1 jour' : '2 jours';
+  const deliveryFee = isNiameyRegion ? 1000 : 2000;
+  const deliveryTimeText = isNiameyRegion ? '1 jour' : '2 jours';
 
   const subtotal = checkoutItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const total = subtotal + deliveryFee;
 
   useEffect(() => {
-    if (!isNiamey && paymentMethod === 'cod') {
+    if (!isNiameyRegion && paymentMethod === 'cod') {
       setPaymentMethod('nita');
     }
-  }, [formData.city, isNiamey, paymentMethod]);
+  }, [formData.region, isNiameyRegion, paymentMethod]);
 
   if (!checkoutItems || checkoutItems.length === 0) {
     return (
@@ -72,6 +72,10 @@ const Checkout = () => {
       newErrors.fullName = 'Le nom complet est requis';
     }
     
+    if (!formData.region) {
+      newErrors.region = 'La région est requise';
+    }
+    
     if (!formData.quartier.trim()) {
       newErrors.quartier = 'Le quartier est requis';
     }
@@ -86,8 +90,8 @@ const Checkout = () => {
       newErrors.phone = 'Numéro de téléphone invalide';
     }
 
-    if (!isNiamey && paymentMethod === 'cod') {
-      newErrors.paymentMethod = 'Le paiement à la livraison n\'est disponible que pour Niamey. Veuillez sélectionner le paiement via NITA.';
+    if (!isNiameyRegion && paymentMethod === 'cod') {
+      newErrors.paymentMethod = 'Paiement à la livraison disponible uniquement à Niamey. Veuillez sélectionner le paiement via NITA ou Amana.';
     }
     
     setErrors(newErrors);
@@ -140,7 +144,7 @@ const Checkout = () => {
                 <span>{formatPrice(subtotal)}</span>
               </div>
               <div className="summary-row">
-                <span>Livraison ({formData.city}):</span>
+                <span>Livraison ({formData.region || 'À définir'}):</span>
                 <span>{formatPrice(deliveryFee)}</span>
               </div>
               <div className="summary-row total">
@@ -184,17 +188,26 @@ const Checkout = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="city">Ville de livraison *</label>
+                <label htmlFor="region">Région *</label>
                 <select
-                  id="city"
-                  name="city"
-                  value={formData.city}
+                  id="region"
+                  name="region"
+                  value={formData.region}
                   onChange={handleInputChange}
+                  className={errors.region ? 'error' : ''}
                 >
+                  <option value="">-- Sélectionnez une région --</option>
+                  <option value="Agadez">Agadez</option>
+                  <option value="Diffa">Diffa</option>
+                  <option value="Dosso">Dosso</option>
+                  <option value="Maradi">Maradi</option>
                   <option value="Niamey">Niamey</option>
-                  <option value="Autres villes">Autres villes</option>
+                  <option value="Tahoua">Tahoua</option>
+                  <option value="Tillabéri">Tillabéri</option>
+                  <option value="Zinder">Zinder</option>
                 </select>
-                {formData.city && (
+                {errors.region && <span className="error-message">{errors.region}</span>}
+                {formData.region && (
                   <div className="delivery-info">
                     <span className="delivery-time">
                       ⏱️ Livraison estimée : <strong>{deliveryTimeText}</strong>
@@ -252,20 +265,20 @@ const Checkout = () => {
               <div className="payment-section">
                 <h3 className="section-subtitle">Mode de paiement</h3>
                 
-                {!isNiamey && (
+                {!isNiameyRegion && formData.region && (
                   <div className="payment-restriction-notice">
                     <span className="restriction-icon">⚠️</span>
                     <span className="restriction-text">
-                      Le paiement à la livraison n'est disponible que pour Niamey. Pour les autres villes, veuillez utiliser le paiement via NITA.
+                      Paiement à la livraison disponible uniquement à Niamey. Pour les autres régions, veuillez utiliser le paiement via NITA ou Amana.
                     </span>
                   </div>
                 )}
                 
                 <div className="payment-options">
                   <label 
-                    className={`payment-option ${paymentMethod === 'cod' ? 'active' : ''} ${!isNiamey ? 'disabled' : ''}`}
+                    className={`payment-option ${paymentMethod === 'cod' ? 'active' : ''} ${!isNiameyRegion ? 'disabled' : ''}`}
                     onClick={(e) => {
-                      if (!isNiamey) {
+                      if (!isNiameyRegion) {
                         e.preventDefault();
                         return false;
                       }
@@ -277,19 +290,19 @@ const Checkout = () => {
                       value="cod"
                       checked={paymentMethod === 'cod'}
                       onChange={(e) => {
-                        if (isNiamey) {
+                        if (isNiameyRegion) {
                           setPaymentMethod(e.target.value);
                         }
                       }}
-                      disabled={!isNiamey}
+                      disabled={!isNiameyRegion}
                     />
                     <div className="payment-option-content">
                       <span className="payment-title">
                         Paiement à la livraison
-                        {!isNiamey && <span className="unavailable-badge">Non disponible</span>}
+                        {!isNiameyRegion && <span className="unavailable-badge">Non disponible</span>}
                       </span>
                       <span className="payment-description">
-                        Paiement en espèces à la livraison. {!isNiamey && 'Disponible uniquement pour Niamey.'}
+                        Paiement en espèces à la livraison. {!isNiameyRegion && 'Disponible uniquement à Niamey.'}
                       </span>
                     </div>
                   </label>
@@ -303,10 +316,10 @@ const Checkout = () => {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                     />
                     <div className="payment-option-content">
-                      <span className="payment-title">Paiement via NITA</span>
+                      <span className="payment-title">Paiement via NITA / Amana</span>
                       <span className="payment-description">
                         Veuillez effectuer le transfert au numéro suivant : <strong>+227 89 60 94 97</strong>. 
-                        Votre commande sera automatiquement confirmée après réception du paiement.
+                        Votre commande sera confirmée après réception du paiement.
                       </span>
                     </div>
                   </label>
@@ -316,7 +329,11 @@ const Checkout = () => {
                 )}
               </div>
 
-              <button type="submit" className="confirm-btn">
+              <button 
+                type="submit" 
+                className="confirm-btn"
+                disabled={!formData.region}
+              >
                 Confirmer ma commande
               </button>
             </form>
@@ -352,7 +369,7 @@ const Checkout = () => {
               </div>
               <div className="total-row">
                 <div className="delivery-details">
-                  <span>Livraison ({formData.city})</span>
+                  <span>Livraison ({formData.region || 'À définir'})</span>
                   <span className="delivery-time-badge">⏱️ {deliveryTimeText}</span>
                 </div>
                 <span>{formatPrice(deliveryFee)}</span>

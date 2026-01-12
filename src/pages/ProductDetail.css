@@ -106,18 +106,54 @@
   background: #ffffff; 
   color: #1a1a1a; 
   border: 2px solid #e0e0e0; 
-  padding: 10px 16px; 
+  padding: 10px 12px; 
   border-radius: 6px; 
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
   min-width: 48px;
   text-align: center;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
 }
 
+.option-btn .size-label {
+  font-weight: 600;
+}
+
+
+/* Disabled style for sizes that are out of stock */
+.option-btn[disabled],
+.option-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: #e9e9e9;
+  background: #ffffff;
+}
+
+.primary-btn[disabled], .buy-now-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .option-btn:hover { 
   border-color: #000000;
   background: #fafafa;
+}
+
+/* Disabled style for sizes that are out of stock */
+.option-btn[disabled],
+.option-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: #e9e9e9;
+  background: #ffffff;
+}
+
+.primary-btn[disabled], .buy-now-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .option-btn.active { 
@@ -255,6 +291,10 @@
   .primary-btn {
     width: 100%;
     padding: 12px 24px;
+    min-width: auto;
+  }
+  .buy-now-btn {
+    min-width: auto;
   }
   
   .detail-actions {
