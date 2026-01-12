@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { products } from '../data/products';
 import PhotoSlider from '../components/PhotoSlider';
 import ProductCard from '../components/ProductCard';
@@ -17,6 +17,7 @@ const ProductDetail = () => {
   const productId = parseInt(id, 10);
   const product = products.find(p => p.id === productId);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Derive sizes and stock availability from product variants (product-specific)
   const variants = product?.variants || [];
@@ -194,6 +195,12 @@ const ProductDetail = () => {
           </div>
 
           <div className="detail-info">
+            <div className="detail-back">
+              <button className="back-btn" onClick={() => {
+                if (location && location.state && location.state.from) navigate(location.state.from);
+                else navigate(-1);
+              }}>← Retour</button>
+            </div>
             <h1 className="detail-title">{product.name}</h1>
 
           <div className="detail-price-container">

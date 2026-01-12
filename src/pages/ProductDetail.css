@@ -26,6 +26,10 @@
   padding: 18px 6px 0 6px; /* no big block shadow, keep it airy */
 }
 
+.detail-back { margin-bottom: 8px; }
+.back-btn { background: transparent; border: none; color: #0b5ed7; cursor:pointer; font-weight:600; padding: 6px 8px; }
+.back-btn:hover { text-decoration: underline; }
+
 .detail-title { 
   font-size: 1.6rem; 
   margin: 0 0 12px; 

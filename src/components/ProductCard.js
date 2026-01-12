@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import PhotoSlider from './PhotoSlider';
 import { formatPrice, hasDiscount } from '../utils/formatPrice';
@@ -8,6 +8,7 @@ import './ProductCard.css';
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -20,7 +21,7 @@ const ProductCard = ({ product }) => {
       return;
     }
     
-    navigate(`/product/${product.id}`);
+    navigate(`/product/${product.id}`, { state: { from: `${location.pathname}${location.search}` } });
   };
 
   const displayImages = Array.from(new Set((product.images && product.images.length ? product.images : [product.image]).map(img => (img || '').replace(/^\/\/?images\//i, '/Images/'))));
@@ -33,7 +34,7 @@ const ProductCard = ({ product }) => {
         </div>
       </div>
       <div className="product-info">
-        <Link to={`/product/${product.id}`} className="product-name-link">
+        <Link to={`/product/${product.id}`} state={{ from: `${location.pathname}${location.search}` }} className="product-name-link">
           <h3 className="product-name">{product.name}</h3>
         </Link>
         <p className="product-category">{product.category}</p>
