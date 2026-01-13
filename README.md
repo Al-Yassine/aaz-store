@@ -17,8 +17,9 @@ Boutique en ligne de vêtements masculins de luxe. Une application React moderne
 
 ## 📋 Prérequis
 
-- Node.js ≥ 14.0
-- npm ≥ 6.0
+- Node.js ≥ 14.0 - [Download](https://nodejs.org/)
+- npm ≥ 6.0 - (comes with Node.js)
+- Git - [Download](https://git-scm.com/)
 
 ---
 
@@ -26,7 +27,7 @@ Boutique en ligne de vêtements masculins de luxe. Une application React moderne
 
 ```bash
 # Clone le repository
-git clone <votre-repo>
+git clone https://github.com/YOUR_USERNAME/aazstore.git
 cd aazstore
 
 # Installe les dépendances
@@ -36,7 +37,7 @@ npm install
 npm start
 ```
 
-L'application s'ouvrira sur [http://localhost:3000](http://localhost:3000)
+**Detailed setup guide**: See [SETUP_GUIDE.md](SETUP_GUIDE.md) for troubleshooting and detailed instructions.
 
 ---
 
