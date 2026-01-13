@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { products } from '../data/products';
 import PhotoSlider from '../components/PhotoSlider';
@@ -19,79 +19,81 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Derive sizes and stock availability from product variants (product-specific)
-  const variants = product?.variants || [];
+  const variants = useMemo(() => product?.variants || [], [product?.variants]);
 
-  // Build a size -> stock count map (prefer generated sizeInventory if available)
-  let sizeStockMap = {};
+  const sizeStockMap = useMemo(() => {
+    let map = {};
+    if (sizeInventory && sizeInventory[productId]) {
+      map = { ...sizeInventory[productId] };
+    } else {
+      variants.forEach(v => {
+        if (v.size) {
+          map[v.size] = (map[v.size] || 0) + (v.stock || 0);
+        } else if (v.sizes) {
+          if (Array.isArray(v.sizes)) {
+            v.sizes.forEach(sz => {
+              map[sz] = (map[sz] || 0) + (v.stock || 0);
+            });
+          } else {
+            map[v.sizes] = (map[v.sizes] || 0) + (v.stock || 0);
+          }
+        }
+      });
+    }
+    const fullSizes = getSizesByCategory(product?.category || '');
+    fullSizes.forEach(sz => { if (!(sz in map)) map[sz] = 0; });
+    return map;
+  }, [productId, variants, product?.category]);
 
-  if (sizeInventory && sizeInventory[productId]) {
-    sizeStockMap = { ...sizeInventory[productId] };
-  } else {
+  const displayedSizes = useMemo(() => {
+    const fullSizes = getSizesByCategory(product?.category || '');
+    const variantSizes = Object.keys(sizeStockMap);
+    const displayed = [];
+    fullSizes.forEach(sz => { if (!displayed.includes(sz)) displayed.push(sz); });
+    variantSizes.forEach(sz => { if (!displayed.includes(sz)) displayed.push(sz); });
+    return displayed;
+  }, [sizeStockMap, product?.category]);
+
+  const colorSizeStock = useMemo(() => {
+    const map = {};
     variants.forEach(v => {
-      // support both singular `size` and plural `sizes` formats
+      const c = v.color || null;
+      if (!c) return;
+      if (!map[c]) map[c] = {};
       if (v.size) {
-        sizeStockMap[v.size] = (sizeStockMap[v.size] || 0) + (v.stock || 0);
+        map[c][v.size] = (map[c][v.size] || 0) + (v.stock || 0);
       } else if (v.sizes) {
         if (Array.isArray(v.sizes)) {
           v.sizes.forEach(sz => {
-            sizeStockMap[sz] = (sizeStockMap[sz] || 0) + (v.stock || 0);
+            map[c][sz] = (map[c][sz] || 0) + (v.stock || 0);
           });
         } else {
-          sizeStockMap[v.sizes] = (sizeStockMap[v.sizes] || 0) + (v.stock || 0);
+          map[c][v.sizes] = (map[c][v.sizes] || 0) + (v.stock || 0);
         }
       }
     });
-  }
+    return map;
+  }, [variants]);
 
-  // Full size list for this category (e.g. 46..60 or S..3XL)
-  const fullSizes = getSizesByCategory(product.category || '');
-
-  // ensure every full size is present in the map (0 if missing)
-  fullSizes.forEach(sz => { if (!(sz in sizeStockMap)) sizeStockMap[sz] = 0; });
-
-  // Add sizes that appear in variants but not in the category list so everything in data is shown
-  const variantSizes = Object.keys(sizeStockMap);
-  const displayedSizes = [];
-  fullSizes.forEach(sz => { if (!displayedSizes.includes(sz)) displayedSizes.push(sz); });
-  variantSizes.forEach(sz => { if (!displayedSizes.includes(sz)) displayedSizes.push(sz); });
-
-  // Build color-specific size stock map: { color: { size: stock } }
-  const colorSizeStock = {};
-  variants.forEach(v => {
-    const c = v.color || null;
-    if (!c) return; // colorless variants handled by aggregated sizeStockMap
-    if (!colorSizeStock[c]) colorSizeStock[c] = {};
-    if (v.size) {
-      colorSizeStock[c][v.size] = (colorSizeStock[c][v.size] || 0) + (v.stock || 0);
-    } else if (v.sizes) {
-      if (Array.isArray(v.sizes)) {
-        v.sizes.forEach(sz => {
-          colorSizeStock[c][sz] = (colorSizeStock[c][sz] || 0) + (v.stock || 0);
-        });
-      } else {
-        colorSizeStock[c][v.sizes] = (colorSizeStock[c][v.sizes] || 0) + (v.stock || 0);
-      }
-    }
-  });
-
-  // default to the first available size in the displayed sizes list (if any)
-  const defaultSize = displayedSizes.find(sz => (sizeStockMap[sz] || 0) > 0) || null;
+  const defaultSize = useMemo(() => 
+    displayedSizes.find(sz => (sizeStockMap[sz] || 0) > 0) || null,
+    [displayedSizes, sizeStockMap]
+  );
 
   const { addToCart, items } = useCart();
   const { showToast } = useToast();
   const [selectedSize, setSelectedSize] = useState(defaultSize);
-  // Quantity state (default 1)
   const [quantity, setQuantity] = useState(1);
 
-  // Derive colors: use product.colors if provided, otherwise collect unique variant colors
-  const colorsFromProduct = Array.isArray(product?.colors) && product.colors.length > 0
-    ? product.colors
-    : Array.from(new Set(variants.map(v => v.color).filter(Boolean)));
+  const colorsFromProduct = useMemo(() => 
+    Array.isArray(product?.colors) && product.colors.length > 0
+      ? product.colors
+      : Array.from(new Set(variants.map(v => v.color).filter(Boolean))),
+    [product?.colors, variants]
+  );
   const [selectedColor, setSelectedColor] = useState(colorsFromProduct[0] || null);
   const colors = colorsFromProduct;
 
-  // Helper to get stock for a size, preferring the selected color if it has data
   const getStockForSize = useCallback((size) => {
     if (selectedColor && colorSizeStock[selectedColor]) {
       return colorSizeStock[selectedColor][size] || 0;

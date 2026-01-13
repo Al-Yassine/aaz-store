@@ -35,7 +35,6 @@ const Products = () => {
     return Array.from(new Set(names)).slice(0, 8);
   }, [productsByCategory, searchInput]);
 
-  // Sync local state when the URL search params change (e.g. when user clicks Back)
   useEffect(() => {
     const cat = searchParams.get('category') || 'Tous';
     if (cat !== selectedCategory) setSelectedCategory(cat);
@@ -44,7 +43,7 @@ const Products = () => {
       setActiveSearch(q);
       setSearchInput(q);
     }
-  }, [searchParams]);
+  }, [searchParams, selectedCategory, activeSearch]);
 
   const applyCategory = (category) => {
     setSelectedCategory(category);
