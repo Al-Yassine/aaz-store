@@ -26,11 +26,12 @@ const Checkout = () => {
 
   const isNiameyRegion = formData.region === 'Niamey';
 
-  const deliveryFee = isNiameyRegion ? 1000 : 2000;
-  const deliveryTimeText = isNiameyRegion ? '1 jour' : '2 jours';
+  // Only calculate delivery fee/time after region is selected
+  const deliveryFee = formData.region ? (isNiameyRegion ? 1000 : 2000) : 0;
+  const deliveryTimeText = formData.region ? (isNiameyRegion ? '1 jour' : '2 jours') : null;
 
   const subtotal = checkoutItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const total = subtotal + deliveryFee;
+  const total = subtotal + (formData.region ? deliveryFee : 0);
 
   useEffect(() => {
     if (!isNiameyRegion && paymentMethod === 'cod') {
@@ -367,13 +368,25 @@ const Checkout = () => {
                 <span>Sous-total</span>
                 <span>{formatPrice(subtotal)}</span>
               </div>
-              <div className="total-row">
-                <div className="delivery-details">
-                  <span>Livraison ({formData.region || 'À définir'})</span>
-                  <span className="delivery-time-badge">⏱️ {deliveryTimeText}</span>
+
+              {/* Delivery row: show fee/time only if region selected, otherwise prompt to define */}
+              {!formData.region ? (
+                <div className="total-row">
+                  <div className="delivery-details">
+                    <span>Livraison (À définir)</span>
+                  </div>
+                  <span>—</span>
                 </div>
-                <span>{formatPrice(deliveryFee)}</span>
-              </div>
+              ) : (
+                <div className="total-row">
+                  <div className="delivery-details">
+                    <span>Livraison ({formData.region})</span>
+                    {deliveryTimeText && <span className="delivery-time-badge">⏱️ {deliveryTimeText}</span>}
+                  </div>
+                  <span>{formatPrice(deliveryFee)}</span>
+                </div>
+              )}
+
               <div className="total-row total-final">
                 <span>Total</span>
                 <span>{formatPrice(total)}</span>

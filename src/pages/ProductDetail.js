@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { products } from '../data/products';
 import PhotoSlider from '../components/PhotoSlider';
@@ -84,6 +84,24 @@ const ProductDetail = () => {
   // Quantity state (default 1)
   const [quantity, setQuantity] = useState(1);
 
+  // Derive colors: use product.colors if provided, otherwise collect unique variant colors
+  const colorsFromProduct = Array.isArray(product?.colors) && product.colors.length > 0
+    ? product.colors
+    : Array.from(new Set(variants.map(v => v.color).filter(Boolean)));
+  const [selectedColor, setSelectedColor] = useState(colorsFromProduct[0] || null);
+  const colors = colorsFromProduct;
+
+  // Helper to get stock for a size, preferring the selected color if it has data
+  const getStockForSize = useCallback((size) => {
+    if (selectedColor && colorSizeStock[selectedColor]) {
+      return colorSizeStock[selectedColor][size] || 0;
+    }
+    return (sizeStockMap[size] || 0);
+  }, [selectedColor, colorSizeStock, sizeStockMap]);
+
+  // available stock for current selection
+  const availableStockForSelection = selectedSize ? getStockForSize(selectedSize) : 0; 
+
   // Clamp quantity when size or color changes or when stock changes
   useEffect(() => {
     const available = selectedSize ? getStockForSize(selectedSize) : 0;
@@ -93,25 +111,8 @@ const ProductDetail = () => {
       const newQ = Math.min(Math.max(q, minQ), Math.max(available, 1));
       return newQ;
     });
-  }, [selectedSize, selectedColor]);
+  }, [selectedSize, getStockForSize]);
 
-  // Derive colors: use product.colors if provided, otherwise collect unique variant colors
-  const colorsFromProduct = Array.isArray(product?.colors) && product.colors.length > 0
-    ? product.colors
-    : Array.from(new Set(variants.map(v => v.color).filter(Boolean)));
-  const [selectedColor, setSelectedColor] = useState(colorsFromProduct[0] || null);
-  const colors = colorsFromProduct;
-
-  // available stock for current selection
-  const availableStockForSelection = selectedSize ? getStockForSize(selectedSize) : 0; 
-
-  // Helper to get stock for a size, preferring the selected color if it has data
-  const getStockForSize = (size) => {
-    if (selectedColor && colorSizeStock[selectedColor]) {
-      return colorSizeStock[selectedColor][size] || 0;
-    }
-    return (sizeStockMap[size] || 0);
-  };
 
   // When color changes we should ensure selected size is available for that color; keep it disabled if not
   const handleColorSelect = (color) => {

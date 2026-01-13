@@ -219,23 +219,29 @@
   background: transparent;
   border: none;
   font-size: 1.25rem;
-  width: 36px;
-  height: 36px;
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 6px;
+  padding: 0;
 }
 
 .qty-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.qty-btn:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
 
 .qty-display {
   min-width: 36px;
   text-align: center;
   font-weight: 700;
   padding: 0 6px;
-}
+} 
 
 .primary-btn { 
   background: #000000; 
@@ -249,6 +255,10 @@
   transition: all 0.2s ease;
   flex: 1;
   min-width: 180px;
+  min-height: var(--touch-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .primary-btn:hover { 
@@ -256,6 +266,11 @@
   border-color: #333333;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.primary-btn:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
 }
 
 .buy-now-btn {
@@ -270,6 +285,10 @@
   transition: all 0.2s ease;
   flex: 1;
   min-width: 180px;
+  min-height: var(--touch-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .buy-now-btn:hover {
@@ -283,7 +302,7 @@
 .buy-now-btn:focus-visible {
   outline: 2px solid #C5A46D;
   outline-offset: 2px;
-}
+} 
 
 .secondary-link { 
   color: #666666; 
@@ -333,9 +352,37 @@
     min-width: auto;
   }
   .buy-now-btn {
+    width: 100%;
+    padding: 12px 24px;
     min-width: auto;
   }
   
+  /* Make quantity control touch-friendly on tablets */
+  .quantity-control {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .qty-btn {
+    width: var(--touch-target);
+    height: var(--touch-target);
+    min-width: var(--touch-target);
+    min-height: var(--touch-target);
+    font-size: 1.1rem;
+    border-radius: 6px;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+  }
+
+  .qty-btn:active { transform: none; }
+
+  .qty-display {
+    min-width: 48px;
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
   .detail-actions {
     flex-direction: column;
     align-items: stretch;
@@ -368,5 +415,32 @@
   .colors .color-swatch {
     width: 36px;
     height: 36px;
+  }
+
+  /* Mobile-specific quantity control layout */
+  .quantity-control {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .qty-btn {
+    width: var(--touch-target);
+    height: var(--touch-target);
+    border-radius: 8px;
+    font-size: 1.3rem;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+  }
+
+  .qty-btn:active { transform: scale(0.98); }
+
+  .qty-display {
+    flex: 1;
+    min-width: 50px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
   }
 }

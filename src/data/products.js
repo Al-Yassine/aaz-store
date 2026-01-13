@@ -263,15 +263,15 @@ export const products = [
     "variants": [
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "54",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "56",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "58",
