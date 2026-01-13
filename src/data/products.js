@@ -521,7 +521,7 @@ export const products = [
       },
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "44",
