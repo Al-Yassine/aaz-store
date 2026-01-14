@@ -131,6 +131,63 @@
   min-width: 20px;
 }
 
+/* Overflow (ellipsis) button + dropdown */
+.navbar-overflow-wrap {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+.navbar-overflow {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+}
+
+.overflow-dot {
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  display: block;
+}
+
+.overflow-menu {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  min-width: 160px;
+  background: #0b0b0b;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  padding: 0.4rem 0;
+  display: none;
+  flex-direction: column;
+  z-index: 1100;
+}
+
+.overflow-menu.open {
+  display: flex;
+}
+
+.overflow-link {
+  color: #FFFFFF;
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+}
+
+.overflow-link:hover {
+  background: rgba(197,164,109,0.06);
+  color: #C5A46D;
+}
+
 @media (max-width: 768px) {
   .navbar-container {
     padding: 0 1rem;
@@ -169,4 +226,9 @@
   .navbar-logo-text {
     font-size: 1rem;
   }
+}
+
+@media (max-width: 480px) {
+  .navbar-overflow { padding: 8px; }
+  .overflow-menu { right: 8px; top: 54px; }
 }

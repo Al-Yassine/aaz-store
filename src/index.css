@@ -4,3 +4,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Smooth scrolling and touch optimizations */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 72px; /* account for sticky header */
+}
+
+/* Reduce abrupt focus outline when clicking quickly */
+:focus {
+  outline: none;
+}

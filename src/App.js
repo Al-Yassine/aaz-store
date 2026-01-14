@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { CartProvider } from './context/CartContext';
@@ -18,6 +18,65 @@ import CGV from './pages/CGV';
 import './App.css';
 
 function App() {
+  useEffect(() => {
+    let lastClick = 0;
+    let pointerHandled = false;
+    const THRESHOLD = 350; // ms
+
+    function smoothScrollTo(hash, e) {
+      if (!hash || hash === '#') return false;
+      const target = document.querySelector(hash);
+      if (!target) return false;
+      if (e && e.cancelable) e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // focus for accessibility
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+      setTimeout(() => target.removeAttribute('tabindex'), 1000);
+      return true;
+    }
+
+    function handler(e) {
+      const el = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!el) return;
+      const now = Date.now();
+      if (now - lastClick < THRESHOLD) {
+        if (e && e.cancelable) e.preventDefault();
+        return;
+      }
+      lastClick = now;
+      const hash = el.getAttribute('href');
+      smoothScrollTo(hash, e);
+    }
+
+    function pointerHandler(e) {
+      pointerHandled = true;
+      handler(e);
+      setTimeout(() => (pointerHandled = false), THRESHOLD + 50);
+    }
+
+    function clickHandler(e) {
+      // Ignore click if pointer/touch already handled it
+      if (pointerHandled) return;
+      handler(e);
+    }
+
+    if (window.PointerEvent) {
+      document.addEventListener('pointerdown', pointerHandler, { passive: false });
+    } else {
+      document.addEventListener('touchstart', pointerHandler, { passive: false });
+    }
+    document.addEventListener('click', clickHandler, { passive: false });
+
+    return () => {
+      if (window.PointerEvent) {
+        document.removeEventListener('pointerdown', pointerHandler);
+      } else {
+        document.removeEventListener('touchstart', pointerHandler);
+      }
+      document.removeEventListener('click', clickHandler);
+    };
+  }, []);
   return (
     <ToastProvider>
       <CartProvider>

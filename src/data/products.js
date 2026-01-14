@@ -895,8 +895,8 @@ export const products = [
   {
     "id": 19,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-1.jpg",
     "images": [
       "/Images/blazers/blazers-1.jpg"
@@ -944,8 +944,8 @@ export const products = [
   {
     "id": 20,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-2.jpg",
     "images": [
       "/Images/blazers/blazers-2.jpg"
@@ -994,8 +994,8 @@ export const products = [
   {
     "id": 21,
     "name": "Blazer Business",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-3.jpg",
     "images": [
       "/Images/blazers/blazers-3.jpg"
@@ -1044,8 +1044,8 @@ export const products = [
   {
     "id": 22,
     "name": "Blazer Moderne",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-4.jpg",
     "images": [
       "/Images/blazers/blazers-4.jpg"
@@ -1093,8 +1093,8 @@ export const products = [
   {
     "id": 23,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-5.jpg",
     "images": [
       "/Images/blazers/blazers-5.jpg"
@@ -1142,8 +1142,8 @@ export const products = [
   {
     "id": 24,
     "name": "Blazer Formel",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-6.jpg",
     "images": [
       "/Images/blazers/blazers-6.jpg"
@@ -1191,8 +1191,8 @@ export const products = [
   {
     "id": 25,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-7.jpg",
     "images": [
       "/Images/blazers/blazers-7.jpg"
@@ -1241,8 +1241,8 @@ export const products = [
   {
     "id": 26,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-8.jpg",
     "images": [
       "/Images/blazers/blazers-8.jpg"
@@ -1290,8 +1290,8 @@ export const products = [
   {
     "id": 27,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-9.jpg",
     "images": [
       "/Images/blazers/blazers-9.jpg"
@@ -1339,8 +1339,8 @@ export const products = [
   {
     "id": 28,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-10.jpg",
     "images": [
       "/Images/blazers/blazers-10.jpg"
@@ -1388,8 +1388,8 @@ export const products = [
   {
     "id": 29,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-11.jpg",
     "images": [
       "/Images/blazers/blazers-11.jpg"
@@ -1437,8 +1437,8 @@ export const products = [
   {
     "id": 30,
     "name": "Blazer Classique",
-    "price": 35000,
-    "originalPrice": 40000,
+    "price": 40000,
+    "originalPrice": 45000,
     "image": "/Images/blazers/blazers-12.jpg",
     "images": [
       "/Images/blazers/blazers-12.jpg"
@@ -3767,7 +3767,7 @@ export const products = [
   {
     "id": 72,
     "name": "Sneakers Classiques",
-    "price": 45000,
+    "price": 50000,
     "image": "/Images/chaussures/sneakers/derimod/derimod-2.jpg",
     "images": [
       "/Images/chaussures/sneakers/derimod/derimod-2.jpg",

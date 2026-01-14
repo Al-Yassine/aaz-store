@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import './Navbar.css';
@@ -6,6 +6,17 @@ import './Navbar.css';
 const Navbar = () => {
   const { getTotalItems } = useCart();
   const [isOpen, setIsOpen] = useState(false);
+  const [overflowOpen, setOverflowOpen] = useState(false);
+  const overflowRef = useRef(null);
+  useEffect(() => {
+    function onDocClick(e) {
+      if (overflowRef.current && !overflowRef.current.contains(e.target)) {
+        setOverflowOpen(false);
+      }
+    }
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  }, []);
 
   return (
     <nav className="navbar">
@@ -47,6 +58,27 @@ const Navbar = () => {
             </Link>
           </li>
         </ul>
+        <div className="navbar-overflow-wrap" ref={overflowRef}>
+          <button
+            className="navbar-overflow"
+            aria-label="More options"
+            aria-expanded={overflowOpen}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOverflowOpen(!overflowOpen);
+            }}
+          >
+            <span className="overflow-dot"></span>
+            <span className="overflow-dot"></span>
+            <span className="overflow-dot"></span>
+          </button>
+          <div className={`overflow-menu ${overflowOpen ? 'open' : ''}`} role="menu">
+            <Link to="/cgu" className="overflow-link" onClick={() => setOverflowOpen(false)}>CGU</Link>
+            <Link to="/cgv" className="overflow-link" onClick={() => setOverflowOpen(false)}>CGV</Link>
+            <Link to="/confidentialite" className="overflow-link" onClick={() => setOverflowOpen(false)}>Confidentialité</Link>
+            <Link to="/confidentialite" className="overflow-link" onClick={() => setOverflowOpen(false)}>Legal</Link>
+          </div>
+        </div>
       </div>
     </nav>
   );
