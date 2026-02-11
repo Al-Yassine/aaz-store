@@ -79,7 +79,7 @@ export const products = [
       },
       {
         "size": "60",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "44",
@@ -113,23 +113,23 @@ export const products = [
     "variants": [
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "54",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "56",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "58",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "60",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "44",
@@ -163,7 +163,7 @@ export const products = [
     "variants": [
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "52",
@@ -175,7 +175,7 @@ export const products = [
       },
       {
         "size": "58",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "44",
@@ -467,7 +467,7 @@ export const products = [
       },
       {
         "size": "54",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "44",
@@ -501,7 +501,7 @@ export const products = [
   },
   {
     "id": 11,
-    "name": "Costume bleu nu classique",
+    "name": "Costume bleu classique",
     "price": 85000,
     "originalPrice": 95000,
     "image": "/Images/costumes/costumes-g/costume-g-11.jpg",
@@ -517,7 +517,7 @@ export const products = [
       },
       {
         "size": "48",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "50",
@@ -611,7 +611,7 @@ export const products = [
     "variants": [
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "54",
@@ -619,7 +619,7 @@ export const products = [
       },
       {
         "size": "56",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "44",
@@ -725,7 +725,7 @@ export const products = [
       },
       {
         "size": "58",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "44",
@@ -807,7 +807,7 @@ export const products = [
     "variants": [
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "54",
@@ -835,7 +835,7 @@ export const products = [
       },
       {
         "size": "58",
-        "stock": 0
+        "stock": 1
       },
       {
         "size": "60",
@@ -856,7 +856,7 @@ export const products = [
     "variants": [
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "56",
@@ -880,7 +880,7 @@ export const products = [
       },
       {
         "size": "54",
-        "stock": 0
+        "stock": 1
       },
       {
         "size": "58",
@@ -905,7 +905,7 @@ export const products = [
     "variants": [
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "56",
@@ -929,7 +929,7 @@ export const products = [
       },
       {
         "size": "54",
-        "stock": 0
+        "stock": 1
       },
       {
         "size": "58",
@@ -1156,7 +1156,7 @@ export const products = [
       },
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "54",
@@ -1180,7 +1180,7 @@ export const products = [
       },
       {
         "size": "52",
-        "stock": 0
+        "stock": 1
       },
       {
         "size": "60",
@@ -1255,7 +1255,7 @@ export const products = [
       },
       {
         "size": "50",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "52",
@@ -1571,7 +1571,7 @@ export const products = [
     "variants": [
       {
         "size": "2XL",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "S",
@@ -1650,7 +1650,7 @@ export const products = [
     "variants": [
       {
         "size": "2XL",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "S",
@@ -1921,7 +1921,7 @@ export const products = [
     "variants": [
       {
         "size": "2XL",
-        "stock": 3
+        "stock": 0
       },
       {
         "size": "S",
@@ -1962,6 +1962,16 @@ export const products = [
     "variants": [
       {
         "color": "#210202",
+        "size": "40",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
+        "size": "41",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
         "size": "42",
         "stock": 1
       },
@@ -1972,8 +1982,28 @@ export const products = [
       },
       {
         "color": "#210202",
+        "size": "44",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
         "size": "45",
         "stock": 1
+      },
+      {
+        "color": "#000000",
+        "size": "40",
+        "stock": 0
+      },
+      {
+        "color": "#000000",
+        "size": "41",
+        "stock": 0
+      },
+      {
+        "color": "#000000",
+        "size": "42",
+        "stock": 0
       },
       {
         "color": "#000000",
@@ -1981,17 +2011,15 @@ export const products = [
         "stock": 2
       },
       {
-        "size": "40",
-        "stock": 0
-      },
-      {
-        "size": "41",
-        "stock": 0
-      },
-      {
+        "color": "#000000",
         "size": "44",
         "stock": 0
-      }
+      },
+      {
+        "color": "#000000",
+        "size": "45",
+        "stock": 0
+      },
     ],
     "description": "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     "category": "Chaussures"
@@ -2007,13 +2035,23 @@ export const products = [
     "variants": [
       {
         "color": "#000000",
+        "size": "40",
+        "stock": 0
+      },
+      {
+        "color": "#000000",
         "size": "41",
+        "stock": 0
+      },
+      {
+        "color": "#000000",
+        "size": "42",
         "stock": 1
       },
       {
         "color": "#000000",
         "size": "43",
-        "stock": 1
+        "stock": 0
       },
       {
         "color": "#000000",
@@ -2021,17 +2059,10 @@ export const products = [
         "stock": 1
       },
       {
-        "size": "40",
-        "stock": 0
-      },
-      {
-        "size": "42",
-        "stock": 0
-      },
-      {
+        "color": "#000000",
         "size": "45",
         "stock": 0
-      }
+      },
     ],
     "description": "Sublimez votre collection de chaussures avec la chaussure habillée exclusive Marco Cassetti, un modèle d'exception alliant savoir-faire et raffinement. Conçue pour l'homme élégant et exigeant, cette chaussure marie avec modernité l'élégance classique.",
     "category": "Chaussures"
@@ -2092,7 +2123,7 @@ export const products = [
       },
       {
         "size": "42",
-        "stock": 1
+        "stock": 2
       },
       {
         "size": "43",
@@ -2100,7 +2131,7 @@ export const products = [
       },
       {
         "size": "44",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "45",
@@ -2125,7 +2156,7 @@ export const products = [
       },
       {
         "size": "42",
-        "stock": 1
+        "stock": 2
       },
       {
         "size": "40",
@@ -2195,6 +2226,11 @@ export const products = [
     "variants": [
       {
         "color": "#210202",
+        "size": "40",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
         "size": "41",
         "stock": 1
       },
@@ -2217,6 +2253,11 @@ export const products = [
         "color": "#210202",
         "size": "45",
         "stock": 1
+      },
+      {
+        "color": "#04043c",
+        "size": "40",
+        "stock": 0
       },
       {
         "color": "#04043c",
@@ -2263,13 +2304,44 @@ export const products = [
     "variants": [
       {
         "color": "#210202",
+        "size": "40",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
+        "size": "41",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
+        "size": "42",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
         "size": "43",
         "stock": 2
       },
       {
         "color": "#210202",
+        "size": "44",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
+        "size": "45",
+        "stock": 0
+      },
+      {
+        "color": "#210202",
         "size": "46",
         "stock": 1
+      },
+
+      {
+        "color": "#000000",
+        "size": "40",
+        "stock": 0
       },
       {
         "color": "#000000",
@@ -2287,17 +2359,20 @@ export const products = [
         "stock": 1
       },
       {
-        "size": "40",
-        "stock": 0
-      },
-      {
+        "color": "#000000",
         "size": "44",
         "stock": 0
       },
       {
+        "color": "#000000",
         "size": "45",
         "stock": 0
-      }
+      },
+      {
+        "color": "#000000",
+        "size": "46",
+        "stock": 0
+      },
     ],
     "category": "Chaussures"
   },
@@ -3768,9 +3843,9 @@ export const products = [
     "id": 72,
     "name": "Sneakers Classiques",
     "price": 50000,
-    "image": "/Images/chaussures/sneakers/derimod/derimod-2.jpg",
+    "image": "/Images/chaussures/sneakers/derimod/derimod-1.jpg",
     "images": [
-      "/Images/chaussures/sneakers/derimod/derimod-2.jpg",
+      "/Images/chaussures/sneakers/derimod/derimod-1.jpg",
       "/Images/chaussures/sneakers/derimod/derimod-2.jpg"
     ],
     "variants": [
@@ -3827,7 +3902,7 @@ export const products = [
       {
         "color": "#000000",
         "size": "43",
-        "stock": 1
+        "stock": 0
       },
       {
         "color": "#000000",
@@ -4103,7 +4178,7 @@ export const products = [
       },
       {
         "size": "45",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "46",
@@ -4223,7 +4298,7 @@ export const products = [
       },
       {
         "size": "46",
-        "stock": 2
+        "stock": 1
       },
       {
         "size": "40",
@@ -4307,7 +4382,7 @@ export const products = [
       },
       {
         "size": "46",
-        "stock": 2
+        "stock": 1
       },
       {
         "size": "40",
@@ -4419,7 +4494,7 @@ export const products = [
     "variants": [
       {
         "size": "43",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "44",
@@ -4427,7 +4502,7 @@ export const products = [
       },
       {
         "size": "45",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "40",
