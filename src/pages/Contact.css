@@ -64,6 +64,12 @@
   margin-top: 0.125rem;
 }
 
+.contact-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
 .contact-item > div {
   flex: 1;
   display: flex;

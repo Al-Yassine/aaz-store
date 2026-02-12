@@ -79,19 +79,27 @@ const SharePopup = ({ productName, productUrl, productImage, onClose }) => {
         <h3 className="share-popup-title">Partager ce produit</h3>
         <div className="share-options">
           <button className="share-option" onClick={shareToWhatsApp}>
-            <div className="share-icon whatsapp">📱</div>
+            <div className="share-icon whatsapp">
+              <img src="/Images/icons/icons8-whatsapp-logo-94.png" alt="WhatsApp" />
+            </div>
             <span>WhatsApp</span>
           </button>
           <button className="share-option" onClick={shareToFacebook}>
-            <div className="share-icon facebook">📘</div>
+            <div className="share-icon facebook">
+              <img src="/Images/icons/icons8-facebook-48.png" alt="Facebook" />
+            </div>
             <span>Facebook</span>
           </button>
           <button className="share-option" onClick={shareToInstagram}>
-            <div className="share-icon instagram">📷</div>
+            <div className="share-icon instagram">
+              <img src="/Images/icons/icons8-instagram-48.png" alt="Instagram" />
+            </div>
             <span>Instagram</span>
           </button>
           <button className="share-option" onClick={shareToTelegram}>
-            <div className="share-icon telegram">✈️</div>
+            <div className="share-icon telegram">
+              <img src="/Images/icons/icons8-telegram-94.png" alt="Telegram" />
+            </div>
             <span>Telegram</span>
           </button>
           <button className="share-option" onClick={copyToClipboard}>

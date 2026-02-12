@@ -82,6 +82,12 @@
   justify-content: center;
 }
 
+.footer-contact-icon img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
 .footer-contact-icon--facebook {
   width: 20px;
   height: 20px;

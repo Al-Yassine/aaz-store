@@ -46,7 +46,9 @@ const Contact = () => {
             <h2>Informations de Contact</h2>
             <div className="contact-details">
               <div className="contact-item">
-                <span className="contact-icon">📧</span>
+                <span className="contact-icon">
+                  <img src="/Images/icons/icons8-circled-envelope-48.png" alt="Email" />
+                </span>
                 <div>
                   <strong>Email</strong>
                   <p><a href="mailto:aazstore.niam@gmail.com">aazstore.niam@gmail.com</a></p>

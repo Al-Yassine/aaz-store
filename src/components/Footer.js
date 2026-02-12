@@ -51,7 +51,7 @@ const Footer = () => {
                 aria-label="Envoyer un email à Aaz Store"
               >
                 <span className="footer-contact-icon" aria-hidden="true">
-                  📧
+                  <img src="/Images/icons/icons8-circled-envelope-48.png" alt="Email" />
                 </span>{' '}
                 aazstore.niam@gmail.com
               </a>
