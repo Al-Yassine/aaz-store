@@ -1,0 +1,136 @@
+.new-collection-page {
+  min-height: 100vh;
+  padding: 2rem 0;
+  background: #F7F7F7;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 1rem 0;
+  font-family: 'Playfair Display', serif;
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: #555555;
+  margin: 0;
+}
+
+.search-bar {
+  margin: 0 0 1.5rem 0;
+}
+
+.search-input-wrapper {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: #555555;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  border-radius: 25px;
+  border: 2px solid #000000;
+  background: #FFFFFF;
+  font-size: 1rem;
+  color: #000000;
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: #000000;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border: 1px solid #2D2D2D;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  z-index: 10;
+}
+
+.suggestion-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #000000;
+}
+
+.suggestion-item:hover {
+  background: #C5A46D;
+  color: #000000;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.no-products {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: #555555;
+  font-size: 1.1rem;
+}
+
+.results-info {
+  text-align: center;
+  color: #555555;
+  font-size: 1rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1rem;
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+

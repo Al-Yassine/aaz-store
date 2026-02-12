@@ -8,8 +8,11 @@ import ScrollToTop from './components/ScrollToTop';
 import Toast from './components/Toast';
 import Home from './pages/Home';
 import Products from './pages/Products';
+import NewCollection from './pages/NewCollection';
 import Cart from './pages/Cart';
 import About from './pages/About';
+import Contact from './pages/Contact';
+import SignIn from './pages/SignIn';
 import ProductDetail from './pages/ProductDetail';
 import Checkout from './pages/Checkout';
 import CGU from './pages/CGU';
@@ -88,10 +91,13 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
+                <Route path="/nouvelle-collection" element={<NewCollection />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/signin" element={<SignIn />} />
                 <Route path="/cgu" element={<CGU />} />
                 <Route path="/confidentialite" element={<Privacy />} />
                 <Route path="/cgv" element={<CGV />} />

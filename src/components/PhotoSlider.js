@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './PhotoSlider.css';
 
-const PhotoSlider = ({ images = [], productName, compact = false }) => {
+const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }) => {
   const unique = Array.from(new Set(images.map(i => i.replace(/^\/images\//i, '/Images/'))));
   const [index, setIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -131,6 +131,9 @@ const PhotoSlider = ({ images = [], productName, compact = false }) => {
                   alt={`${productName} - ${i + 1}`} 
                   className="slider-image"
                   draggable="false"
+                  onClick={() => onImageClick && onImageClick(i)}
+                  style={{ cursor: onImageClick ? 'pointer' : 'default' }}
+                  loading={i === 0 ? 'eager' : 'lazy'}
                 />
               </div>
             ))}
@@ -199,6 +202,9 @@ const PhotoSlider = ({ images = [], productName, compact = false }) => {
                   alt={`${productName} - ${i + 1}`} 
                   className="single-image"
                   draggable="false"
+                  onClick={() => onImageClick && onImageClick(i)}
+                  style={{ cursor: onImageClick ? 'pointer' : 'default' }}
+                  loading={i === 0 ? 'eager' : 'lazy'}
                 />
               </div>
             ))}
@@ -218,7 +224,7 @@ const PhotoSlider = ({ images = [], productName, compact = false }) => {
         <div className="thumbnails">
           {unique.map((src, i) => (
             <button key={src} className={`thumb-btn ${i===index? 'active':''}`} onClick={() => setIndex(i)} aria-label={`Show image ${i+1}`}>
-              <img src={src} alt={`thumb-${i}`} />
+              <img src={src} alt={`thumb-${i}`} loading="lazy" />
             </button>
           ))}
         </div>

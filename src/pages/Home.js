@@ -62,7 +62,7 @@ const Home = () => {
             <div className="feature">
               <div className="feature-icon">↩️</div>
               <h3>Politique de Retour</h3>
-              <p>10 jours pour retourner le produit dans sa forme originale sans utilisation</p>
+              <p>Retours acceptés dans les 3 jours</p>
             </div>
           </div>
         </div>

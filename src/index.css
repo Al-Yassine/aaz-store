@@ -9,7 +9,7 @@ body {
 html {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  scroll-padding-top: 72px; /* account for sticky header */
+  scroll-padding-top: 60px; /* account for fixed navbar */
 }
 
 /* Reduce abrupt focus outline when clicking quickly */

@@ -19,6 +19,42 @@
   border-radius: 10px;
   border: 1px solid #e6f0ff; /* subtle blue tint */
   box-shadow: 0 8px 24px rgba(12,66,150,0.04);
+  position: relative;
+}
+
+.product-image-wrapper {
+  position: relative;
+}
+
+.share-icon-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+
+.share-icon-btn:hover {
+  background: white;
+  border-color: #C5A46D;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.share-icon-btn svg {
+  color: #1a1a1a;
+  stroke-width: 2.5;
 }
 
 .detail-info {
@@ -26,9 +62,6 @@
   padding: 18px 6px 0 6px; /* no big block shadow, keep it airy */
 }
 
-.detail-back { margin-bottom: 8px; }
-.back-btn { background: transparent; border: none; color: #0b5ed7; cursor:pointer; font-weight:600; padding: 6px 8px; }
-.back-btn:hover { text-decoration: underline; }
 
 .detail-title { 
   font-size: 1.6rem; 

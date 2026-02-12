@@ -10,6 +10,7 @@ export const products = [
       "/Images/costumes/costumes-g/costume-g-1-2.jpg"
     ],
     "category": "Costumes",
+    "isNew": true,
     "variants": [
       {
         "size": "50",
@@ -60,6 +61,7 @@ export const products = [
     ],
     "description": "Costume marron chic avec fines rayures, parfait pour un look professionnel et sophistiqué.",
     "category": "Costumes",
+    "isNew": true,
     "variants": [
       {
         "size": "50",
@@ -210,6 +212,7 @@ export const products = [
     ],
     "description": "Adoptez un look professionnel avec ce costume business classique, conçu pour allier confort et élégance lors de vos journées de travail.",
     "category": "Costumes",
+    "isNew": true,
     "variants": [
       {
         "size": "44",
@@ -902,6 +905,7 @@ export const products = [
       "/Images/blazers/blazers-1.jpg"
     ],
     "category": "Blazers",
+    "isNew": true,
     "variants": [
       {
         "size": "50",
@@ -1532,6 +1536,7 @@ export const products = [
     ],
     "customStatus": "Out Of Stock",
     "category": "Chemises",
+    "isNew": true,
     "variants": [
       {
         "size": "S",

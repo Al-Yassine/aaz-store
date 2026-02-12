@@ -25,7 +25,8 @@
 .product-image {
   position: relative;
   overflow: hidden;
-  height: 280px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,8 +47,7 @@
 .product-image img,
 .product-image .photo-slider .single-image {
   width: 100%;
-  max-height: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
   border-radius: 8px;
 }
@@ -176,8 +176,8 @@
   }
   
   .product-image {
-    height: 240px;
-    padding: 16px;
+    aspect-ratio: 1 / 1;
+    padding: 12px;
   }
   
   .product-info {
@@ -224,8 +224,14 @@
   }
   
   .product-image {
-    height: 200px;
-    padding: 12px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .product-image img,
+  .product-image .photo-slider .single-image {
+    border-radius: 0;
   }
   
   .product-info {

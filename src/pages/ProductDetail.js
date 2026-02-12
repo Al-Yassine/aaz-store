@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { products } from '../data/products';
 import PhotoSlider from '../components/PhotoSlider';
 import ProductCard from '../components/ProductCard';
 import ProductReviews from '../components/ProductReviews';
 import { formatPrice, hasDiscount } from '../utils/formatPrice';
-
+import ImageViewer from '../components/ImageViewer';
+import SharePopup from '../components/SharePopup';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import { getSizesByCategory } from '../utils/getSizesByCategory';
@@ -17,7 +18,9 @@ const ProductDetail = () => {
   const productId = parseInt(id, 10);
   const product = products.find(p => p.id === productId);
   const navigate = useNavigate();
-  const location = useLocation();
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isSharePopupOpen, setIsSharePopupOpen] = useState(false);
 
   const variants = useMemo(() => product?.variants || [], [product?.variants]);
 
@@ -207,21 +210,42 @@ const ProductDetail = () => {
 
   const displayImages = (product.images || [product.image]).map(img => img.replace(/^\/\/?images\//i, '/Images/'));
 
+  const handleImageClick = (index) => {
+    setCurrentImageIndex(index);
+    setIsImageViewerOpen(true);
+  };
+
+  const productUrl = `${window.location.origin}/product/${product.id}`;
+
   return (
     <div className="product-detail page">
       <div className="container">
         <div className="detail-grid">
           <div className="detail-media">
-            <PhotoSlider images={displayImages} productName={product.name} compact={false} />
+            <div className="product-image-wrapper">
+              <PhotoSlider 
+                images={displayImages} 
+                productName={product.name} 
+                compact={false}
+                onImageClick={handleImageClick}
+              />
+              <button 
+                className="share-icon-btn"
+                onClick={() => setIsSharePopupOpen(true)}
+                aria-label="Partager ce produit"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div className="detail-info">
-            <div className="detail-back">
-              <button className="back-btn" onClick={() => {
-                if (location && location.state && location.state.from) navigate(location.state.from);
-                else navigate(-1);
-              }}>← Retour</button>
-            </div>
             <h1 className="detail-title">{product.name}</h1>
 
           <div className="detail-price-container">
@@ -309,6 +333,24 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      {isImageViewerOpen && (
+        <ImageViewer
+          images={displayImages}
+          currentIndex={currentImageIndex}
+          onClose={() => setIsImageViewerOpen(false)}
+          onNavigate={(index) => setCurrentImageIndex(index)}
+        />
+      )}
+
+      {isSharePopupOpen && (
+        <SharePopup
+          productName={product.name}
+          productUrl={productUrl}
+          productImage={displayImages[0]}
+          onClose={() => setIsSharePopupOpen(false)}
+        />
+      )}
     </div>
   );
 };

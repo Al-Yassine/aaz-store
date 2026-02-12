@@ -56,7 +56,8 @@ img, picture, video, svg {
 
 .main-content {
   flex: 1;
-  padding-top: 0;
+  padding-top: 60px; /* Account for fixed navbar */
+  min-height: calc(100vh - 60px);
 }
 
 .btn {

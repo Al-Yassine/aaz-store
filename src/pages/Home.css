@@ -13,8 +13,8 @@
 
 .hero-image {
   width: 100%;
-  /* make hero fit in viewport without sliding under header on large screens */
-  height: calc(100vh - 52px);
+  /* make hero fit in viewport without sliding under fixed navbar */
+  height: calc(100vh - 60px);
   /* Background image is set inline in the Home component so it can reference files in /public */
   /* ensure the image covers the available area and fits the width */
   background-size: cover;
@@ -166,6 +166,10 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-cta:hover {
@@ -284,18 +288,32 @@
   .hero-subtitle {
     font-size: 1rem;
     margin-bottom: 1.5rem;
-    color: #FFFFFF;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    color: rgba(173, 216, 230, 0.5);
+    text-shadow: 0 2px 8px rgba(11, 94, 215, 0.4);
     font-weight: 500;
+    line-height: 1.7;
+    padding: 0 0.5rem;
+    max-width: 100%;
   }
   
   .btn-cta {
     padding: 12px 30px;
     font-size: 0.9rem;
+    text-align: center;
+    display: inline-block;
+    white-space: nowrap;
   }
   
   .section-title {
     font-size: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1.05rem;
+    padding: 0 1.5rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
   }
   
   .products-grid {
@@ -306,6 +324,12 @@
   .features-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+  
+  .feature p {
+    font-size: 1rem;
+    line-height: 1.7;
+    padding: 0 1rem;
   }
 
   .legal-links-list {
@@ -322,17 +346,34 @@
   
   .hero-subtitle {
     font-size: 0.95rem;
-    color: #FFFFFF;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    line-height: 1.5;
+    color: rgba(173, 216, 230, 0.5);
+    text-shadow: 0 2px 8px rgba(11, 94, 215, 0.4);
+    line-height: 1.65;
+    padding: 0 0.25rem;
+    margin-bottom: 1.5rem;
   }
   
   .btn-cta {
-    padding: 10px 25px;
-    font-size: 0.85rem;
+    padding: 11px 28px;
+    font-size: 0.88rem;
+    text-align: center;
+    display: inline-block;
+    width: auto;
   }
   
   .hero-content {
     padding: 0 1rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+    line-height: 1.65;
+  }
+  
+  .feature p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    padding: 0 0.5rem;
   }
 }

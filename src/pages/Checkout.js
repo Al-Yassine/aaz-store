@@ -351,6 +351,7 @@ const Checkout = () => {
                     src={item.selectedColor || item.image || item.images?.[0]} 
                     alt={item.name}
                     className="order-item-image"
+                    loading="lazy"
                   />
                   <div className="order-item-details">
                     <h4>{item.name}</h4>
