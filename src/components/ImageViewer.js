@@ -66,7 +66,7 @@ const ImageViewer = ({ images, currentIndex, onClose, onNavigate }) => {
       <div className="image-viewer-content">
         <img 
           src={images[currentIndex]} 
-          alt={`Image ${currentIndex + 1}`}
+          alt={`${currentIndex + 1}`}
           className="image-viewer-image"
           loading="eager"
         />
