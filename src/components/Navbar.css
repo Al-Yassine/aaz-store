@@ -165,6 +165,26 @@
   padding-right: 1.75rem;
 }
 
+/* Featured menu item - Nouvelle collection */
+.navbar-link-featured {
+  background: linear-gradient(90deg, rgba(197,164,109,0.15) 0%, rgba(197,164,109,0.08) 100%);
+  border-right-color: #C5A46D;
+  color: #C5A46D;
+  font-weight: 600;
+  position: relative;
+}
+
+.navbar-link-featured::before {
+  content: '✨';
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.navbar-link-featured:hover {
+  background: linear-gradient(90deg, rgba(197,164,109,0.25) 0%, rgba(197,164,109,0.15) 100%);
+  color: #D4B87A;
+}
+
 .navbar-right {
   display: flex;
   align-items: center;
@@ -222,7 +242,9 @@
 
 @media (max-width: 768px) {
   .navbar-container {
-    padding: 0 1rem;
+    /* Keep left padding for logo, move icons to right edge */
+    padding-left: 12px;
+    padding-right: 2px;
   }
   
   .navbar-menu {
@@ -233,11 +255,12 @@
   .navbar-cart-link {
     min-width: 40px;
     min-height: 40px;
-    padding: 0.35rem 0.4rem;
+    padding: 0.18rem 0.3rem;
   }
   
   .cart-icon {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+    line-height: 1;
   }
   
   .cart-count {
@@ -256,6 +279,37 @@
   
   .navbar-logo-text {
     font-size: 1rem;
+  }
+}
+
+/* Tweak spacing and alignment specifically for small screens to keep cart and hamburger together */
+@media (max-width: 480px) {
+  .navbar-container {
+    padding-left: 12px;
+    padding-right: 2px; /* bring icons to right corner */
+  }
+
+  .navbar-right {
+    gap: 0.35rem; /* ~5-6px spacing between cart and hamburger */
+    align-items: center;
+  }
+
+  .navbar-toggle {
+    padding: 0.15rem;
+    width: var(--touch-target);
+    height: var(--touch-target);
+  }
+
+  .navbar-cart-link {
+    padding: 0.2rem 0.35rem;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .navbar-toggle, .navbar-cart-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

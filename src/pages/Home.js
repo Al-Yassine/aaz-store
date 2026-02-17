@@ -19,8 +19,8 @@ const Home = () => {
               <p className="hero-subtitle">
               Élevez votre style avec notre collection de  vêtements, chaussures et accessoires pour hommes.
               </p>
-              <Link to="/products" className="btn btn-cta">
-                Découvrir la Collection
+              <Link to="/products" className="hero-cta" aria-label="Découvrir la collection">
+                <span className="hero-cta-text">Découvrir la Collection</span>
               </Link>
             </div>
           </div>

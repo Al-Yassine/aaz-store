@@ -68,12 +68,22 @@ const Navbar = () => {
         <ul id="navbar-menu" className={`navbar-menu ${isOpen ? 'open' : ''}`} role="menu">
           <li className="navbar-item">
             <Link to="/" className="navbar-link" onClick={handleLinkClick}>
-              Acceuil
+              Accueil
+            </Link>
+          </li>
+          <li className="navbar-item">
+            <Link to="/nouvelle-collection" className="navbar-link navbar-link-featured" onClick={handleLinkClick}>
+              Nouvelle collection
             </Link>
           </li>
           <li className="navbar-item">
             <Link to="/products" className="navbar-link" onClick={handleLinkClick}>
               Articles
+            </Link>
+          </li>
+          <li className="navbar-item">
+            <Link to="/signin" className="navbar-link" onClick={handleLinkClick}>
+              Mon compte
             </Link>
           </li>
           <li className="navbar-item">
@@ -83,17 +93,7 @@ const Navbar = () => {
           </li>
           <li className="navbar-item">
             <Link to="/about" className="navbar-link" onClick={handleLinkClick}>
-              A propos
-            </Link>
-          </li>
-          <li className="navbar-item">
-            <Link to="/nouvelle-collection" className="navbar-link" onClick={handleLinkClick}>
-              Nouvelle collection
-            </Link>
-          </li>
-          <li className="navbar-item">
-            <Link to="/signin" className="navbar-link" onClick={handleLinkClick}>
-              Mon compte
+              À propos
             </Link>
           </li>
         </ul>
