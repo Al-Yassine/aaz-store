@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { formatPrice } from '../utils/formatPrice';
+import { createOrder } from '../services/orderService';
 import './Checkout.css';
 
 const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { items: cartItems, clearCart } = useCart();
+  const { currentUser, isAuthenticated } = useAuth();
+  const { showToast } = useToast();
   
   const checkoutItems = location.state?.items || cartItems;
   const fromBuyNow = location.state?.fromBuyNow || false;
@@ -22,6 +27,8 @@ const Checkout = () => {
 
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [orderId, setOrderId] = useState(null);
   const [errors, setErrors] = useState({});
 
   const isNiameyRegion = formData.region === 'Niamey';
@@ -38,6 +45,14 @@ const Checkout = () => {
       setPaymentMethod('nita');
     }
   }, [formData.region, isNiameyRegion, paymentMethod]);
+
+  // Redirect to sign in if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      showToast('Veuillez vous connecter pour passer une commande', 'error');
+      navigate('/signin', { state: { from: 'checkout' } });
+    }
+  }, [isAuthenticated, navigate, showToast]);
 
   if (!checkoutItems || checkoutItems.length === 0) {
     return (
@@ -99,19 +114,63 @@ const Checkout = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleConfirmOrder = (e) => {
+  const handleConfirmOrder = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
       return;
     }
+
+    if (!currentUser) {
+      showToast('Veuillez vous connecter pour passer une commande', 'error');
+      navigate('/signin');
+      return;
+    }
     
-    setOrderConfirmed(true);
+    setLoading(true);
+
+    // Prepare order data
+    const orderData = {
+      userId: currentUser.uid,
+      customerEmail: currentUser.email,
+      products: checkoutItems.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        selectedSize: item.selectedSize,
+        selectedColor: item.selectedColor,
+        image: item.image || item.images?.[0]
+      })),
+      totalPrice: total,
+      subtotal: subtotal,
+      deliveryFee: deliveryFee,
+      paymentMethod: paymentMethod,
+      deliveryRegion: formData.region,
+      deliveryInfo: {
+        fullName: formData.fullName,
+        phone: formData.phone,
+        quartier: formData.quartier,
+        address: formData.address
+      }
+    };
+
+    // Create order in Firestore
+    const result = await createOrder(orderData);
     
-    if (!fromBuyNow) {
-      setTimeout(() => {
+    setLoading(false);
+
+    if (result.success) {
+      setOrderId(result.orderId);
+      setOrderConfirmed(true);
+      
+      if (!fromBuyNow) {
         clearCart();
-      }, 2000);
+      }
+      
+      showToast('Commande créée avec succès !', 'success');
+    } else {
+      showToast(result.error || 'Erreur lors de la création de la commande', 'error');
     }
   };
 
@@ -125,7 +184,7 @@ const Checkout = () => {
                 <div className="confirmation-icon success">✅</div>
                 <h2>Commande confirmée !</h2>
                 <p className="confirmation-message">
-                  Votre commande a été confirmée. Vous paierez à la livraison.
+                  Votre commande <strong>#{orderId?.slice(-8).toUpperCase()}</strong> a été confirmée. Vous paierez à la livraison.
                 </p>
               </>
             ) : (
@@ -133,7 +192,7 @@ const Checkout = () => {
                 <div className="confirmation-icon pending">⏳</div>
                 <h2>Commande en attente</h2>
                 <p className="confirmation-message">
-                  Votre commande est en attente de paiement. Elle sera confirmée dès réception du transfert.
+                  Votre commande <strong>#{orderId?.slice(-8).toUpperCase()}</strong> est en attente de paiement. Elle sera confirmée dès réception du transfert.
                 </p>
               </>
             )}
@@ -333,9 +392,9 @@ const Checkout = () => {
               <button 
                 type="submit" 
                 className="confirm-btn"
-                disabled={!formData.region}
+                disabled={!formData.region || loading}
               >
-                Confirmer ma commande
+                {loading ? 'Traitement en cours...' : 'Confirmer ma commande'}
               </button>
             </form>
           </div>

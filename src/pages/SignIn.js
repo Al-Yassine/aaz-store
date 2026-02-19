@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { signUp, signIn, resetPassword } from '../services/authService';
 import './SignIn.css';
 
 const SignIn = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,6 +18,13 @@ const SignIn = () => {
   });
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { currentUser } = useAuth();
+
+  // Redirect if already logged in
+  if (currentUser) {
+    navigate('/');
+    return null;
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,50 +34,149 @@ const SignIn = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     
     if (isSignUp) {
       // Sign up validation
       if (!formData.name || !formData.email || !formData.phone || !formData.password) {
         showToast('Veuillez remplir tous les champs', 'error');
+        setLoading(false);
         return;
       }
       
       if (formData.password !== formData.confirmPassword) {
         showToast('Les mots de passe ne correspondent pas', 'error');
+        setLoading(false);
         return;
       }
       
       if (formData.password.length < 6) {
         showToast('Le mot de passe doit contenir au moins 6 caractères', 'error');
+        setLoading(false);
         return;
       }
       
-      // In a real app, you would send this to a backend
-      showToast('Inscription réussie ! Vous pouvez maintenant vous connecter.', 'success');
-      setIsSignUp(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        confirmPassword: ''
+      // Sign up with Firebase
+      const result = await signUp(formData.email, formData.password, {
+        name: formData.name,
+        phone: formData.phone
       });
+      
+      if (result.success) {
+        showToast('Inscription réussie ! Vous êtes maintenant connecté.', 'success');
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
+      } else {
+        showToast(result.error || 'Erreur lors de l\'inscription', 'error');
+      }
     } else {
       // Sign in validation
       if (!formData.email || !formData.password) {
         showToast('Veuillez remplir tous les champs', 'error');
+        setLoading(false);
         return;
       }
       
-      // In a real app, you would authenticate with a backend
-      showToast('Connexion réussie !', 'success');
-      setTimeout(() => {
-        navigate('/');
-      }, 1000);
+      // Sign in with Firebase
+      const result = await signIn(formData.email, formData.password);
+      
+      if (result.success) {
+        showToast('Connexion réussie !', 'success');
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
+      } else {
+        showToast(result.error || 'Erreur lors de la connexion', 'error');
+      }
+    }
+    
+    setLoading(false);
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.email) {
+      showToast('Veuillez entrer votre adresse email', 'error');
+      return;
+    }
+    
+    setLoading(true);
+    const result = await resetPassword(formData.email);
+    setLoading(false);
+    
+    if (result.success) {
+      showToast('Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.', 'success');
+      setShowForgotPassword(false);
+    } else {
+      showToast(result.error || 'Erreur lors de l\'envoi de l\'email', 'error');
     }
   };
+
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: ''
+    });
+  };
+
+  // Forgot Password Form
+  if (showForgotPassword) {
+    return (
+      <div className="signin-page">
+        <div className="container">
+          <div className="signin-container">
+            <div className="signin-card">
+              <h1 className="signin-title">Mot de passe oublié</h1>
+              <p className="signin-subtitle">
+                Entrez votre adresse email pour recevoir un lien de réinitialisation
+              </p>
+
+              <form className="signin-form" onSubmit={handleForgotPassword}>
+                <div className="form-group">
+                  <label htmlFor="email">Email *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Entrez votre email"
+                  />
+                </div>
+
+                <button type="submit" className="signin-btn" disabled={loading}>
+                  {loading ? 'Envoi en cours...' : 'Envoyer le lien'}
+                </button>
+              </form>
+
+              <div className="signin-switch">
+                <p>
+                  <button
+                    type="button"
+                    className="switch-link"
+                    onClick={() => {
+                      setShowForgotPassword(false);
+                      resetForm();
+                    }}
+                  >
+                    Retour à la connexion
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="signin-page">
@@ -153,10 +263,25 @@ const SignIn = () => {
                 </div>
               )}
 
-              <button type="submit" className="signin-btn">
-                {isSignUp ? 'S\'inscrire' : 'Se connecter'}
+              <button type="submit" className="signin-btn" disabled={loading}>
+                {loading 
+                  ? (isSignUp ? 'Inscription...' : 'Connexion...') 
+                  : (isSignUp ? 'S\'inscrire' : 'Se connecter')
+                }
               </button>
             </form>
+
+            {!isSignUp && (
+              <div className="forgot-password">
+                <button
+                  type="button"
+                  className="forgot-link"
+                  onClick={() => setShowForgotPassword(true)}
+                >
+                  Mot de passe oublié ?
+                </button>
+              </div>
+            )}
 
             <div className="signin-switch">
               <p>
@@ -166,13 +291,7 @@ const SignIn = () => {
                   className="switch-link"
                   onClick={() => {
                     setIsSignUp(!isSignUp);
-                    setFormData({
-                      name: '',
-                      email: '',
-                      phone: '',
-                      password: '',
-                      confirmPassword: ''
-                    });
+                    resetForm();
                   }}
                 >
                   {isSignUp ? 'Se connecter' : 'S\'inscrire'}
@@ -187,4 +306,3 @@ const SignIn = () => {
 };
 
 export default SignIn;
-

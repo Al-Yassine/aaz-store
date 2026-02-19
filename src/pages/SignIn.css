@@ -111,6 +111,32 @@
   color: #a0855a;
 }
 
+.forgot-password {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.forgot-link:hover {
+  color: #C5A46D;
+}
+
+.signin-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 @media (max-width: 480px) {
   .signin-card {
     padding: 1.5rem;

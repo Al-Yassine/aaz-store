@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { menuCategories } from '../data/categories';
+import { logOut } from '../services/authService';
 import './Navbar.css';
 
 const Navbar = () => {
   const { getTotalItems } = useCart();
+  const { currentUser, isAdmin } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [currentView, setCurrentView] = useState('main'); // 'main' or 'articles' or 'chaussures' or 'tshirts'
   const [viewStack, setViewStack] = useState(['main']); // Track navigation history
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -107,6 +111,27 @@ const Navbar = () => {
     navigate('/products');
   };
 
+  // Handle logout
+  const handleLogout = async () => {
+    const result = await logOut();
+    if (result.success) {
+      setShowUserMenu(false);
+      navigate('/');
+    }
+  };
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showUserMenu && !e.target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showUserMenu]);
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -167,9 +192,44 @@ const Navbar = () => {
             </li>
             
             <li className="navbar-item">
-              <Link to="/signin" className="navbar-link" onClick={handleLinkClick}>
-                Mon compte
-              </Link>
+              {currentUser ? (
+                <div className="user-menu-container">
+                  <button 
+                    className="navbar-link user-menu-toggle"
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                  >
+                    {currentUser.displayName || currentUser.email?.split('@')[0] || 'Mon compte'}
+                    <span className="user-menu-arrow">▼</span>
+                  </button>
+                  {showUserMenu && (
+                    <div className="user-dropdown-menu">
+                      <div className="user-email">{currentUser.email}</div>
+                      {isAdmin && (
+                        <Link 
+                          to="/admin" 
+                          className="dropdown-item admin-link"
+                          onClick={() => {
+                            setShowUserMenu(false);
+                            handleLinkClick();
+                          }}
+                        >
+                          👑 Tableau de bord Admin
+                        </Link>
+                      )}
+                      <button 
+                        className="dropdown-item logout-btn"
+                        onClick={handleLogout}
+                      >
+                        🚪 Déconnexion
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to="/signin" className="navbar-link" onClick={handleLinkClick}>
+                  Mon compte
+                </Link>
+              )}
             </li>
             <li className="navbar-item">
               <Link to="/contact" className="navbar-link" onClick={handleLinkClick}>

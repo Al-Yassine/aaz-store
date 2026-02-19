@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -18,6 +19,7 @@ import Checkout from './pages/Checkout';
 import CGU from './pages/CGU';
 import Privacy from './pages/Privacy';
 import CGV from './pages/CGV';
+import AdminDashboard from './pages/AdminDashboard';
 import './App.css';
 
 function App() {
@@ -82,32 +84,35 @@ function App() {
   }, []);
   return (
     <ToastProvider>
-      <CartProvider>
-        <Router>
-          <ScrollToTop />
-          <div className="App">
-            <Navbar />
-            <main className="main-content">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/nouvelle-collection" element={<NewCollection />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/cgu" element={<CGU />} />
-                <Route path="/confidentialite" element={<Privacy />} />
-                <Route path="/cgv" element={<CGV />} />
-              </Routes>
-            </main>
-            <Footer />
-            <Toast />
-          </div>
-        </Router>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Router>
+            <ScrollToTop />
+            <div className="App">
+              <Navbar />
+              <main className="main-content">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/nouvelle-collection" element={<NewCollection />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/signin" element={<SignIn />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/cgu" element={<CGU />} />
+                  <Route path="/confidentialite" element={<Privacy />} />
+                  <Route path="/cgv" element={<CGV />} />
+                </Routes>
+              </main>
+              <Footer />
+              <Toast />
+            </div>
+          </Router>
+        </CartProvider>
+      </AuthProvider>
     </ToastProvider>
   );
 }
