@@ -325,7 +325,7 @@ const ProductDetail = () => {
         <ProductReviews productId={product.id} />
 
         <div className="similar-section">
-          <h3>Similar products</h3>
+          <h3>Produits similaires</h3>
           <div className="similar-grid">
             {similar.map(p => (
               <ProductCard key={p.id} product={p} />

@@ -32,10 +32,35 @@ const ProductCard = ({ product }) => {
     setIsImageViewerOpen(true);
   };
 
+  // Check if product is out of stock
+  const isOutOfStock = product.customStatus === 'Out Of Stock' || 
+    (product.variants && product.variants.every(v => v.stock === 0));
+
+  // Determine which badge to show
+  const getBadge = () => {
+    if (isOutOfStock) {
+      return { text: 'Rupture de stock', type: 'out-of-stock' };
+    }
+    if (product.isNew) {
+      return { text: 'Nouveau', type: 'new' };
+    }
+    if (product.isBestSeller) {
+      return { text: 'Best-seller', type: 'best-seller' };
+    }
+    return null;
+  };
+
+  const badge = getBadge();
+
   const displayImages = Array.from(new Set((product.images && product.images.length ? product.images : [product.image]).map(img => (img || '').replace(/^\/\/?images\//i, '/Images/'))));
 
   return (
     <div className="product-card">
+      {badge && (
+        <span className={`product-badge product-badge-${badge.type}`}>
+          {badge.text}
+        </span>
+      )}
       <div className="product-image-container" onClick={handleImageClick}>
         <div className="product-image">
           <PhotoSlider 
@@ -61,8 +86,9 @@ const ProductCard = ({ product }) => {
         <button 
           className="add-to-cart-btn" 
           onClick={handleAddToCart}
+          disabled={isOutOfStock}
         >
-          Ajouter au Panier
+          {isOutOfStock ? 'Épuisé' : 'Ajouter au Panier'}
         </button>
       </div>
 

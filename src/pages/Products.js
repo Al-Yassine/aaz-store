@@ -9,16 +9,51 @@ const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get('category') || 'Tous');
+  const [selectedSubcategory, setSelectedSubcategory] = useState(() => searchParams.get('subcategory') || null);
   const [searchInput, setSearchInput] = useState(() => searchParams.get('q') || '');
   const [activeSearch, setActiveSearch] = useState(() => searchParams.get('q') || '');
   const [showSuggestions, setShowSuggestions] = useState(false);
   
   const categories = ['Tous', ...new Set(products.map(product => product.category))];
   
+  // Filter products by category and subcategory
   const productsByCategory = useMemo(() => {
-    if (selectedCategory === 'Tous') return products;
-    return products.filter(product => product.category === selectedCategory);
-  }, [selectedCategory]);
+    let filtered = products;
+    
+    // Filter by main category
+    if (selectedCategory && selectedCategory !== 'Tous') {
+      filtered = filtered.filter(product => product.category === selectedCategory);
+    }
+    
+    // Filter by subcategory if specified
+    if (selectedSubcategory) {
+      filtered = filtered.filter(product => {
+        // Check the product's image path for subcategory indicators
+        const imagePath = product.image || '';
+        const images = product.images || [];
+        const allImages = [imagePath, ...images].join(' ').toLowerCase();
+        
+        switch (selectedSubcategory) {
+          case 'soulier':
+            return allImages.includes('/souliers/');
+          case 'mocassins':
+            return allImages.includes('/mocassins/');
+          case 'sneakers':
+            return allImages.includes('/sneakers/');
+          case 'nupied':
+            return allImages.includes('/nue-pieds/') || allImages.includes('/nue-pied/');
+          case 'classiques':
+            return allImages.includes('/tshirts/') || allImages.includes('/polo/tshirts/');
+          case 'manche-longue':
+            return allImages.includes('/manches_longues/') || allImages.includes('/manche-longue/');
+          default:
+            return true;
+        }
+      });
+    }
+    
+    return filtered;
+  }, [selectedCategory, selectedSubcategory]);
 
   const filteredProducts = useMemo(() => {
     if (!activeSearch.trim()) return productsByCategory;
@@ -38,18 +73,50 @@ const Products = () => {
   useEffect(() => {
     const cat = searchParams.get('category') || 'Tous';
     if (cat !== selectedCategory) setSelectedCategory(cat);
+    
+    const subcat = searchParams.get('subcategory') || null;
+    if (subcat !== selectedSubcategory) setSelectedSubcategory(subcat);
+    
     const q = searchParams.get('q') || '';
     if (q !== activeSearch) {
       setActiveSearch(q);
       setSearchInput(q);
     }
-  }, [searchParams, selectedCategory, activeSearch]);
+  }, [searchParams, selectedCategory, selectedSubcategory, activeSearch]);
+
+  // Listen for custom category change events from Navbar
+  useEffect(() => {
+    const handleCategoryChange = (e) => {
+      const { category, subcategory } = e.detail || {};
+      
+      if (category) {
+        setSelectedCategory(category);
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('category', category);
+        
+        if (subcategory) {
+          setSelectedSubcategory(subcategory);
+          newParams.set('subcategory', subcategory);
+        } else {
+          setSelectedSubcategory(null);
+          newParams.delete('subcategory');
+        }
+        
+        setSearchParams(newParams);
+      }
+    };
+    
+    window.addEventListener('categoryChange', handleCategoryChange);
+    return () => window.removeEventListener('categoryChange', handleCategoryChange);
+  }, [searchParams, setSearchParams]);
 
   const applyCategory = (category) => {
     setSelectedCategory(category);
+    setSelectedSubcategory(null); // Reset subcategory when changing main category
     const newParams = new URLSearchParams(searchParams);
     if (category && category !== 'Tous') newParams.set('category', category);
     else newParams.delete('category');
+    newParams.delete('subcategory'); // Remove subcategory when changing main category
     setSearchParams(newParams);
   };
 
@@ -149,6 +216,7 @@ const Products = () => {
           <p>
             Affichage de {filteredProducts.length} produit{filteredProducts.length !== 1 ? 's' : ''}
             {selectedCategory !== 'Tous' && ` dans ${selectedCategory}`}
+            {selectedSubcategory && ` › ${selectedSubcategory}`}
             {activeSearch && ` pour "${activeSearch}"`}
           </p>
         </div>

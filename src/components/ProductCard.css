@@ -10,6 +10,39 @@
   flex-direction: column;
 }
 
+/* Product Badges */
+.product-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Nouveau badge - Gold gradient with black text */
+.product-badge-new {
+  background: linear-gradient(135deg, #C5A46D 0%, #D4B87A 50%, #C5A46D 100%);
+  color: #1a1a1a;
+}
+
+/* Best-seller badge - Blue with white text */
+.product-badge-best-seller {
+  background: #0b5ed7;
+  color: #ffffff;
+}
+
+/* Rupture de stock badge - Red/coral with white text */
+.product-badge-out-of-stock {
+  background: #dc3545;
+  color: #ffffff;
+}
+
 .product-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   border-color: #e0e0e0;
@@ -164,6 +197,19 @@
 
 .add-to-cart-btn:active {
   transform: translateY(0);
+}
+
+.add-to-cart-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.add-to-cart-btn:disabled:hover {
+  background: #cccccc;
+  transform: none;
+  box-shadow: none;
 }
 
 @media (max-width: 768px) {
