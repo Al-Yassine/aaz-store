@@ -10,15 +10,126 @@
   margin-bottom: 30px;
 }
 
-.admin-header h1 {
+.admin-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.admin-header-text h1 {
   font-size: 2rem;
   color: #1a1a2e;
   margin-bottom: 8px;
 }
 
-.admin-header p {
+.admin-header-text p {
   color: #666;
   font-size: 1rem;
+}
+
+.admin-header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.admin-user-info {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.admin-user-info strong {
+  color: #1a1a2e;
+}
+
+.logout-btn {
+  padding: 10px 20px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #c0392b;
+  transform: translateY(-1px);
+}
+
+/* Not Admin Container */
+.not-admin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.not-admin-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.not-admin-card h2 {
+  color: #1a1a2e;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.not-admin-card p {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.not-admin-card p strong {
+  color: #1a1a2e;
+}
+
+.not-admin-info {
+  background: #fff3e0;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  color: #e65100 !important;
+}
+
+.not-admin-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin: 25px 0;
+}
+
+.make-admin-btn {
+  padding: 12px 24px;
+  background: #1a1a2e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.make-admin-btn:hover {
+  background: #16213e;
+  transform: translateY(-1px);
+}
+
+.not-admin-note {
+  font-size: 0.85rem;
+  color: #999 !important;
+  font-style: italic;
 }
 
 /* Statistics Cards */
@@ -501,6 +612,17 @@
 @media (max-width: 768px) {
   .admin-dashboard {
     padding: 20px 0;
+  }
+
+  .admin-header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-header-actions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .admin-header h1 {

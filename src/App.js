@@ -20,6 +20,7 @@ import CGU from './pages/CGU';
 import Privacy from './pages/Privacy';
 import CGV from './pages/CGV';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLogin from './pages/AdminLogin';
 import './App.css';
 
 function App() {
@@ -101,6 +102,7 @@ function App() {
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/signin" element={<SignIn />} />
+                  <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/cgu" element={<CGU />} />
                   <Route path="/confidentialite" element={<Privacy />} />

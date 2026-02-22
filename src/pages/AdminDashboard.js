@@ -10,11 +10,13 @@ import {
   timestampToDate,
   getOrderStatistics
 } from '../services/orderService';
+import { logOut } from '../services/authService';
+import { setUserAsAdmin } from '../services/userService';
 import { formatPrice } from '../utils/formatPrice';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-  const { currentUser, isAdmin, loading: authLoading } = useAuth();
+  const { currentUser, isAdmin, userData, loading: authLoading, refreshUserData } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
   
@@ -28,13 +30,48 @@ const AdminDashboard = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
 
+  // Debug logging
+  useEffect(() => {
+    console.log('AdminDashboard - authLoading:', authLoading);
+    console.log('AdminDashboard - currentUser:', currentUser?.email);
+    console.log('AdminDashboard - userData:', userData);
+    console.log('AdminDashboard - isAdmin:', isAdmin);
+  }, [authLoading, currentUser, userData, isAdmin]);
+
   // Redirect non-admin users
   useEffect(() => {
-    if (!authLoading && (!currentUser || !isAdmin)) {
-      showToast('Accès non autorisé', 'error');
-      navigate('/');
+    if (!authLoading && !currentUser) {
+      showToast('Veuillez vous connecter', 'error');
+      navigate('/admin/login');
     }
-  }, [currentUser, isAdmin, authLoading, navigate, showToast]);
+  }, [currentUser, authLoading, navigate, showToast]);
+
+  // For development: Allow setting self as admin
+  const handleMakeAdmin = async () => {
+    if (!currentUser) return;
+    
+    try {
+      const result = await setUserAsAdmin(currentUser.uid);
+      if (result.success) {
+        showToast('Vous êtes maintenant administrateur !', 'success');
+        await refreshUserData();
+      } else {
+        showToast('Erreur: ' + result.error, 'error');
+      }
+    } catch (error) {
+      showToast('Erreur lors de la mise à jour du rôle', 'error');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      showToast('Déconnexion réussie', 'success');
+      navigate('/admin/login');
+    } catch (error) {
+      showToast('Erreur lors de la déconnexion', 'error');
+    }
+  };
 
   // Fetch orders
   useEffect(() => {
@@ -191,16 +228,55 @@ const AdminDashboard = () => {
     );
   }
 
-  if (!isAdmin) {
-    return null;
+  // Show "Make Admin" option for logged-in users who are not admin
+  if (currentUser && !isAdmin) {
+    return (
+      <div className="admin-dashboard page">
+        <div className="container">
+          <div className="not-admin-container">
+            <div className="not-admin-card">
+              <h2>Accès Admin Requis</h2>
+              <p>Vous êtes connecté en tant que <strong>{currentUser.email}</strong></p>
+              <p>Votre rôle actuel: <strong>{userData?.role || 'customer'}</strong></p>
+              <p className="not-admin-info">
+                Pour accéder au tableau de bord admin, votre compte doit avoir le rôle "admin".
+              </p>
+              <div className="not-admin-actions">
+                <button className="make-admin-btn" onClick={handleMakeAdmin}>
+                  Devenir Admin
+                </button>
+                <button className="logout-btn" onClick={handleLogout}>
+                  Déconnexion
+                </button>
+              </div>
+              <p className="not-admin-note">
+                Note: En production, seul un administrateur existant peut attribuer le rôle admin.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="admin-dashboard page">
       <div className="container">
         <div className="admin-header">
-          <h1>Tableau de bord Admin</h1>
-          <p>Gestion des commandes</p>
+          <div className="admin-header-content">
+            <div className="admin-header-text">
+              <h1>Tableau de bord Admin</h1>
+              <p>Gestion des commandes</p>
+            </div>
+            <div className="admin-header-actions">
+              <span className="admin-user-info">
+                Connecté en tant que: <strong>{currentUser?.email}</strong>
+              </span>
+              <button className="logout-btn" onClick={handleLogout}>
+                Déconnexion
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Statistics Cards */}
