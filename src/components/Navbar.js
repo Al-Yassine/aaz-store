@@ -37,7 +37,7 @@ const Navbar = () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
     };
-  }, [isOpen, currentView]);
+  }, [isOpen, currentView,]);
 
   const handleLinkClick = () => {
     setIsOpen(false);
