@@ -1,50 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { products } from '../data/products';
-import ProductCard from '../components/ProductCard';
+import BrandShowcase from '../components/BrandShowcase';
 import './Home.css';
 
 const Home = () => {
-  const featuredProducts = products.slice(0, 6);
-
   const heroImage = '/Images/home-photo/10111398.jpg';
 
   return (
     <div className="home">
       <section className="hero">
         <div className="hero-image" style={{ backgroundImage: `url(${heroImage})` }}>
-          <div className="hero-overlay">
-            <div className="hero-content">
-              <h1 className="hero-title">Élevez Votre Style</h1>
-              <p className="hero-subtitle">
-              Élevez votre style avec notre collection de  vêtements, chaussures et accessoires pour hommes.
-              </p>
-              <Link to="/products" className="hero-cta" aria-label="Découvrir la collection">
-                <span className="hero-cta-text">Découvrir la Collection</span>
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
 
-      <section className="featured-products">
-        <div className="container">
-          <h2 className="section-title">Collection Vedette</h2>
-          <p className="section-subtitle">
-            Découvrez nos pièces les plus recherchées
-          </p>
-          <div className="products-grid">
-            {featuredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-          <div className="section-cta">
-            <Link to="/products" className="btn btn-outline">
-              Voir Tous les Produits
-            </Link>
-          </div>
-        </div>
-      </section>
+      <BrandShowcase />
 
       <section className="features">
         <div className="container">

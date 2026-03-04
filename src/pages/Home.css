@@ -66,42 +66,11 @@
   font-weight: 400;
 }
 
-/* Featured Products Section */
-.featured-products {
-  padding: 5rem 0;
-  background: #ffffff;
-}
-
+/* Container utility (kept for features section) */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin: 0 0 1rem 0;
-}
-
-.section-subtitle {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #7f8c8d;
-  margin: 0 0 3rem 0;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.section-cta {
-  text-align: center;
 }
 
 /* Features Section */

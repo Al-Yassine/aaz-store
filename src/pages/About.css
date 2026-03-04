@@ -75,28 +75,20 @@
 
 .stat {
   text-align: center;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 15px;
-  transition: transform 0.3s ease;
-}
-
-.stat:hover {
-  transform: translateY(-5px);
+  padding: 1.25rem;
+  background: #ffffff;
+  color: #0b2340;
+  border-radius: 12px;
+  border: 1px solid #ececec;
 }
 
 .stat h3 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.4rem 0;
 }
 
-.stat p {
-  font-size: 1.1rem;
-  margin: 0;
-  opacity: 0.9;
-}
+.stat p { font-size: 1rem; margin: 0; color: #5a6680; }
 
 /* Contact Section */
 .contact-section {

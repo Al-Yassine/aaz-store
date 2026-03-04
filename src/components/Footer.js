@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-section">
             <h3>Aaz Store</h3>
-            <p>AAZ Store, c’est plus qu’une boutique : c’est une équipe qui vous accompagne. Nous choisissons des vêtements pensés pour vous, pour chaque moment important.</p>
+            <p>AAZ Store — des pièces sélectionnées avec rigueur pour un style maîtrisé.</p>
           </div>
           
           <div className="footer-section">

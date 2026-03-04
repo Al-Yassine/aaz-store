@@ -157,6 +157,98 @@
   transform: translateY(-2px);
 }
 
+/* Contact form styles (moved from About) */
+.contact-form-area {
+  margin: 40px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.contact-form-container {
+  background: #f8f9fa;
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-width: 680px;
+  width: 100%;
+}
+
+.contact-form h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.contact-form-note {
+  text-align: center;
+  color: #7f8c8d;
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+}
+
+/* Ensure the form labels and inputs are left-aligned and LTR */
+.contact-form {
+  direction: ltr;
+  text-align: left;
+}
+
+.contact-form .form-group {
+  text-align: left;
+}
+
+.contact-form label {
+  display: block;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0b2340;
+}
+
+.form-group textarea { resize: vertical; min-height: 120px; }
+
+.submit-btn {
+  width: 100%;
+  background: #0b2340;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(11,35,64,0.18); }
+
 /* Tablet Responsive */
 @media (max-width: 1024px) {
   .contact-cards {

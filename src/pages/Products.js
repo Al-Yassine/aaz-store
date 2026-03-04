@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { products } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import './Products.css';
@@ -143,13 +143,18 @@ const Products = () => {
     setShowSuggestions(false);
   };
 
+  const featuredProducts = useMemo(() => products.slice(0, 6), []);
+
   return (
     <div className="products-page">
+
+      {/* Collection Vedette removed per request */}
+
       <div className="container">
         <div className="page-header">
           <h1 className="page-title">Nos Produits</h1>
           <p className="page-subtitle">
-            Découvrez notre large gamme de produits de haute qualité
+            Découvrez nos pièces essentielles, conçues avec exigence.
           </p>
         </div>
 
@@ -220,7 +225,7 @@ const Products = () => {
             {activeSearch && ` pour "${activeSearch}"`}
           </p>
         </div>
-      </div>
+      </div> {/* end .container */}
     </div>
   );
 };

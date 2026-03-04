@@ -1,7 +1,14 @@
 .products-page {
   min-height: 100vh;
-  padding: 2rem 0;
+  padding: 0;
   background: #F7F7F7;
+}
+
+/* Collection Vedette removed */
+
+/* Products section top padding when it follows vedette */
+.products-page .container {
+  padding-top: 2rem;
 }
 
 .container {
@@ -164,6 +171,7 @@
   .container {
     padding: 0 1rem;
   }
+  /* collection vedette removed */
   
   .page-title {
     font-size: 2rem;

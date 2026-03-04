@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useToast } from '../context/ToastContext';
 import './Contact.css';
 
 const Contact = () => {
@@ -76,6 +77,13 @@ const Contact = () => {
               <span>📍</span> Ouvrir dans Google Maps
             </a>
           </div>
+
+          {/* Contact Form (moved from About) - placed below the map per request */}
+          <div className="contact-form-area">
+            <div className="contact-form-container">
+              <ContactForm />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -83,3 +91,49 @@ const Contact = () => {
 };
 
 export default Contact;
+
+/* ContactForm component moved here for simplicity */
+function ContactForm() {
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const { showToast } = useToast();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    showToast('Merci pour votre message ! Nous vous répondrons très bientôt.', 'success');
+    setFormData({ name: '', email: '', subject: '', message: '' });
+  };
+
+  return (
+    <form className="contact-form" onSubmit={handleSubmit}>
+      <p className="contact-form-note">Vous avez une question ou remarque, nous serons ravi de vous lire.</p>
+      <h3>Envoyez-nous un message</h3>
+
+      <div className="form-group">
+        <label htmlFor="name">Nom *</label>
+        <input id="name" name="name" type="text" value={formData.name} onChange={handleInputChange} required />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="email">Email *</label>
+        <input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} required />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="subject">Sujet *</label>
+        <input id="subject" name="subject" type="text" value={formData.subject} onChange={handleInputChange} required />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="message">Message *</label>
+        <textarea id="message" name="message" rows="5" value={formData.message} onChange={handleInputChange} required />
+      </div>
+
+      <button type="submit" className="submit-btn">Envoyer un Message</button>
+    </form>
+  );
+}
