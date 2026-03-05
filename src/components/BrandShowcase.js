@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './BrandShowcase.css';
 
-const COSTUME_IMG = '/Images/home-photo/three%20images/costume.jpg';
-const CHEMISE_IMG = '/Images/home-photo/three%20images/chemise.jpg';
-const SOULIER_IMG = '/Images/home-photo/three%20images/soulier.jpg';
+const COSTUME_IMG = '/Images/home-photo/three%20images/costume.webp';
+const CHEMISE_IMG = '/Images/home-photo/three%20images/chemise.webp';
+const SOULIER_IMG = '/Images/home-photo/three%20images/soulier.webp';
 
 const BrandShowcase = () => {
   return (

@@ -3,7 +3,7 @@ import BrandShowcase from '../components/BrandShowcase';
 import './Home.css';
 
 const Home = () => {
-  const heroImage = '/Images/home-photo/10111398.jpg';
+  const heroImage = '/Images/home-photo/10111398.webp';
 
   return (
     <div className="home">
