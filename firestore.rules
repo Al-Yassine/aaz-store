@@ -67,9 +67,9 @@ service cloud.firestore {
       );
       
       // Authenticated users can create orders for themselves.
-      // Guest users can also create orders with restricted fields.
+      // Guest-shaped orders are allowed with restricted fields, even if an auth token exists.
       allow create: if (isAuthenticated() && request.resource.data.userId == request.auth.uid)
-        || (!isAuthenticated() && isValidGuestOrderCreate());
+        || isValidGuestOrderCreate();
       
       // Only admins can update orders (for status changes)
       allow update: if isAuthenticated() && isAdmin();

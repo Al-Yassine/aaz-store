@@ -12,11 +12,31 @@ import {
   serverTimestamp,
   Timestamp 
 } from 'firebase/firestore';
-import { firestore } from '../firebase';
+import { auth, firestore, functions } from '../firebase';
 import { httpsCallable } from 'firebase/functions';
-import { functions } from '../firebase';
 
 const ORDERS_COLLECTION = 'orders';
+
+// Align order identity with the real Firebase auth state before hitting Firestore rules.
+const normalizeOrderIdentity = (orderData = {}) => {
+  const firebaseUser = auth.currentUser;
+  const normalizedOrder = { ...orderData };
+
+  if (firebaseUser?.uid) {
+    normalizedOrder.userId = firebaseUser.uid;
+    normalizedOrder.customerEmail = normalizedOrder.customerEmail || firebaseUser.email || '';
+    normalizedOrder.isGuest = false;
+    normalizedOrder.checkoutMode = 'account';
+    return normalizedOrder;
+  }
+
+  normalizedOrder.userId = null;
+  normalizedOrder.isGuest = true;
+  normalizedOrder.checkoutMode = normalizedOrder.checkoutMode || 'guest';
+  normalizedOrder.customerEmail = normalizedOrder.customerEmail || '';
+
+  return normalizedOrder;
+};
 
 /**
  * Order status constants
@@ -43,9 +63,10 @@ export const ORDER_STATUS = {
 export const createOrder = async (orderData) => {
   try {
     const ordersRef = collection(firestore, ORDERS_COLLECTION);
+    const normalizedOrderData = normalizeOrderIdentity(orderData);
     
     const order = {
-      ...orderData,
+      ...normalizedOrderData,
       status: ORDER_STATUS.PENDING,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
@@ -70,6 +91,14 @@ export const createOrder = async (orderData) => {
     };
   } catch (error) {
     console.error('Error creating order:', error);
+
+    if (error?.code === 'permission-denied') {
+      return {
+        success: false,
+        error: 'Permissions Firestore insuffisantes. Verifiez les regles Firestore publiees puis reessayez.'
+      };
+    }
+
     return { 
       success: false, 
       error: error.message 
