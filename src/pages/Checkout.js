@@ -11,7 +11,7 @@ const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { items: cartItems, clearCart } = useCart();
-  const { currentUser, isAuthenticated } = useAuth();
+  const { currentUser } = useAuth();
   const { showToast } = useToast();
   
   const checkoutItems = location.state?.items || cartItems;
@@ -30,29 +30,35 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState(null);
   const [errors, setErrors] = useState({});
+  const [checkoutMode, setCheckoutMode] = useState(currentUser ? 'account' : 'guest');
 
   const isNiameyRegion = formData.region === 'Niamey';
+  const isPickupOrder = paymentMethod === 'pickup';
 
-  // Only calculate delivery fee/time after region is selected
-  const deliveryFee = formData.region ? (isNiameyRegion ? 1000 : 2000) : 0;
-  const deliveryTimeText = formData.region ? (isNiameyRegion ? '1 jour' : '2 jours') : null;
+  // Delivery fees apply only for home delivery orders.
+  const deliveryFee = !isPickupOrder && formData.region ? (isNiameyRegion ? 1000 : 2000) : 0;
+  const deliveryTimeText = isPickupOrder
+    ? 'Retrait en magasin'
+    : (formData.region ? (isNiameyRegion ? '1 jour' : '2 jours') : null);
 
   const subtotal = checkoutItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const total = subtotal + (formData.region ? deliveryFee : 0);
+  const total = subtotal + deliveryFee;
 
   useEffect(() => {
-    if (!isNiameyRegion && paymentMethod === 'cod') {
+    if (formData.region && !isNiameyRegion && paymentMethod === 'cod') {
       setPaymentMethod('nita');
     }
   }, [formData.region, isNiameyRegion, paymentMethod]);
 
-  // Redirect to sign in if not authenticated
   useEffect(() => {
-    if (!isAuthenticated()) {
-      showToast('Veuillez vous connecter pour passer une commande', 'error');
-      navigate('/signin', { state: { from: 'checkout' } });
+    if (currentUser) {
+      setCheckoutMode('account');
+      setFormData(prev => ({
+        ...prev,
+        fullName: prev.fullName || currentUser.displayName || ''
+      }));
     }
-  }, [isAuthenticated, navigate, showToast]);
+  }, [currentUser]);
 
   if (!checkoutItems || checkoutItems.length === 0) {
     return (
@@ -88,16 +94,18 @@ const Checkout = () => {
       newErrors.fullName = 'Le nom complet est requis';
     }
     
-    if (!formData.region) {
-      newErrors.region = 'La région est requise';
-    }
-    
-    if (!formData.quartier.trim()) {
-      newErrors.quartier = 'Le quartier est requis';
-    }
-    
-    if (!formData.address.trim()) {
-      newErrors.address = 'L\'adresse complète est requise';
+    if (!isPickupOrder) {
+      if (!formData.region) {
+        newErrors.region = 'La région est requise';
+      }
+
+      if (!formData.quartier.trim()) {
+        newErrors.quartier = 'Le quartier est requis';
+      }
+
+      if (!formData.address.trim()) {
+        newErrors.address = 'L\'adresse complète est requise';
+      }
     }
     
     if (!formData.phone.trim()) {
@@ -106,7 +114,7 @@ const Checkout = () => {
       newErrors.phone = 'Numéro de téléphone invalide';
     }
 
-    if (!isNiameyRegion && paymentMethod === 'cod') {
+    if (!isPickupOrder && !isNiameyRegion && paymentMethod === 'cod') {
       newErrors.paymentMethod = 'Paiement à la livraison disponible uniquement à Niamey. Veuillez sélectionner le paiement via NITA ou Amana.';
     }
     
@@ -121,37 +129,33 @@ const Checkout = () => {
       return;
     }
 
-    if (!currentUser) {
-      showToast('Veuillez vous connecter pour passer une commande', 'error');
-      navigate('/signin');
-      return;
-    }
-    
     setLoading(true);
 
-    // Prepare order data
+    // Prepare order data with safe defaults to prevent undefined values in Firestore
     const orderData = {
-      userId: currentUser.uid,
-      customerEmail: currentUser.email,
-      products: checkoutItems.map(item => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        selectedSize: item.selectedSize,
-        selectedColor: item.selectedColor,
-        image: item.image || item.images?.[0]
+      userId: currentUser?.uid || null,
+      isGuest: !currentUser,
+      checkoutMode: currentUser ? 'account' : checkoutMode,
+      customerEmail: currentUser?.email || "",
+      products: (checkoutItems || []).map(item => ({
+        id: item?.id || "",
+        name: item?.name || "",
+        price: item?.price || 0,
+        quantity: item?.quantity || 1,
+        selectedSize: item?.selectedSize || "",
+        selectedColor: item?.selectedColor || "",
+        image: item?.image || item?.images?.[0] || ""
       })),
-      totalPrice: total,
-      subtotal: subtotal,
-      deliveryFee: deliveryFee,
-      paymentMethod: paymentMethod,
-      deliveryRegion: formData.region,
+      totalPrice: total || 0,
+      subtotal: subtotal || 0,
+      deliveryFee: deliveryFee || 0,
+      paymentMethod: paymentMethod || "cod",
+      deliveryRegion: isPickupOrder ? 'Retrait en magasin' : (formData?.region || ""),
       deliveryInfo: {
-        fullName: formData.fullName,
-        phone: formData.phone,
-        quartier: formData.quartier,
-        address: formData.address
+        fullName: formData?.fullName || "",
+        phone: formData?.phone || "",
+        quartier: isPickupOrder ? '' : (formData?.quartier || ""),
+        address: isPickupOrder ? '' : (formData?.address || "")
       }
     };
 
@@ -179,7 +183,15 @@ const Checkout = () => {
       <div className="checkout-page page">
         <div className="container">
           <div className="order-confirmation">
-            {paymentMethod === 'cod' ? (
+            {paymentMethod === 'pickup' ? (
+              <>
+                <div className="confirmation-icon success">✅</div>
+                <h2>Reservation confirmee !</h2>
+                <p className="confirmation-message">
+                  Votre reservation <strong>#{orderId?.slice(-8).toUpperCase()}</strong> est enregistree. Vous pouvez recuperer votre commande directement en magasin.
+                </p>
+              </>
+            ) : paymentMethod === 'cod' ? (
               <>
                 <div className="confirmation-icon success">✅</div>
                 <h2>Commande confirmée !</h2>
@@ -204,7 +216,7 @@ const Checkout = () => {
                 <span>{formatPrice(subtotal)}</span>
               </div>
               <div className="summary-row">
-                <span>Livraison ({formData.region || 'À définir'}):</span>
+                <span>{isPickupOrder ? 'Retrait en magasin:' : `Livraison (${formData.region || 'A definir'}):`}</span>
                 <span>{formatPrice(deliveryFee)}</span>
               </div>
               <div className="summary-row total">
@@ -230,7 +242,40 @@ const Checkout = () => {
         <div className="checkout-grid">
           {/* Customer Information Form */}
           <div className="checkout-form-section">
-            <h2 className="section-title">Informations de livraison</h2>
+            {!currentUser && (
+              <div className="checkout-account-choice">
+                <h2 className="choice-title">Comment souhaitez-vous continuer ?</h2>
+                <p className="choice-subtitle">
+                  Vous pouvez commander sans compte, ou vous connecter pour retrouver vos commandes plus facilement.
+                </p>
+                <div className="choice-actions">
+                  <button
+                    type="button"
+                    className={`choice-btn ${checkoutMode === 'guest' ? 'active' : ''}`}
+                    onClick={() => setCheckoutMode('guest')}
+                  >
+                    Continuer en tant qu'invité
+                  </button>
+                  <button
+                    type="button"
+                    className="choice-btn secondary"
+                    onClick={() => navigate('/signin', { state: { from: 'checkout' } })}
+                  >
+                    Se connecter / Creer un compte
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {currentUser && (
+              <div className="checkout-authenticated-notice">
+                <strong>Compte connecte :</strong> {currentUser.email}
+              </div>
+            )}
+
+            <h2 className="section-title">
+              {isPickupOrder ? 'Informations de reservation' : 'Informations de livraison'}
+            </h2>
             
             <form onSubmit={handleConfirmOrder} className="checkout-form">
               <div className="form-group">
@@ -247,65 +292,77 @@ const Checkout = () => {
                 {errors.fullName && <span className="error-message">{errors.fullName}</span>}
               </div>
 
-              <div className="form-group">
-                <label htmlFor="region">Région *</label>
-                <select
-                  id="region"
-                  name="region"
-                  value={formData.region}
-                  onChange={handleInputChange}
-                  className={errors.region ? 'error' : ''}
-                >
-                  <option value="">-- Sélectionnez une région --</option>
-                  <option value="Agadez">Agadez</option>
-                  <option value="Diffa">Diffa</option>
-                  <option value="Dosso">Dosso</option>
-                  <option value="Maradi">Maradi</option>
-                  <option value="Niamey">Niamey</option>
-                  <option value="Tahoua">Tahoua</option>
-                  <option value="Tillabéri">Tillabéri</option>
-                  <option value="Zinder">Zinder</option>
-                </select>
-                {errors.region && <span className="error-message">{errors.region}</span>}
-                {formData.region && (
-                  <div className="delivery-info">
-                    <span className="delivery-time">
-                      ⏱️ Livraison estimée : <strong>{deliveryTimeText}</strong>
-                    </span>
-                    <span className="delivery-fee">
-                      💰 Frais de livraison : <strong>{formatPrice(deliveryFee)}</strong>
-                    </span>
+              {!isPickupOrder && (
+                <>
+                  <div className="form-group">
+                    <label htmlFor="region">Region *</label>
+                    <select
+                      id="region"
+                      name="region"
+                      value={formData.region}
+                      onChange={handleInputChange}
+                      className={errors.region ? 'error' : ''}
+                    >
+                      <option value="">-- Selectionnez une region --</option>
+                      <option value="Agadez">Agadez</option>
+                      <option value="Diffa">Diffa</option>
+                      <option value="Dosso">Dosso</option>
+                      <option value="Maradi">Maradi</option>
+                      <option value="Niamey">Niamey</option>
+                      <option value="Tahoua">Tahoua</option>
+                      <option value="Tillaberi">Tillaberi</option>
+                      <option value="Zinder">Zinder</option>
+                    </select>
+                    {errors.region && <span className="error-message">{errors.region}</span>}
+                    {formData.region && (
+                      <div className="delivery-info">
+                        <span className="delivery-time">
+                          Livraison estimee : <strong>{deliveryTimeText}</strong>
+                        </span>
+                        <span className="delivery-fee">
+                          Frais de livraison : <strong>{formatPrice(deliveryFee)}</strong>
+                        </span>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <div className="form-group">
-                <label htmlFor="quartier">Quartier *</label>
-                <input
-                  type="text"
-                  id="quartier"
-                  name="quartier"
-                  value={formData.quartier}
-                  onChange={handleInputChange}
-                  className={errors.quartier ? 'error' : ''}
-                  placeholder="Entrez votre quartier"
-                />
-                {errors.quartier && <span className="error-message">{errors.quartier}</span>}
-              </div>
+                  <div className="form-group">
+                    <label htmlFor="quartier">Quartier *</label>
+                    <input
+                      type="text"
+                      id="quartier"
+                      name="quartier"
+                      value={formData.quartier}
+                      onChange={handleInputChange}
+                      className={errors.quartier ? 'error' : ''}
+                      placeholder="Entrez votre quartier"
+                    />
+                    {errors.quartier && <span className="error-message">{errors.quartier}</span>}
+                  </div>
 
-              <div className="form-group">
-                <label htmlFor="address">Adresse complète *</label>
-                <textarea
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className={errors.address ? 'error' : ''}
-                  placeholder="Entrez votre adresse complète"
-                  rows="3"
-                />
-                {errors.address && <span className="error-message">{errors.address}</span>}
-              </div>
+                  <div className="form-group">
+                    <label htmlFor="address">Adresse complete *</label>
+                    <textarea
+                      id="address"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      className={errors.address ? 'error' : ''}
+                      placeholder="Entrez votre adresse complete"
+                      rows="3"
+                    />
+                    {errors.address && <span className="error-message">{errors.address}</span>}
+                  </div>
+                </>
+              )}
+
+              {isPickupOrder && (
+                <div className="delivery-info">
+                  <span className="delivery-time">
+                    Retrait en magasin : <strong>Reservation sans frais de livraison</strong>
+                  </span>
+                </div>
+              )}
 
               <div className="form-group">
                 <label htmlFor="phone">Numéro de téléphone *</label>
@@ -325,7 +382,7 @@ const Checkout = () => {
               <div className="payment-section">
                 <h3 className="section-subtitle">Mode de paiement</h3>
                 
-                {!isNiameyRegion && formData.region && (
+                {!isPickupOrder && !isNiameyRegion && formData.region && (
                   <div className="payment-restriction-notice">
                     <span className="restriction-icon">⚠️</span>
                     <span className="restriction-text">
@@ -383,6 +440,22 @@ const Checkout = () => {
                       </span>
                     </div>
                   </label>
+
+                  <label className={`payment-option ${paymentMethod === 'pickup' ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="pickup"
+                      checked={paymentMethod === 'pickup'}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                    />
+                    <div className="payment-option-content">
+                      <span className="payment-title">Reservation et retrait en magasin</span>
+                      <span className="payment-description">
+                        Reservez vos articles maintenant et venez les recuperer en boutique. Aucun frais de livraison.
+                      </span>
+                    </div>
+                  </label>
                 </div>
                 {errors.paymentMethod && (
                   <span className="error-message">{errors.paymentMethod}</span>
@@ -392,7 +465,7 @@ const Checkout = () => {
               <button 
                 type="submit" 
                 className="confirm-btn"
-                disabled={!formData.region || loading}
+                disabled={loading || (!isPickupOrder && !formData.region)}
               >
                 {loading ? 'Traitement en cours...' : 'Confirmer ma commande'}
               </button>
@@ -430,7 +503,15 @@ const Checkout = () => {
               </div>
 
               {/* Delivery row: show fee/time only if region selected, otherwise prompt to define */}
-              {!formData.region ? (
+              {isPickupOrder ? (
+                <div className="total-row">
+                  <div className="delivery-details">
+                    <span>Retrait en magasin</span>
+                    <span className="delivery-time-badge">Sans frais de livraison</span>
+                  </div>
+                  <span>{formatPrice(0)}</span>
+                </div>
+              ) : !formData.region ? (
                 <div className="total-row">
                   <div className="delivery-details">
                     <span>Livraison (À définir)</span>

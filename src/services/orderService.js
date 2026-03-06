@@ -53,13 +53,15 @@ export const createOrder = async (orderData) => {
     
     const docRef = await addDoc(ordersRef, order);
     
-    // Trigger email notification via Cloud Function
-    try {
-      const sendOrderEmail = httpsCallable(functions, 'sendOrderConfirmationEmail');
-      await sendOrderEmail({ orderId: docRef.id });
-    } catch (emailError) {
-      // Don't fail the order if email fails
-      console.warn('Failed to send order confirmation email:', emailError);
+    // Guests are unauthenticated, so skip callable email notification for guest orders.
+    if (!order.isGuest && order.userId) {
+      try {
+        const sendOrderEmail = httpsCallable(functions, 'sendOrderConfirmationEmail');
+        await sendOrderEmail({ orderId: docRef.id });
+      } catch (emailError) {
+        // Don't fail the order if email fails
+        console.warn('Failed to send order confirmation email:', emailError);
+      }
     }
     
     return { 

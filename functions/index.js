@@ -67,6 +67,12 @@ function getStatusLabel(status) {
   return labels[status] || status;
 }
 
+function getPaymentMethodLabel(paymentMethod) {
+  if (paymentMethod === 'cod') return 'Paiement a la livraison';
+  if (paymentMethod === 'pickup') return 'Reservation / retrait en magasin';
+  return 'NITA/Amana';
+}
+
 /**
  * Send order confirmation email when a new order is created
  * Callable from client-side
@@ -308,7 +314,7 @@ exports.onOrderCreated = functions.firestore
               <p><strong>Numéro de commande:</strong> #${orderId.slice(-8).toUpperCase()}</p>
               <p><strong>Date:</strong> ${formatDate(order.createdAt)}</p>
               <p><strong>Statut:</strong> ${getStatusLabel(order.status)}</p>
-              <p><strong>Méthode de paiement:</strong> ${order.paymentMethod === 'cod' ? 'Paiement à la livraison' : 'NITA/Amana'}</p>
+              <p><strong>Méthode de paiement:</strong> ${getPaymentMethodLabel(order.paymentMethod)}</p>
             </div>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">

@@ -215,6 +215,12 @@ const AdminDashboard = () => {
     return classes[status] || '';
   };
 
+  const getPaymentMethodLabel = (method) => {
+    if (method === 'cod') return 'A la livraison';
+    if (method === 'pickup') return 'Reservation / Retrait';
+    return 'NITA/Amana';
+  };
+
   if (authLoading || loading) {
     return (
       <div className="admin-dashboard page">
@@ -360,7 +366,7 @@ const AdminDashboard = () => {
                     <td className="order-total">{formatPrice(order.totalPrice)}</td>
                     <td>
                       <span className={`payment-badge ${order.paymentMethod}`}>
-                        {order.paymentMethod === 'cod' ? 'À la livraison' : 'NITA/Amana'}
+                        {getPaymentMethodLabel(order.paymentMethod)}
                       </span>
                     </td>
                     <td>{order.deliveryRegion}</td>
@@ -420,7 +426,7 @@ const AdminDashboard = () => {
                   </span>
                 </p>
                 <p><strong>Méthode de paiement:</strong> 
-                  {selectedOrder.paymentMethod === 'cod' ? 'À la livraison' : 'NITA/Amana'}
+                  {getPaymentMethodLabel(selectedOrder.paymentMethod)}
                 </p>
               </div>
               

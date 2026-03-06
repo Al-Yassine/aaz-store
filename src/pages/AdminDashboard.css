@@ -296,6 +296,11 @@
   color: #1565c0;
 }
 
+.payment-badge.pickup {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
 /* Status Select */
 .status-select {
   padding: 6px 10px;
