@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { signUp, signIn, resetPassword, resendVerificationEmail } from '../services/authService';
 import './SignIn.css';
@@ -57,11 +57,33 @@ const SignIn = () => {
     }, [resendCooldown]);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { currentUser } = useAuth();
+  const redirectAfterSignIn =
+    typeof location.state?.redirectTo === 'string' && location.state.redirectTo
+      ? location.state.redirectTo
+      : '/';
+
+  useEffect(() => {
+    if (location.state?.formSuccess) {
+      setSubmitError('');
+      setSubmitSuccess(location.state.formSuccess);
+    }
+
+    if (location.state?.formError) {
+      setSubmitSuccess('');
+      setSubmitError(location.state.formError);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    if (currentUser && !loading && !resendLoading) {
+      navigate(redirectAfterSignIn, { replace: true });
+    }
+  }, [currentUser, loading, resendLoading, navigate, redirectAfterSignIn]);
 
   // Redirect if already logged in
   if (currentUser && !loading && !resendLoading) {
-    navigate('/');
     return null;
   }
 
@@ -221,7 +243,7 @@ const SignIn = () => {
         setSubmitError('');
         setSubmitSuccess('Connexion reussie ! Redirection...');
         setTimeout(() => {
-          navigate('/');
+          navigate(redirectAfterSignIn, { replace: true });
         }, 1000);
       } else {
         setCanResendVerification(result.errorCode === 'auth/email-not-verified');

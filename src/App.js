@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import ProtectedRoute from './components/ProtectedRoute';
 import Toast from './components/Toast';
 import Home from './pages/Home';
 import Products from './pages/Products';
@@ -100,7 +101,14 @@ function App() {
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/order-tracking" element={<OrderTracking />} />
+                  <Route
+                    path="/order-tracking"
+                    element={(
+                      <ProtectedRoute message="Veuillez vous connecter pour acceder a Mon compte et suivre vos commandes.">
+                        <OrderTracking />
+                      </ProtectedRoute>
+                    )}
+                  />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/signin" element={<SignIn />} />

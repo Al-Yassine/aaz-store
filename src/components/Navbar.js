@@ -284,11 +284,6 @@ const Navbar = () => {
               )}
             </li>
             <li className="navbar-item">
-              <Link to="/order-tracking" className="navbar-link" onClick={handleLinkClick}>
-                Suivi commande
-              </Link>
-            </li>
-            <li className="navbar-item">
               <Link to="/contact" className="navbar-link" onClick={handleLinkClick}>
                 Contact
               </Link>

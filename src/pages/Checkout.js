@@ -50,7 +50,6 @@ const Checkout = () => {
   const confirmationTotal = confirmedOrder?.total ?? total;
   const confirmationIsPickup = confirmedOrder?.isPickupOrder ?? isPickupOrder;
   const confirmationRegion = confirmedOrder?.deliveryRegion || formData.region;
-  const canTrackCreatedOrder = Boolean(currentUser && orderNumber);
 
   useEffect(() => {
     if (formData.region && !isNiameyRegion && paymentMethod === 'cod') {
@@ -293,14 +292,6 @@ const Checkout = () => {
             </div>
             
             <div className="confirmation-actions">
-              {canTrackCreatedOrder && (
-                <button
-                  className="secondary-btn"
-                  onClick={() => navigate(`/order-tracking?orderRef=${encodeURIComponent(orderNumber)}`)}
-                >
-                  Suivre cette commande
-                </button>
-              )}
               <button className="primary-btn" onClick={() => navigate('/products')}>
                 Continuer vos achats
               </button>
