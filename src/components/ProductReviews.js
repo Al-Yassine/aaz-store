@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { createProductReview, getProductReviews } from '../services/reviewService';
 import './ProductReviews.css';
 
 const ProductReviews = ({ productId }) => {
@@ -9,24 +10,71 @@ const ProductReviews = ({ productId }) => {
     comment: '',
     rating: 0
   });
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [hoveredStar, setHoveredStar] = useState(0);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [statusType, setStatusType] = useState('');
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const storedReviews = localStorage.getItem(`product_reviews_${productId}`);
-    if (storedReviews) {
-      try {
-        setReviews(JSON.parse(storedReviews));
-      } catch (error) {}
-    }
+    let isCancelled = false;
+
+    setStatusMessage('');
+    setStatusType('');
+
+    const loadReviews = async () => {
+      setLoadingReviews(true);
+
+      const result = await getProductReviews(String(productId));
+
+      if (isCancelled) {
+        return;
+      }
+
+      if (result.success) {
+        setReviews(result.data || []);
+      } else {
+        setReviews([]);
+        setStatusType('error');
+        setStatusMessage(result.error || 'Impossible de charger les avis pour le moment.');
+      }
+
+      setLoadingReviews(false);
+    };
+
+    loadReviews();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [productId]);
 
-  useEffect(() => {
-    if (reviews.length > 0) {
-      localStorage.setItem(`product_reviews_${productId}`, JSON.stringify(reviews));
+  const ratingSummary = useMemo(() => {
+    const totalReviews = reviews.length;
+
+    if (totalReviews === 0) {
+      return {
+        average: 0,
+        averageText: '0.0',
+        starText: '☆☆☆☆☆',
+        totalReviews: 0
+      };
     }
-  }, [reviews, productId]);
+
+    const totalRating = reviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0);
+    const average = totalRating / totalReviews;
+    const roundedToOneDecimal = Math.round(average * 10) / 10;
+    const roundedStars = Math.max(0, Math.min(5, Math.round(average)));
+    const starText = `${'★'.repeat(roundedStars)}${'☆'.repeat(5 - roundedStars)}`;
+
+    return {
+      average,
+      averageText: roundedToOneDecimal.toFixed(1),
+      starText,
+      totalReviews
+    };
+  }, [reviews]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -53,34 +101,41 @@ const ProductReviews = ({ productId }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (submitting) {
+      return;
+    }
+
     if (!validateForm()) {
       return;
     }
 
-    const newReview = {
-      id: Date.now(),
-      name: formData.name.trim(),
-      email: formData.email.trim(), // Stored but not displayed
-      comment: formData.comment.trim(),
-      rating: formData.rating,
-      date: new Date().toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
-    };
+    setSubmitting(true);
+    setStatusMessage('');
+    setStatusType('');
 
-    setReviews([newReview, ...reviews]);
-    setFormData({ name: '', email: '', comment: '', rating: 0 });
-    setShowSuccess(true);
-    setErrors({});
-    
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 5000);
+    const result = await createProductReview({
+      productId: String(productId),
+      name: formData.name,
+      email: formData.email,
+      comment: formData.comment,
+      rating: formData.rating
+    });
+
+    if (result.success && result.data) {
+      setReviews((currentReviews) => [result.data, ...currentReviews]);
+      setFormData({ name: '', email: '', comment: '', rating: 0 });
+      setErrors({});
+      setStatusType('success');
+      setStatusMessage('Merci pour votre avis ! Votre commentaire a ete enregistre.');
+    } else {
+      setStatusType('error');
+      setStatusMessage(result.error || 'Impossible de publier votre avis pour le moment.');
+    }
+
+    setSubmitting(false);
   };
 
   const handleStarClick = (rating) => {
@@ -146,17 +201,6 @@ const ProductReviews = ({ productId }) => {
     <div className="product-reviews">
       <h2 className="reviews-title">Avis clients</h2>
 
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="success-message">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          Merci pour votre avis !
-        </div>
-      )}
-
       {/* Review Form */}
       <form className="review-form" onSubmit={handleSubmit}>
         <h3 className="form-title">Laisser un avis</h3>
@@ -221,14 +265,33 @@ const ProductReviews = ({ productId }) => {
           {errors.comment && <span className="error-message">{errors.comment}</span>}
         </div>
 
-        <button type="submit" className="submit-review-btn">
-          Publier l'avis
+        <button type="submit" className="submit-review-btn" disabled={submitting}>
+          {submitting ? 'Publication...' : "Publier l'avis"}
         </button>
+
+        {statusMessage && (
+          <p
+            className={`review-status review-status-${statusType || 'info'}`}
+            role={statusType === 'error' ? 'alert' : 'status'}
+          >
+            {statusMessage}
+          </p>
+        )}
       </form>
+
+      <div className="reviews-summary" aria-live="polite">
+        <p className="summary-rating-line">
+          <span className="summary-stars" aria-hidden="true">{ratingSummary.starText}</span>{' '}
+          <strong>{ratingSummary.averageText} / 5</strong>
+        </p>
+        <p className="summary-count-line">Base sur {ratingSummary.totalReviews} avis</p>
+      </div>
 
       {/* Reviews List */}
       <div className="reviews-list">
-        {reviews.length === 0 ? (
+        {loadingReviews ? (
+          <p className="no-reviews">Chargement des avis...</p>
+        ) : reviews.length === 0 ? (
           <p className="no-reviews">Aucun avis pour le moment. Soyez le premier à laisser un avis !</p>
         ) : (
           reviews.map((review) => (
