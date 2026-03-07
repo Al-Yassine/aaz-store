@@ -11,21 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate Firebase env vars
-        env:
-          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY || vars.REACT_APP_FIREBASE_API_KEY }}
-          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN || vars.REACT_APP_FIREBASE_AUTH_DOMAIN }}
-          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID || vars.REACT_APP_FIREBASE_PROJECT_ID }}
-          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET || vars.REACT_APP_FIREBASE_STORAGE_BUCKET }}
-          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || vars.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
-          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID || vars.REACT_APP_FIREBASE_APP_ID }}
-        run: |
-          test -n "$REACT_APP_FIREBASE_API_KEY" || (echo "Missing Firebase env value: REACT_APP_FIREBASE_API_KEY (set Secret or Variable)" && exit 1)
-          test -n "$REACT_APP_FIREBASE_AUTH_DOMAIN" || (echo "Missing Firebase env value: REACT_APP_FIREBASE_AUTH_DOMAIN (set Secret or Variable)" && exit 1)
-          test -n "$REACT_APP_FIREBASE_PROJECT_ID" || (echo "Missing Firebase env value: REACT_APP_FIREBASE_PROJECT_ID (set Secret or Variable)" && exit 1)
-          test -n "$REACT_APP_FIREBASE_STORAGE_BUCKET" || (echo "Missing Firebase env value: REACT_APP_FIREBASE_STORAGE_BUCKET (set Secret or Variable)" && exit 1)
-          test -n "$REACT_APP_FIREBASE_MESSAGING_SENDER_ID" || (echo "Missing Firebase env value: REACT_APP_FIREBASE_MESSAGING_SENDER_ID (set Secret or Variable)" && exit 1)
-          test -n "$REACT_APP_FIREBASE_APP_ID" || (echo "Missing Firebase env value: REACT_APP_FIREBASE_APP_ID (set Secret or Variable)" && exit 1)
       - run: npm ci && CI=false npm run build
         env:
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY || vars.REACT_APP_FIREBASE_API_KEY }}

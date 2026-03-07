@@ -30,15 +30,15 @@ const missingOrPlaceholderApiKeys = new Set([
   'your_api_key'
 ]);
 
-// Keep the app renderable even if deploy env vars are missing.
-// Auth actions will surface a clear inline API-key error in the UI.
+// Use canonical Firebase web config values for this project as safe defaults.
+// Firebase web SDK keys are public in frontend apps.
 const apiKey = missingOrPlaceholderApiKeys.has(apiKeyFromEnv)
-  ? 'AIzaSyDemoKeyForDevelopmentOnly'
+  ? 'AIzaSyC60yn8Yvyf8U6wHiqG79OJ6pZCF5w_Tjs'
   : apiKeyFromEnv;
 
 if (missingOrPlaceholderApiKeys.has(apiKeyFromEnv)) {
-  console.error(
-    '[Firebase config] REACT_APP_FIREBASE_API_KEY is missing/placeholder in this build environment. Set REACT_APP_FIREBASE_* on your host (Vercel or CI secrets), then rebuild/redeploy to enable authentication.'
+  console.warn(
+    '[Firebase config] REACT_APP_FIREBASE_API_KEY is missing/placeholder. Using built-in AAZ Store Firebase project config.'
   );
 }
 
@@ -48,9 +48,9 @@ const firebaseConfig = {
   apiKey,
   authDomain: getEnv('REACT_APP_FIREBASE_AUTH_DOMAIN', 'aazstore-71de7.firebaseapp.com'),
   projectId: getEnv('REACT_APP_FIREBASE_PROJECT_ID', 'aazstore-71de7'),
-  storageBucket: getEnv('REACT_APP_FIREBASE_STORAGE_BUCKET', 'aazstore-71de7.appspot.com'),
-  messagingSenderId: getEnv('REACT_APP_FIREBASE_MESSAGING_SENDER_ID', '123456789'),
-  appId: getEnv('REACT_APP_FIREBASE_APP_ID', '1:123456789:web:abcdef123456'),
+  storageBucket: getEnv('REACT_APP_FIREBASE_STORAGE_BUCKET', 'aazstore-71de7.firebasestorage.app'),
+  messagingSenderId: getEnv('REACT_APP_FIREBASE_MESSAGING_SENDER_ID', '935908899228'),
+  appId: getEnv('REACT_APP_FIREBASE_APP_ID', '1:935908899228:web:2e1d8fe86784901e80f059'),
   measurementId: getEnv('REACT_APP_FIREBASE_MEASUREMENT_ID', 'G-XXXXXXXXXX')
 };
 
