@@ -145,7 +145,7 @@ export const setUserAsAdmin = async (uid) => {
   }
 };
 
-export default {
+const userService = {
   createUserDocument,
   getUserDocument,
   updateUserDocument,
@@ -153,3 +153,5 @@ export default {
   getUserRole,
   setUserAsAdmin
 };
+
+export default userService;

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
 import { formatPrice } from '../utils/formatPrice';
 import { createOrder } from '../services/orderService';
 import './Checkout.css';
@@ -12,9 +11,8 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { items: cartItems, clearCart } = useCart();
   const { currentUser } = useAuth();
-  const { showToast } = useToast();
   
-  const checkoutItems = location.state?.items || cartItems;
+  const checkoutItems = location.state?.items || cartItems || [];
   const fromBuyNow = location.state?.fromBuyNow || false;
 
   const [formData, setFormData] = useState({
@@ -28,9 +26,11 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [orderId, setOrderId] = useState(null);
+  const [orderNumber, setOrderNumber] = useState('');
   const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
   const [checkoutMode, setCheckoutMode] = useState(currentUser ? 'account' : 'guest');
+  const [confirmedOrder, setConfirmedOrder] = useState(null);
 
   const isNiameyRegion = formData.region === 'Niamey';
   const isPickupOrder = paymentMethod === 'pickup';
@@ -43,6 +43,14 @@ const Checkout = () => {
 
   const subtotal = checkoutItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const total = subtotal + deliveryFee;
+
+  const confirmationItems = confirmedOrder?.items || checkoutItems;
+  const confirmationSubtotal = confirmedOrder?.subtotal ?? subtotal;
+  const confirmationDeliveryFee = confirmedOrder?.deliveryFee ?? deliveryFee;
+  const confirmationTotal = confirmedOrder?.total ?? total;
+  const confirmationIsPickup = confirmedOrder?.isPickupOrder ?? isPickupOrder;
+  const confirmationRegion = confirmedOrder?.deliveryRegion || formData.region;
+  const canTrackCreatedOrder = Boolean(currentUser && orderNumber);
 
   useEffect(() => {
     if (formData.region && !isNiameyRegion && paymentMethod === 'cod') {
@@ -60,7 +68,7 @@ const Checkout = () => {
     }
   }, [currentUser]);
 
-  if (!checkoutItems || checkoutItems.length === 0) {
+  if (!orderConfirmed && (!checkoutItems || checkoutItems.length === 0)) {
     return (
       <div className="checkout-page page">
         <div className="container">
@@ -84,6 +92,21 @@ const Checkout = () => {
     }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    if (submitError) {
+      setSubmitError('');
+    }
+  };
+
+  const handlePaymentMethodChange = (value) => {
+    setPaymentMethod(value);
+
+    if (errors.paymentMethod) {
+      setErrors(prev => ({ ...prev, paymentMethod: '' }));
+    }
+
+    if (submitError) {
+      setSubmitError('');
     }
   };
 
@@ -124,6 +147,7 @@ const Checkout = () => {
 
   const handleConfirmOrder = async (e) => {
     e.preventDefault();
+    setSubmitError('');
     
     if (!validateForm()) {
       return;
@@ -165,16 +189,31 @@ const Checkout = () => {
     setLoading(false);
 
     if (result.success) {
-      setOrderId(result.orderId);
+      setConfirmedOrder({
+        items: checkoutItems.map(item => ({
+          id: item?.id || '',
+          cartItemId: item?.cartItemId || '',
+          name: item?.name || 'Article',
+          quantity: item?.quantity || 1,
+          price: item?.price || 0,
+          selectedSize: item?.selectedSize || '',
+          selectedColor: item?.selectedColor || ''
+        })),
+        subtotal,
+        deliveryFee,
+        total,
+        isPickupOrder,
+        deliveryRegion: isPickupOrder ? 'Retrait en magasin' : (formData?.region || '')
+      });
+
+      setOrderNumber(result.orderNumber || (result.orderId ? result.orderId.slice(-8).toUpperCase() : ''));
       setOrderConfirmed(true);
       
       if (!fromBuyNow) {
         clearCart();
       }
-      
-      showToast('Commande créée avec succès !', 'success');
     } else {
-      showToast(result.error || 'Erreur lors de la création de la commande', 'error');
+      setSubmitError(result.error || 'Erreur lors de la creation de la commande');
     }
   };
 
@@ -188,7 +227,7 @@ const Checkout = () => {
                 <div className="confirmation-icon success">✅</div>
                 <h2>Reservation confirmee !</h2>
                 <p className="confirmation-message">
-                  Votre reservation <strong>#{orderId?.slice(-8).toUpperCase()}</strong> est enregistree. Vous pouvez recuperer votre commande directement en magasin.
+                  Votre reference <strong>{orderNumber || 'N/A'}</strong> est enregistree. Vous pouvez recuperer votre commande directement en magasin.
                 </p>
               </>
             ) : paymentMethod === 'cod' ? (
@@ -196,7 +235,7 @@ const Checkout = () => {
                 <div className="confirmation-icon success">✅</div>
                 <h2>Commande confirmée !</h2>
                 <p className="confirmation-message">
-                  Votre commande <strong>#{orderId?.slice(-8).toUpperCase()}</strong> a été confirmée. Vous paierez à la livraison.
+                  Votre reference <strong>{orderNumber || 'N/A'}</strong> a ete confirmee. Vous paierez a la livraison.
                 </p>
               </>
             ) : (
@@ -204,7 +243,7 @@ const Checkout = () => {
                 <div className="confirmation-icon pending">⏳</div>
                 <h2>Commande en attente</h2>
                 <p className="confirmation-message">
-                  Votre commande <strong>#{orderId?.slice(-8).toUpperCase()}</strong> est en attente de paiement. Elle sera confirmée dès réception du transfert.
+                  Votre reference <strong>{orderNumber || 'N/A'}</strong> est en attente de paiement. Elle sera confirmee des reception du transfert.
                 </p>
               </>
             )}
@@ -212,22 +251,60 @@ const Checkout = () => {
             <div className="order-summary-box">
               <h3>Récapitulatif de votre commande</h3>
               <div className="summary-row">
-                <span>Sous-total:</span>
-                <span>{formatPrice(subtotal)}</span>
+                <span>Reference de commande:</span>
+                <span>{orderNumber || 'N/A'}</span>
               </div>
               <div className="summary-row">
-                <span>{isPickupOrder ? 'Retrait en magasin:' : `Livraison (${formData.region || 'A definir'}):`}</span>
-                <span>{formatPrice(deliveryFee)}</span>
+                <span>Sous-total:</span>
+                <span>{formatPrice(confirmationSubtotal)}</span>
+              </div>
+              <div className="summary-row">
+                <span>{confirmationIsPickup ? 'Retrait en magasin:' : `Livraison (${confirmationRegion || 'A definir'}):`}</span>
+                <span>{formatPrice(confirmationDeliveryFee)}</span>
               </div>
               <div className="summary-row total">
                 <span>Total:</span>
-                <span>{formatPrice(total)}</span>
+                <span>{formatPrice(confirmationTotal)}</span>
+              </div>
+            </div>
+
+            <div className="confirmation-items-box">
+              <h3>Articles commandés</h3>
+              <div className="confirmation-items-list">
+                {confirmationItems.map((item, index) => (
+                  <div
+                    key={item.cartItemId || item.id || `${item.name}-${index}`}
+                    className="confirmation-item-row"
+                  >
+                    <div className="confirmation-item-main">
+                      <span className="confirmation-item-name">{item.name}</span>
+                      <span className="confirmation-item-meta">
+                        Qté: {item.quantity}
+                        {item.selectedSize ? ` • Taille: ${item.selectedSize}` : ''}
+                        {item.price ? ` • ${formatPrice(item.price)} / unité` : ''}
+                      </span>
+                    </div>
+                    <span className="confirmation-item-total">
+                      {formatPrice((item.price || 0) * (item.quantity || 1))}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
             
-            <button className="primary-btn" onClick={() => navigate('/products')}>
-              Continuer vos achats
-            </button>
+            <div className="confirmation-actions">
+              {canTrackCreatedOrder && (
+                <button
+                  className="secondary-btn"
+                  onClick={() => navigate(`/order-tracking?orderRef=${encodeURIComponent(orderNumber)}`)}
+                >
+                  Suivre cette commande
+                </button>
+              )}
+              <button className="primary-btn" onClick={() => navigate('/products')}>
+                Continuer vos achats
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -277,7 +354,7 @@ const Checkout = () => {
               {isPickupOrder ? 'Informations de reservation' : 'Informations de livraison'}
             </h2>
             
-            <form onSubmit={handleConfirmOrder} className="checkout-form">
+            <form onSubmit={handleConfirmOrder} className="checkout-form" noValidate>
               <div className="form-group">
                 <label htmlFor="fullName">Nom complet *</label>
                 <input
@@ -408,7 +485,7 @@ const Checkout = () => {
                       checked={paymentMethod === 'cod'}
                       onChange={(e) => {
                         if (isNiameyRegion) {
-                          setPaymentMethod(e.target.value);
+                          handlePaymentMethodChange(e.target.value);
                         }
                       }}
                       disabled={!isNiameyRegion}
@@ -430,7 +507,7 @@ const Checkout = () => {
                       name="paymentMethod"
                       value="nita"
                       checked={paymentMethod === 'nita'}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      onChange={(e) => handlePaymentMethodChange(e.target.value)}
                     />
                     <div className="payment-option-content">
                       <span className="payment-title">Paiement via NITA / Amana</span>
@@ -447,7 +524,7 @@ const Checkout = () => {
                       name="paymentMethod"
                       value="pickup"
                       checked={paymentMethod === 'pickup'}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      onChange={(e) => handlePaymentMethodChange(e.target.value)}
                     />
                     <div className="payment-option-content">
                       <span className="payment-title">Reservation et retrait en magasin</span>
@@ -461,6 +538,12 @@ const Checkout = () => {
                   <span className="error-message">{errors.paymentMethod}</span>
                 )}
               </div>
+
+              {submitError && (
+                <div className="checkout-submit-error" role="alert">
+                  {submitError}
+                </div>
+              )}
 
               <button 
                 type="submit" 

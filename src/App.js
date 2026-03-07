@@ -16,6 +16,7 @@ import Contact from './pages/Contact';
 import SignIn from './pages/SignIn';
 import ProductDetail from './pages/ProductDetail';
 import Checkout from './pages/Checkout';
+import OrderTracking from './pages/OrderTracking';
 import CGU from './pages/CGU';
 import Privacy from './pages/Privacy';
 import CGV from './pages/CGV';
@@ -99,6 +100,7 @@ function App() {
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/order-tracking" element={<OrderTracking />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/signin" element={<SignIn />} />

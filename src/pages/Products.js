@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { products } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import './Products.css';
@@ -142,8 +142,6 @@ const Products = () => {
     applySearch(name);
     setShowSuggestions(false);
   };
-
-  const featuredProducts = useMemo(() => products.slice(0, 6), []);
 
   return (
     <div className="products-page">

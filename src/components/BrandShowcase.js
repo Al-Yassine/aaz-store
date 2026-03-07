@@ -13,7 +13,7 @@ const BrandShowcase = () => {
         
         {/* ── Transition statement (visual pause under Hero) ── */}
         <div className="brand-transition" aria-hidden="true">
-          L’essentiel. Rien de superflu.
+          Une vision complète du style masculin.
         </div>
 
 

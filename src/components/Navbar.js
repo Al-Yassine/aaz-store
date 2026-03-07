@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -13,8 +13,21 @@ const Navbar = () => {
   const [currentView, setCurrentView] = useState('main'); // 'main' or 'articles' or 'chaussures' or 'tshirts'
   const [viewStack, setViewStack] = useState(['main']); // Track navigation history
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const scrollPositionRef = useRef(0);
   const navigate = useNavigate();
 
+  // Go back to previous view
+  const goBack = useCallback(() => {
+    if (viewStack.length > 1) {
+      const newStack = [...viewStack];
+      newStack.pop();
+      const previousView = newStack[newStack.length - 1];
+      setViewStack(newStack);
+      setCurrentView(previousView);
+    }
+  }, [viewStack]);
+
+  // Keyboard handling while menu is open.
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape' && isOpen) {
@@ -26,18 +39,59 @@ const Navbar = () => {
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+    if (!isOpen) {
+      return;
     }
+
+    document.addEventListener('keydown', handleEscape);
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
     };
-  }, [isOpen, currentView,]);
+  }, [isOpen, currentView, goBack]);
+
+  // Prevent page/background scroll while keeping the hamburger menu scrollable.
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const html = document.documentElement;
+    const body = document.body;
+    const currentScrollY = window.scrollY || window.pageYOffset || 0;
+    const previousInlineScrollBehavior = html.style.scrollBehavior;
+
+    scrollPositionRef.current = currentScrollY;
+
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+    body.style.position = 'fixed';
+    body.style.top = `-${currentScrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+
+    return () => {
+      const savedScrollY = scrollPositionRef.current;
+
+      // Override global smooth scrolling so restoring position is immediate.
+      html.style.scrollBehavior = 'auto';
+
+      html.style.overflow = '';
+      body.style.overflow = '';
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+
+      window.scrollTo({ top: savedScrollY, left: 0, behavior: 'auto' });
+
+      requestAnimationFrame(() => {
+        html.style.scrollBehavior = previousInlineScrollBehavior;
+      });
+    };
+  }, [isOpen]);
 
   const handleLinkClick = () => {
     setIsOpen(false);
@@ -53,17 +107,6 @@ const Navbar = () => {
   const navigateToView = (view) => {
     setViewStack(prev => [...prev, view]);
     setCurrentView(view);
-  };
-
-  // Go back to previous view
-  const goBack = () => {
-    if (viewStack.length > 1) {
-      const newStack = [...viewStack];
-      newStack.pop();
-      const previousView = newStack[newStack.length - 1];
-      setViewStack(newStack);
-      setCurrentView(previousView);
-    }
   };
 
   // Handle category/subcategory click - navigates to products page with filter
@@ -178,17 +221,16 @@ const Navbar = () => {
             
             {/* Articles - navigates to submenu */}
             <li className="navbar-item">
-              <a 
-                href="#" 
-                className="navbar-link navbar-link-parent"
-                onClick={(e) => {
-                  e.preventDefault();
+              <button
+                type="button"
+                className="navbar-link navbar-link-parent navbar-link-button"
+                onClick={() => {
                   navigateToView('articles');
                 }}
               >
                 <span className="nav-arrow">‹</span>
                 Articles
-              </a>
+              </button>
             </li>
             
             <li className="navbar-item">
@@ -204,6 +246,16 @@ const Navbar = () => {
                   {showUserMenu && (
                     <div className="user-dropdown-menu">
                       <div className="user-email">{currentUser.email}</div>
+                      <Link
+                        to="/order-tracking"
+                        className="dropdown-item"
+                        onClick={() => {
+                          setShowUserMenu(false);
+                          handleLinkClick();
+                        }}
+                      >
+                        📦 Suivi de mes commandes
+                      </Link>
                       {isAdmin && (
                         <Link 
                           to="/admin" 
@@ -232,6 +284,11 @@ const Navbar = () => {
               )}
             </li>
             <li className="navbar-item">
+              <Link to="/order-tracking" className="navbar-link" onClick={handleLinkClick}>
+                Suivi commande
+              </Link>
+            </li>
+            <li className="navbar-item">
               <Link to="/contact" className="navbar-link" onClick={handleLinkClick}>
                 Contact
               </Link>
@@ -246,16 +303,15 @@ const Navbar = () => {
           {/* Articles Submenu View */}
           <div className={`menu-view ${currentView === 'articles' ? 'active' : ''}`}>
             <li className="navbar-item navbar-item-back">
-              <a 
-                href="#" 
-                className="navbar-link"
-                onClick={(e) => {
-                  e.preventDefault();
+              <button
+                type="button"
+                className="navbar-link navbar-link-button"
+                onClick={() => {
                   goBack();
                 }}
               >
                 Retour<span className="back-arrow">›</span>
-              </a>
+              </button>
             </li>
             <li className="navbar-item navbar-item-title">
               <span className="navbar-link navbar-link-title">Articles</span>
@@ -277,17 +333,16 @@ const Navbar = () => {
               <React.Fragment key={category.id}>
                 {category.isExpandable ? (
                   <li className="navbar-item">
-                    <a
-                      href="#"
-                      className="navbar-link navbar-link-parent"
-                      onClick={(e) => {
-                        e.preventDefault();
+                    <button
+                      type="button"
+                      className="navbar-link navbar-link-parent navbar-link-button"
+                      onClick={() => {
                         navigateToView(category.id);
                       }}
                     >
                       <span className="nav-arrow">‹</span>
                       {category.name}
-                    </a>
+                    </button>
                   </li>
                 ) : (
                   <li className="navbar-item">
@@ -315,17 +370,16 @@ const Navbar = () => {
           {menuCategories.filter(cat => cat.id !== 'all' && cat.isExpandable).map(category => (
             <div key={category.id} className={`menu-view ${currentView === category.id ? 'active' : ''}`}>
               <li className="navbar-item navbar-item-back">
-                <a 
-                  href="#" 
-                  className="navbar-link"
-                  onClick={(e) => {
-                    e.preventDefault();
+                <button
+                  type="button"
+                  className="navbar-link navbar-link-button"
+                  onClick={() => {
                     goBack();
                   }}
                 >
                   Retour
                   <span className="back-arrow">›</span>
-                </a>
+                </button>
               </li>
               <li className="navbar-item navbar-item-title">
                 <span className="navbar-link navbar-link-title">{category.name}</span>

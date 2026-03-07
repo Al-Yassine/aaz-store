@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useToast } from '../context/ToastContext';
+import { createContactMessage, sendContactMessageNotification } from '../services/contactService';
 import './Contact.css';
 
 const Contact = () => {
@@ -94,46 +94,161 @@ export default Contact;
 
 /* ContactForm component moved here for simplicity */
 function ContactForm() {
+  const GENERIC_SUBMIT_ERROR = '⚠️ Une erreur est survenue. Veuillez réessayer.';
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
-  const { showToast } = useToast();
+  const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const validateForm = () => {
+    const validationErrors = {};
+
+    if (!formData.name.trim()) {
+      validationErrors.name = 'Le nom est requis';
+    }
+
+    if (!formData.email.trim()) {
+      validationErrors.email = "L'adresse email est requise";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      validationErrors.email = 'Adresse email invalide';
+    }
+
+    if (!formData.subject.trim()) {
+      validationErrors.subject = 'Le sujet est requis';
+    }
+
+    if (!formData.message.trim()) {
+      validationErrors.message = 'Le message est requis';
+    } else if (formData.message.trim().length < 10) {
+      validationErrors.message = 'Le message doit contenir au moins 10 caracteres';
+    }
+
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+
+    if (submitError) {
+      setSubmitError('');
+    }
+
+    if (submitSuccess) {
+      setSubmitSuccess('');
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    showToast('Merci pour votre message ! Nous vous répondrons très bientôt.', 'success');
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess('');
+
+    const saveResult = await createContactMessage(formData);
+    if (!saveResult.success || !saveResult.messageId) {
+      console.error('Contact message save failed:', saveResult.error);
+      setSubmitError(GENERIC_SUBMIT_ERROR);
+      setSubmitting(false);
+      return;
+    }
+
+    const notificationResult = await sendContactMessageNotification(saveResult.messageId);
+    if (!notificationResult.success && !notificationResult.nonBlocking) {
+      console.error('Contact message email notification failed:', notificationResult.error);
+      setSubmitError(GENERIC_SUBMIT_ERROR);
+      setSubmitting(false);
+      return;
+    }
+
+    if (notificationResult.nonBlocking) {
+      console.warn('Contact notification skipped due unavailable endpoint:', notificationResult.error);
+    }
+
     setFormData({ name: '', email: '', subject: '', message: '' });
+    setErrors({});
+    setSubmitSuccess('Message envoye avec succes. Nous vous repondrons bientot.');
+    setSubmitting(false);
   };
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit}>
+    <form className="contact-form" onSubmit={handleSubmit} noValidate>
       <p className="contact-form-note">Vous avez une question ou remarque, nous serons ravi de vous lire.</p>
       <h3>Envoyez-nous un message</h3>
 
+      {submitError && <div className="contact-form-feedback error">{submitError}</div>}
+      {submitSuccess && <div className="contact-form-feedback success">{submitSuccess}</div>}
+
       <div className="form-group">
         <label htmlFor="name">Nom *</label>
-        <input id="name" name="name" type="text" value={formData.name} onChange={handleInputChange} required />
+        <input
+          id="name"
+          name="name"
+          type="text"
+          value={formData.name}
+          onChange={handleInputChange}
+          className={errors.name ? 'contact-input-error' : ''}
+          aria-invalid={!!errors.name}
+        />
+        {errors.name && <span className="contact-field-error">{errors.name}</span>}
       </div>
 
       <div className="form-group">
         <label htmlFor="email">Email *</label>
-        <input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} required />
+        <input
+          id="email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          className={errors.email ? 'contact-input-error' : ''}
+          aria-invalid={!!errors.email}
+        />
+        {errors.email && <span className="contact-field-error">{errors.email}</span>}
       </div>
 
       <div className="form-group">
         <label htmlFor="subject">Sujet *</label>
-        <input id="subject" name="subject" type="text" value={formData.subject} onChange={handleInputChange} required />
+        <input
+          id="subject"
+          name="subject"
+          type="text"
+          value={formData.subject}
+          onChange={handleInputChange}
+          className={errors.subject ? 'contact-input-error' : ''}
+          aria-invalid={!!errors.subject}
+        />
+        {errors.subject && <span className="contact-field-error">{errors.subject}</span>}
       </div>
 
       <div className="form-group">
         <label htmlFor="message">Message *</label>
-        <textarea id="message" name="message" rows="5" value={formData.message} onChange={handleInputChange} required />
+        <textarea
+          id="message"
+          name="message"
+          rows="5"
+          value={formData.message}
+          onChange={handleInputChange}
+          className={errors.message ? 'contact-input-error' : ''}
+          aria-invalid={!!errors.message}
+        />
+        {errors.message && <span className="contact-field-error">{errors.message}</span>}
       </div>
 
-      <button type="submit" className="submit-btn">Envoyer un Message</button>
+      <button type="submit" className="submit-btn" disabled={submitting}>
+        {submitting ? 'Envoi en cours...' : 'Envoyer un Message'}
+      </button>
     </form>
   );
 }

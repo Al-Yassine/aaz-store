@@ -45,6 +45,62 @@
   color: #1a1a2e;
 }
 
+.admin-inline-error {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  background: #ffe9ec;
+  border: 1px solid #f5b8c0;
+  color: #8b1d2c;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  line-height: 1.45;
+}
+
+.admin-inline-error-close {
+  border: none;
+  background: transparent;
+  color: #8b1d2c;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.admin-inline-error-close:hover {
+  color: #5f1320;
+}
+
+.admin-inline-success {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  background: #e9f8ef;
+  border: 1px solid #bfe5cc;
+  color: #176443;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  line-height: 1.45;
+}
+
+.admin-inline-success-close {
+  border: none;
+  background: transparent;
+  color: #176443;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.admin-inline-success-close:hover {
+  color: #0f4e34;
+}
+
 .logout-btn {
   padding: 10px 20px;
   background: #e74c3c;
@@ -221,6 +277,161 @@
   overflow: hidden;
 }
 
+/* Client Messages */
+.client-messages-section {
+  margin-top: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+}
+
+.messages-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.messages-section-header h2 {
+  margin: 0;
+  color: #1a1a2e;
+  font-size: 1.2rem;
+}
+
+.messages-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.messages-sort-controls label {
+  color: #4a4a4a;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.messages-sort-controls select {
+  border: 1px solid #d8dce2;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background: #fff;
+}
+
+.no-messages {
+  padding: 36px 16px;
+  text-align: center;
+  color: #6c757d;
+  background: #fafbfc;
+  border: 1px dashed #dce1e8;
+  border-radius: 10px;
+}
+
+.messages-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.messages-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 920px;
+}
+
+.messages-table th,
+.messages-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #edf0f5;
+  vertical-align: middle;
+}
+
+.messages-table th {
+  background: #f8f9fa;
+  color: #333;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.messages-table tr:hover {
+  background: #fafafa;
+}
+
+.message-row-unread {
+  background: #f4f9ff;
+}
+
+.message-row-unread td:first-child {
+  border-left: 3px solid #1f7aec;
+}
+
+.message-preview {
+  max-width: 320px;
+  color: #4a5568;
+  line-height: 1.35;
+}
+
+.message-status-select {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 100px;
+}
+
+.message-status-new {
+  background: #e8f2ff;
+  color: #0d4fbe;
+}
+
+.message-status-read {
+  background: #fff5df;
+  color: #915a00;
+}
+
+.message-status-resolved {
+  background: #e7f8ee;
+  color: #146b45;
+}
+
+.messages-pagination {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.messages-page-btn {
+  border: 1px solid #d2d7df;
+  background: #fff;
+  color: #1f2a37;
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.messages-page-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.messages-page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.messages-page-indicator {
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
 .no-orders {
   padding: 60px 20px;
   text-align: center;
@@ -372,6 +583,21 @@
   color: #c62828;
 }
 
+.status-badge.message-status-new {
+  background: #e8f2ff;
+  color: #0d4fbe;
+}
+
+.status-badge.message-status-read {
+  background: #fff5df;
+  color: #915a00;
+}
+
+.status-badge.message-status-resolved {
+  background: #e7f8ee;
+  color: #146b45;
+}
+
 /* Actions */
 .actions-cell {
   display: flex;
@@ -386,6 +612,20 @@
   cursor: pointer;
   font-size: 1rem;
   transition: all 0.2s ease;
+}
+
+.action-btn.whatsapp-btn {
+  width: auto;
+  min-height: 36px;
+  padding: 0 12px;
+  background: #25d366;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.action-btn.whatsapp-btn:hover {
+  background: #1fb857;
 }
 
 .view-btn {
@@ -496,6 +736,52 @@
 .detail-section p strong {
   color: #666;
   font-weight: 500;
+}
+
+.message-detail-text {
+  margin-top: 12px;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  color: #2d3748;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.message-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.message-action-btn {
+  border: none;
+  background: #e8f2ff;
+  color: #0d4fbe;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.message-action-btn:hover:not(:disabled) {
+  background: #dceafe;
+}
+
+.message-action-btn.resolved {
+  background: #e7f8ee;
+  color: #146b45;
+}
+
+.message-action-btn.resolved:hover:not(:disabled) {
+  background: #d9f1e5;
+}
+
+.message-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Ordered Products */
@@ -655,6 +941,28 @@
     min-width: 800px;
   }
 
+  .client-messages-section {
+    padding: 16px;
+  }
+
+  .messages-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .messages-sort-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .messages-sort-controls select {
+    width: 62%;
+  }
+
+  .messages-pagination {
+    justify-content: space-between;
+  }
+
   .modal-content {
     margin: 10px;
     max-height: 95vh;
@@ -672,5 +980,20 @@
 
   .stat-value {
     font-size: 1.25rem;
+  }
+
+  .messages-sort-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .messages-sort-controls select {
+    width: 100%;
+  }
+
+  .messages-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }

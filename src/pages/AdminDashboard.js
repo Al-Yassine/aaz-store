@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
 import { 
   getAllOrders, 
   updateOrderStatus, 
@@ -12,12 +11,43 @@ import {
 } from '../services/orderService';
 import { logOut } from '../services/authService';
 import { setUserAsAdmin } from '../services/userService';
+import {
+  CONTACT_MESSAGE_STATUS,
+  getAllContactMessages,
+  updateContactMessageStatus
+} from '../services/contactService';
 import { formatPrice } from '../utils/formatPrice';
 import './AdminDashboard.css';
 
+const DEFAULT_STORE_ADMIN_WHATSAPP = '22789609497';
+
+const sanitizePhoneForWhatsApp = (value) => (value || '').toString().replace(/\D/g, '');
+
+const formatAmountForWhatsApp = (amount) => {
+  return `${new Intl.NumberFormat('fr-FR').format(amount || 0)} CFA`;
+};
+
+const MESSAGES_PAGE_SIZE = 8;
+
+const MESSAGE_STATUS_SORT_WEIGHT = {
+  [CONTACT_MESSAGE_STATUS.NEW]: 0,
+  [CONTACT_MESSAGE_STATUS.READ]: 1,
+  [CONTACT_MESSAGE_STATUS.RESOLVED]: 2
+};
+
+const getOrderDisplayReference = (order = {}) => {
+  const idValue = (order.id || '').toString().trim();
+  if (idValue) {
+    return idValue.slice(-8).toUpperCase();
+  }
+
+  const legacyOrderNumber = (order.orderNumber || '').toString().trim();
+  return legacyOrderNumber || 'N/A';
+};
+
 const AdminDashboard = () => {
   const { currentUser, isAdmin, userData, loading: authLoading, refreshUserData } = useAuth();
-  const { showToast } = useToast();
+  const location = useLocation();
   const navigate = useNavigate();
   
   const [orders, setOrders] = useState([]);
@@ -29,6 +59,17 @@ const AdminDashboard = () => {
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [messageSort, setMessageSort] = useState('date_desc');
+  const [messagePage, setMessagePage] = useState(1);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [pageError, setPageError] = useState('');
+  const [pageSuccess, setPageSuccess] = useState('');
+
+  const adminWhatsAppPhone = sanitizePhoneForWhatsApp(
+    process.env.REACT_APP_ADMIN_WHATSAPP_NUMBER || DEFAULT_STORE_ADMIN_WHATSAPP
+  );
 
   // Debug logging
   useEffect(() => {
@@ -41,70 +82,109 @@ const AdminDashboard = () => {
   // Redirect non-admin users
   useEffect(() => {
     if (!authLoading && !currentUser) {
-      showToast('Veuillez vous connecter', 'error');
-      navigate('/admin/login');
+      navigate('/admin/login', {
+        replace: true,
+        state: {
+          formError: 'Veuillez vous connecter pour acceder au tableau de bord admin.'
+        }
+      });
     }
-  }, [currentUser, authLoading, navigate, showToast]);
+  }, [currentUser, authLoading, navigate]);
 
   // For development: Allow setting self as admin
   const handleMakeAdmin = async () => {
     if (!currentUser) return;
     
     try {
+      setPageError('');
+      setPageSuccess('');
       const result = await setUserAsAdmin(currentUser.uid);
       if (result.success) {
-        showToast('Vous êtes maintenant administrateur !', 'success');
+        setPageSuccess('Vous etes maintenant administrateur !');
         await refreshUserData();
       } else {
-        showToast('Erreur: ' + result.error, 'error');
+        setPageSuccess('');
+        setPageError('Erreur: ' + result.error);
       }
     } catch (error) {
-      showToast('Erreur lors de la mise à jour du rôle', 'error');
+      setPageSuccess('');
+      setPageError('Erreur lors de la mise a jour du role');
     }
   };
 
   const handleLogout = async () => {
     try {
+      setPageError('');
+      setPageSuccess('');
       await logOut();
-      showToast('Déconnexion réussie', 'success');
-      navigate('/admin/login');
+      navigate('/admin/login', {
+        replace: true,
+        state: {
+          formSuccess: 'Deconnexion reussie.'
+        }
+      });
     } catch (error) {
-      showToast('Erreur lors de la déconnexion', 'error');
+      setPageSuccess('');
+      setPageError('Erreur lors de la deconnexion');
     }
   };
 
   // Fetch orders
   useEffect(() => {
     const fetchOrders = async () => {
-      if (!isAdmin) return;
+      if (!isAdmin) {
+        setLoading(false);
+        return;
+      }
       
       setLoading(true);
+      setPageError('');
       try {
-        const [ordersResult, statsResult] = await Promise.all([
+        const [ordersResult, statsResult, messagesResult] = await Promise.all([
           getAllOrders(),
-          getOrderStatistics()
+          getOrderStatistics(),
+          getAllContactMessages()
         ]);
         
         if (ordersResult.success) {
           setOrders(ordersResult.data);
           setFilteredOrders(ordersResult.data);
         } else {
-          showToast('Erreur lors du chargement des commandes', 'error');
+          setPageError('Erreur lors du chargement des commandes');
         }
         
         if (statsResult.success) {
           setStats(statsResult.data);
         }
+
+        if (messagesResult.success) {
+          setMessages(messagesResult.data);
+        } else {
+          setPageError('Erreur lors du chargement des messages clients');
+        }
       } catch (error) {
         console.error('Error fetching orders:', error);
-        showToast('Erreur lors du chargement des données', 'error');
+        setPageError('Erreur lors du chargement des donnees');
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrders();
-  }, [isAdmin, showToast]);
+  }, [isAdmin]);
+
+  useEffect(() => {
+    const targetMessageId = new URLSearchParams(location.search).get('messageId');
+    if (!targetMessageId || messages.length === 0) {
+      return;
+    }
+
+    const targetMessage = messages.find((message) => message.id === targetMessageId);
+    if (targetMessage) {
+      setSelectedMessage(targetMessage);
+      setShowMessageModal(true);
+    }
+  }, [location.search, messages]);
 
   // Filter orders by status
   useEffect(() => {
@@ -117,6 +197,8 @@ const AdminDashboard = () => {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
+      setPageError('');
+      setPageSuccess('');
       const result = await updateOrderStatus(orderId, newStatus);
       
       if (result.success) {
@@ -135,13 +217,15 @@ const AdminDashboard = () => {
           setStats(statsResult.data);
         }
         
-        showToast('Statut mis à jour avec succès', 'success');
+        setPageSuccess('Statut mis a jour avec succes');
       } else {
-        showToast(result.error || 'Erreur lors de la mise à jour', 'error');
+        setPageSuccess('');
+        setPageError(result.error || 'Erreur lors de la mise a jour');
       }
     } catch (error) {
       console.error('Error updating status:', error);
-      showToast('Erreur lors de la mise à jour du statut', 'error');
+      setPageSuccess('');
+      setPageError('Erreur lors de la mise a jour du statut');
     }
   };
 
@@ -149,6 +233,8 @@ const AdminDashboard = () => {
     if (!orderToDelete) return;
     
     try {
+      setPageError('');
+      setPageSuccess('');
       const result = await deleteOrder(orderToDelete);
       
       if (result.success) {
@@ -157,13 +243,15 @@ const AdminDashboard = () => {
           ...prevStats,
           total: prevStats.total - 1
         }));
-        showToast('Commande supprimée avec succès', 'success');
+        setPageSuccess('Commande supprimee avec succes');
       } else {
-        showToast(result.error || 'Erreur lors de la suppression', 'error');
+        setPageSuccess('');
+        setPageError(result.error || 'Erreur lors de la suppression');
       }
     } catch (error) {
       console.error('Error deleting order:', error);
-      showToast('Erreur lors de la suppression de la commande', 'error');
+      setPageSuccess('');
+      setPageError('Erreur lors de la suppression de la commande');
     } finally {
       setShowDeleteConfirm(false);
       setOrderToDelete(null);
@@ -178,6 +266,148 @@ const AdminDashboard = () => {
   const confirmDelete = (orderId) => {
     setOrderToDelete(orderId);
     setShowDeleteConfirm(true);
+  };
+
+  const sortedMessages = useMemo(() => {
+    const nextMessages = [...messages];
+
+    if (messageSort === 'date_asc') {
+      nextMessages.sort((a, b) => {
+        const aTime = timestampToDate(a.createdAt)?.getTime() || 0;
+        const bTime = timestampToDate(b.createdAt)?.getTime() || 0;
+        return aTime - bTime;
+      });
+      return nextMessages;
+    }
+
+    if (messageSort === 'status') {
+      nextMessages.sort((a, b) => {
+        const aWeight = MESSAGE_STATUS_SORT_WEIGHT[a.status] ?? 99;
+        const bWeight = MESSAGE_STATUS_SORT_WEIGHT[b.status] ?? 99;
+        if (aWeight !== bWeight) {
+          return aWeight - bWeight;
+        }
+
+        const aTime = timestampToDate(a.createdAt)?.getTime() || 0;
+        const bTime = timestampToDate(b.createdAt)?.getTime() || 0;
+        return bTime - aTime;
+      });
+      return nextMessages;
+    }
+
+    nextMessages.sort((a, b) => {
+      const aTime = timestampToDate(a.createdAt)?.getTime() || 0;
+      const bTime = timestampToDate(b.createdAt)?.getTime() || 0;
+      return bTime - aTime;
+    });
+
+    return nextMessages;
+  }, [messages, messageSort]);
+
+  const totalMessagePages = Math.max(1, Math.ceil(sortedMessages.length / MESSAGES_PAGE_SIZE));
+
+  const paginatedMessages = useMemo(() => {
+    const startIndex = (messagePage - 1) * MESSAGES_PAGE_SIZE;
+    return sortedMessages.slice(startIndex, startIndex + MESSAGES_PAGE_SIZE);
+  }, [sortedMessages, messagePage]);
+
+  useEffect(() => {
+    if (messagePage > totalMessagePages) {
+      setMessagePage(totalMessagePages);
+    }
+  }, [messagePage, totalMessagePages]);
+
+  const buildWhatsAppOrderMessage = (order) => {
+    const productsText = (order?.products || []).map((product) => {
+      const productName = product?.name || 'Produit';
+      const sizePart = product?.selectedSize ? ` - Taille ${product.selectedSize}` : '';
+      const quantityPart = product?.quantity ? ` x${product.quantity}` : '';
+      return `- ${productName}${sizePart}${quantityPart}`;
+    }).join('\n');
+
+    return [
+      'Nouvelle commande',
+      '',
+      `Commande: ${getOrderDisplayReference(order)}`,
+      `Client: ${order?.deliveryInfo?.fullName || 'N/A'}`,
+      `Telephone: ${order?.deliveryInfo?.phone || 'N/A'}`,
+      '',
+      'Produits:',
+      productsText || '- N/A',
+      '',
+      `Total: ${formatAmountForWhatsApp(order?.totalPrice)}`
+    ].join('\n');
+  };
+
+  const handleSendWhatsApp = (order) => {
+    setPageError('');
+    setPageSuccess('');
+
+    if (!adminWhatsAppPhone) {
+      setPageError('Numero WhatsApp admin manquant. Configurez REACT_APP_ADMIN_WHATSAPP_NUMBER.');
+      return;
+    }
+
+    const message = buildWhatsAppOrderMessage(order);
+    // encodeURIComponent ensures spaces/new lines are URL-safe for WhatsApp links.
+    const whatsappUrl = `https://wa.me/${adminWhatsAppPhone}?text=${encodeURIComponent(message)}`;
+    const openedWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+
+    if (!openedWindow) {
+      setPageError('Impossible d\'ouvrir WhatsApp. Autorisez les pop-ups puis reessayez.');
+      return;
+    }
+
+    setPageSuccess('Message WhatsApp pre-rempli ouvert. Verifiez puis envoyez depuis WhatsApp.');
+  };
+
+  const handleMessageStatusChange = async (messageId, newStatus) => {
+    setPageError('');
+    setPageSuccess('');
+
+    const result = await updateContactMessageStatus(messageId, newStatus);
+    if (!result.success) {
+      setPageError(result.error || 'Erreur lors de la mise a jour du message');
+      return;
+    }
+
+    setMessages((prevMessages) =>
+      prevMessages.map((message) =>
+        message.id === messageId
+          ? { ...message, status: newStatus }
+          : message
+      )
+    );
+
+    if (selectedMessage?.id === messageId) {
+      setSelectedMessage((prev) => (prev ? { ...prev, status: newStatus } : prev));
+    }
+
+    setPageSuccess('Statut du message client mis a jour.');
+  };
+
+  const openMessageDetails = (message) => {
+    setSelectedMessage(message);
+    setShowMessageModal(true);
+  };
+
+  const closeMessageModal = () => {
+    setShowMessageModal(false);
+
+    const params = new URLSearchParams(location.search);
+    if (!params.has('messageId')) {
+      return;
+    }
+
+    params.delete('messageId');
+    const nextSearch = params.toString();
+    navigate(
+      {
+        pathname: location.pathname,
+        search: nextSearch ? `?${nextSearch}` : ''
+      },
+      { replace: true }
+    );
   };
 
   const formatDate = (timestamp) => {
@@ -221,6 +451,20 @@ const AdminDashboard = () => {
     return 'NITA/Amana';
   };
 
+  const getMessageStatusLabel = (status) => {
+    if (status === CONTACT_MESSAGE_STATUS.NEW) return 'Nouveau';
+    if (status === CONTACT_MESSAGE_STATUS.READ) return 'Lu';
+    if (status === CONTACT_MESSAGE_STATUS.RESOLVED) return 'Resolue';
+    return status || 'N/A';
+  };
+
+  const getMessageStatusClass = (status) => {
+    if (status === CONTACT_MESSAGE_STATUS.NEW) return 'message-status-new';
+    if (status === CONTACT_MESSAGE_STATUS.READ) return 'message-status-read';
+    if (status === CONTACT_MESSAGE_STATUS.RESOLVED) return 'message-status-resolved';
+    return '';
+  };
+
   if (authLoading || loading) {
     return (
       <div className="admin-dashboard page">
@@ -242,6 +486,32 @@ const AdminDashboard = () => {
           <div className="not-admin-container">
             <div className="not-admin-card">
               <h2>Accès Admin Requis</h2>
+              {pageSuccess && (
+                <div className="admin-inline-success" role="status">
+                  <span>{pageSuccess}</span>
+                  <button
+                    type="button"
+                    className="admin-inline-success-close"
+                    onClick={() => setPageSuccess('')}
+                    aria-label="Fermer le message de succes"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+              {pageError && (
+                <div className="admin-inline-error" role="alert">
+                  <span>{pageError}</span>
+                  <button
+                    type="button"
+                    className="admin-inline-error-close"
+                    onClick={() => setPageError('')}
+                    aria-label="Fermer le message d'erreur"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
               <p>Vous êtes connecté en tant que <strong>{currentUser.email}</strong></p>
               <p>Votre rôle actuel: <strong>{userData?.role || 'customer'}</strong></p>
               <p className="not-admin-info">
@@ -284,6 +554,34 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
+
+        {pageError && (
+          <div className="admin-inline-error" role="alert">
+            <span>{pageError}</span>
+            <button
+              type="button"
+              className="admin-inline-error-close"
+              onClick={() => setPageError('')}
+              aria-label="Fermer le message d'erreur"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
+        {pageSuccess && (
+          <div className="admin-inline-success" role="status">
+            <span>{pageSuccess}</span>
+            <button
+              type="button"
+              className="admin-inline-success-close"
+              onClick={() => setPageSuccess('')}
+              aria-label="Fermer le message de succes"
+            >
+              ×
+            </button>
+          </div>
+        )}
 
         {/* Statistics Cards */}
         {stats && (
@@ -342,7 +640,7 @@ const AdminDashboard = () => {
             <table className="orders-table">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>N° Commande</th>
                   <th>Client</th>
                   <th>Date</th>
                   <th>Total</th>
@@ -355,7 +653,7 @@ const AdminDashboard = () => {
               <tbody>
                 {filteredOrders.map((order) => (
                   <tr key={order.id}>
-                    <td className="order-id">{order.id.slice(-8).toUpperCase()}</td>
+                    <td className="order-id">{getOrderDisplayReference(order)}</td>
                     <td>
                       <div className="customer-info">
                         <span className="customer-name">{order.deliveryInfo?.fullName || 'N/A'}</span>
@@ -384,6 +682,13 @@ const AdminDashboard = () => {
                       </select>
                     </td>
                     <td className="actions-cell">
+                      <button
+                        className="action-btn whatsapp-btn"
+                        onClick={() => handleSendWhatsApp(order)}
+                        title="Envoyer sur WhatsApp"
+                      >
+                        Envoyer sur WhatsApp
+                      </button>
                       <button 
                         className="action-btn view-btn"
                         onClick={() => openOrderDetails(order)}
@@ -405,6 +710,114 @@ const AdminDashboard = () => {
             </table>
           )}
         </div>
+
+        <section className="client-messages-section">
+          <div className="messages-section-header">
+            <h2>Messages Clients</h2>
+            <div className="messages-sort-controls">
+              <label htmlFor="messages-sort">Trier:</label>
+              <select
+                id="messages-sort"
+                value={messageSort}
+                onChange={(event) => {
+                  setMessageSort(event.target.value);
+                  setMessagePage(1);
+                }}
+              >
+                <option value="date_desc">Date (plus recents)</option>
+                <option value="date_asc">Date (plus anciens)</option>
+                <option value="status">Statut</option>
+              </select>
+            </div>
+          </div>
+
+          {sortedMessages.length === 0 ? (
+            <div className="no-messages">
+              <p>Aucun message client pour le moment.</p>
+            </div>
+          ) : (
+            <>
+              <div className="messages-table-container">
+                <table className="messages-table">
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Email</th>
+                      <th>Sujet</th>
+                      <th>Message</th>
+                      <th>Date</th>
+                      <th>Statut</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginatedMessages.map((message) => (
+                      <tr
+                        key={message.id}
+                        className={message.status === CONTACT_MESSAGE_STATUS.NEW ? 'message-row-unread' : ''}
+                      >
+                        <td>{message.name || 'N/A'}</td>
+                        <td>{message.email || 'N/A'}</td>
+                        <td>{message.subject || 'Sans sujet'}</td>
+                        <td className="message-preview">
+                          {(message.message || '').length > 90
+                            ? `${message.message.slice(0, 90)}...`
+                            : (message.message || 'N/A')}
+                        </td>
+                        <td>{formatDate(message.createdAt)}</td>
+                        <td>
+                          <select
+                            value={message.status || CONTACT_MESSAGE_STATUS.NEW}
+                            onChange={(event) => handleMessageStatusChange(message.id, event.target.value)}
+                            className={`message-status-select ${getMessageStatusClass(message.status)}`}
+                          >
+                            <option value={CONTACT_MESSAGE_STATUS.NEW}>Nouveau</option>
+                            <option value={CONTACT_MESSAGE_STATUS.READ}>Lu</option>
+                            <option value={CONTACT_MESSAGE_STATUS.RESOLVED}>Resolue</option>
+                          </select>
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="action-btn view-btn"
+                            onClick={() => openMessageDetails(message)}
+                            title="Voir le message"
+                          >
+                            👁️
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {totalMessagePages > 1 && (
+                <div className="messages-pagination">
+                  <button
+                    type="button"
+                    className="messages-page-btn"
+                    onClick={() => setMessagePage((prev) => Math.max(1, prev - 1))}
+                    disabled={messagePage === 1}
+                  >
+                    Precedent
+                  </button>
+                  <span className="messages-page-indicator">
+                    Page {messagePage} / {totalMessagePages}
+                  </span>
+                  <button
+                    type="button"
+                    className="messages-page-btn"
+                    onClick={() => setMessagePage((prev) => Math.min(totalMessagePages, prev + 1))}
+                    disabled={messagePage === totalMessagePages}
+                  >
+                    Suivant
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </section>
       </div>
 
       {/* Order Details Modal */}
@@ -418,7 +831,8 @@ const AdminDashboard = () => {
             <div className="modal-body">
               <div className="detail-section">
                 <h3>Informations de commande</h3>
-                <p><strong>ID:</strong> {selectedOrder.id}</p>
+                <p><strong>Numero de commande:</strong> {getOrderDisplayReference(selectedOrder)}</p>
+                <p><strong>ID technique:</strong> {selectedOrder.id}</p>
                 <p><strong>Date:</strong> {formatDate(selectedOrder.createdAt)}</p>
                 <p><strong>Statut:</strong> 
                   <span className={`status-badge ${getStatusClass(selectedOrder.status)}`}>
@@ -465,6 +879,57 @@ const AdminDashboard = () => {
                 <p><strong>Sous-total:</strong> {formatPrice(selectedOrder.subtotal || selectedOrder.totalPrice - (selectedOrder.deliveryFee || 0))}</p>
                 <p><strong>Livraison:</strong> {formatPrice(selectedOrder.deliveryFee || 0)}</p>
                 <p className="total-line"><strong>Total:</strong> {formatPrice(selectedOrder.totalPrice)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Message Details Modal */}
+      {showMessageModal && selectedMessage && (
+        <div className="modal-overlay" onClick={closeMessageModal}>
+          <div className="modal-content" onClick={(event) => event.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Message Client</h2>
+              <button className="close-btn" onClick={closeMessageModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="detail-section">
+                <h3>Informations</h3>
+                <p><strong>Nom:</strong> {selectedMessage.name || 'N/A'}</p>
+                <p><strong>Email:</strong> {selectedMessage.email || 'N/A'}</p>
+                <p><strong>Sujet:</strong> {selectedMessage.subject || 'Sans sujet'}</p>
+                <p><strong>Date:</strong> {formatDate(selectedMessage.createdAt)}</p>
+                <p>
+                  <strong>Statut:</strong>
+                  <span className={`status-badge ${getMessageStatusClass(selectedMessage.status)}`}>
+                    {getMessageStatusLabel(selectedMessage.status)}
+                  </span>
+                </p>
+              </div>
+
+              <div className="detail-section">
+                <h3>Message</h3>
+                <p className="message-detail-text">{selectedMessage.message || 'N/A'}</p>
+              </div>
+
+              <div className="detail-section message-detail-actions">
+                <button
+                  type="button"
+                  className="message-action-btn"
+                  onClick={() => handleMessageStatusChange(selectedMessage.id, CONTACT_MESSAGE_STATUS.READ)}
+                  disabled={selectedMessage.status === CONTACT_MESSAGE_STATUS.READ}
+                >
+                  Marquer comme lu
+                </button>
+                <button
+                  type="button"
+                  className="message-action-btn resolved"
+                  onClick={() => handleMessageStatusChange(selectedMessage.id, CONTACT_MESSAGE_STATUS.RESOLVED)}
+                  disabled={selectedMessage.status === CONTACT_MESSAGE_STATUS.RESOLVED}
+                >
+                  Marquer comme resolu
+                </button>
               </div>
             </div>
           </div>

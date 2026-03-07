@@ -27,7 +27,7 @@ const app = initializeApp(firebaseConfig);
 // Initialize services
 const auth = getAuth(app);
 const firestore = getFirestore(app);
-const functions = getFunctions(app);
+const functions = getFunctions(app, 'us-central1');
 
 // Connect to emulators in development (optional)
 if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_EMULATORS === 'true') {

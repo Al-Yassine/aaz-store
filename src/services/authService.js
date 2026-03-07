@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendEmailVerification,
   sendPasswordResetEmail,
   onAuthStateChanged,
   updateProfile
@@ -20,6 +21,7 @@ export const signUp = async (email, password, additionalData = {}) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const { user } = userCredential;
+    let verificationEmailSent = false;
 
     // Update profile with display name
     if (additionalData.name) {
@@ -37,12 +39,29 @@ export const signUp = async (email, password, additionalData = {}) => {
       createdAt: new Date().toISOString()
     });
 
-    return { success: true, user };
+    try {
+      // Firebase Auth built-in verification email (no paid external API required).
+      await sendEmailVerification(user);
+      verificationEmailSent = true;
+    } catch (verificationError) {
+      console.error('Error sending verification email:', verificationError);
+    }
+
+    // Do not keep new users logged in until they verify their email.
+    await signOut(auth);
+
+    return {
+      success: true,
+      user,
+      verificationEmailSent,
+      requiresEmailVerification: true
+    };
   } catch (error) {
     console.error('Error signing up:', error);
     return { 
       success: false, 
-      error: getErrorMessage(error.code) 
+      error: getErrorMessage(error.code),
+      errorCode: error.code
     };
   }
 };
@@ -56,12 +75,30 @@ export const signUp = async (email, password, additionalData = {}) => {
 export const signIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return { success: true, user: userCredential.user };
+    const user = userCredential.user;
+
+    try {
+      await user.reload();
+    } catch (reloadError) {
+      console.error('Error reloading user profile after sign-in:', reloadError);
+    }
+
+    if (!user.emailVerified) {
+      await signOut(auth);
+      return {
+        success: false,
+        error: getErrorMessage('auth/email-not-verified'),
+        errorCode: 'auth/email-not-verified'
+      };
+    }
+
+    return { success: true, user };
   } catch (error) {
     console.error('Error signing in:', error);
     return { 
       success: false, 
-      error: getErrorMessage(error.code) 
+      error: getErrorMessage(error.code),
+      errorCode: error.code
     };
   }
 };
@@ -78,7 +115,8 @@ export const logOut = async () => {
     console.error('Error signing out:', error);
     return { 
       success: false, 
-      error: getErrorMessage(error.code) 
+      error: getErrorMessage(error.code),
+      errorCode: error.code
     };
   }
 };
@@ -96,7 +134,49 @@ export const resetPassword = async (email) => {
     console.error('Error resetting password:', error);
     return { 
       success: false, 
-      error: getErrorMessage(error.code) 
+      error: getErrorMessage(error.code),
+      errorCode: error.code
+    };
+  }
+};
+
+/**
+ * Resend account verification email.
+ * Requires user credentials to authenticate before sending verification email.
+ * @param {string} email - User's email
+ * @param {string} password - User's password
+ * @returns {Promise<object>} - Result object
+ */
+export const resendVerificationEmail = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const { user } = userCredential;
+
+    try {
+      await user.reload();
+    } catch (reloadError) {
+      console.error('Error reloading user profile before resending verification:', reloadError);
+    }
+
+    if (user.emailVerified) {
+      await signOut(auth);
+      return {
+        success: false,
+        error: getErrorMessage('auth/email-already-verified'),
+        errorCode: 'auth/email-already-verified'
+      };
+    }
+
+    await sendEmailVerification(user);
+    await signOut(auth);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error resending verification email:', error);
+    return {
+      success: false,
+      error: getErrorMessage(error.code),
+      errorCode: error.code
     };
   }
 };
@@ -133,6 +213,8 @@ const getErrorMessage = (errorCode) => {
     'auth/user-not-found': 'Aucun compte trouvé avec cette adresse email.',
     'auth/wrong-password': 'Mot de passe incorrect.',
     'auth/invalid-credential': 'Email ou mot de passe incorrect.',
+    'auth/email-not-verified': 'Veuillez confirmer votre adresse email avant de vous connecter. Consultez votre boite de reception et vos spams.',
+    'auth/email-already-verified': 'Votre adresse email est deja confirmee. Vous pouvez vous connecter.',
     'auth/too-many-requests': 'Trop de tentatives. Veuillez réessayer plus tard.',
     'auth/requires-recent-login': 'Veuillez vous reconnecter pour effectuer cette action.',
     'auth/network-request-failed': 'Erreur de connexion. Vérifiez votre connexion internet.'
@@ -141,11 +223,14 @@ const getErrorMessage = (errorCode) => {
   return errorMessages[errorCode] || 'Une erreur est survenue. Veuillez réessayer.';
 };
 
-export default {
+const authService = {
   signUp,
   signIn,
   logOut,
   resetPassword,
+  resendVerificationEmail,
   subscribeToAuthChanges,
   getCurrentUser
 };
+
+export default authService;

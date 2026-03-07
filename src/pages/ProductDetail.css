@@ -237,6 +237,28 @@
   flex-wrap: wrap;
 }
 
+.detail-inline-error {
+  width: 100%;
+  background: #ffe9ec;
+  border: 1px solid #f4b7be;
+  color: #8b1d2c;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.detail-inline-success {
+  width: 100%;
+  background: #e9f8ef;
+  border: 1px solid #bfe5cc;
+  color: #176443;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
 /* Quantity control */
 .quantity-control {
   display: inline-flex;

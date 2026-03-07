@@ -18,6 +18,7 @@ const Footer = () => {
               <li><a href="/home">Accueil</a></li>
               <li><a href="/products">Articles</a></li>
               <li><a href="/nouvelle-collection">Nouvelle collection</a></li>
+              <li><a href="/order-tracking">Suivi commande</a></li>
               <li><a href="/about">À Propos</a></li>
               <li><a href="/contact">Contact</a></li>
             </ul>
@@ -51,7 +52,7 @@ const Footer = () => {
                 aria-label="Envoyer un email à Aaz Store"
               >
                 <span className="footer-contact-icon" aria-hidden="true">
-                  <img src="/Images/icons/icons8-circled-envelope-48.png" alt="Email" />
+                  <img src="/Images/Icons/icons8-circled-envelope-48.png" alt="Email" />
                 </span>{' '}
                 aazstore.niam@gmail.com
               </a>

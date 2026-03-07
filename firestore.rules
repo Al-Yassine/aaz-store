@@ -37,6 +37,33 @@ service cloud.firestore {
         && request.resource.data.deliveryInfo.address is string;
     }
 
+      // Contact message payload validation for public contact form submissions.
+      function isValidContactMessageCreate() {
+        return request.resource.data.keys().hasOnly([
+          'name',
+          'email',
+          'subject',
+          'message',
+          'createdAt',
+          'status'
+        ])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.email is string
+        && request.resource.data.email.size() > 3
+        && request.resource.data.email.size() <= 200
+        && request.resource.data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+        && request.resource.data.subject is string
+        && request.resource.data.subject.size() > 0
+        && request.resource.data.subject.size() <= 200
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 10
+        && request.resource.data.message.size() <= 5000
+        && request.resource.data.status == 'new'
+        && request.resource.data.createdAt is timestamp;
+      }
+
     // Users collection
     match /users/{userId} {
       // Users can read their own document
@@ -76,6 +103,15 @@ service cloud.firestore {
       
       // Only admins can delete orders
       allow delete: if isAuthenticated() && isAdmin();
+    }
+
+    // Contact messages collection
+    match /contactMessages/{messageId} {
+      // Public submissions allowed for the contact form.
+      allow create: if isValidContactMessageCreate();
+
+      // Admin-only management in dashboard.
+      allow read, update, delete: if isAuthenticated() && isAdmin();
     }
 
     // Deny all other access by default

@@ -1,7 +1,7 @@
 import { 
   collection, 
+  addDoc,
   doc, 
-  addDoc, 
   getDoc, 
   getDocs, 
   updateDoc, 
@@ -16,6 +16,13 @@ import { auth, firestore, functions } from '../firebase';
 import { httpsCallable } from 'firebase/functions';
 
 const ORDERS_COLLECTION = 'orders';
+
+const getOrderDisplayReference = (orderId) => {
+  if (!orderId || typeof orderId !== 'string') {
+    return 'N/A';
+  }
+  return orderId.slice(-8).toUpperCase();
+};
 
 // Align order identity with the real Firebase auth state before hitting Firestore rules.
 const normalizeOrderIdentity = (orderData = {}) => {
@@ -58,24 +65,24 @@ export const ORDER_STATUS = {
  * @param {string} orderData.paymentMethod - Payment method
  * @param {string} orderData.deliveryRegion - Delivery region
  * @param {object} orderData.deliveryInfo - Delivery information
- * @returns {Promise<object>} - Result object with order ID
+ * @returns {Promise<object>} - Result object with order ID and display reference
  */
 export const createOrder = async (orderData) => {
   try {
     const ordersRef = collection(firestore, ORDERS_COLLECTION);
     const normalizedOrderData = normalizeOrderIdentity(orderData);
-    
+
     const order = {
       ...normalizedOrderData,
       status: ORDER_STATUS.PENDING,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
-    
+
     const docRef = await addDoc(ordersRef, order);
     
     // Guests are unauthenticated, so skip callable email notification for guest orders.
-    if (!order.isGuest && order.userId) {
+    if (!normalizedOrderData.isGuest && normalizedOrderData.userId) {
       try {
         const sendOrderEmail = httpsCallable(functions, 'sendOrderConfirmationEmail');
         await sendOrderEmail({ orderId: docRef.id });
@@ -87,7 +94,9 @@ export const createOrder = async (orderData) => {
     
     return { 
       success: true, 
-      orderId: docRef.id 
+      orderId: docRef.id,
+      // Keep the same response key for UI compatibility, but use random Firestore ID reference.
+      orderNumber: getOrderDisplayReference(docRef.id)
     };
   } catch (error) {
     console.error('Error creating order:', error);
@@ -144,17 +153,20 @@ export const getOrder = async (orderId) => {
 export const getUserOrders = async (userId) => {
   try {
     const ordersRef = collection(firestore, ORDERS_COLLECTION);
-    const q = query(
-      ordersRef, 
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
-    );
+    const q = query(ordersRef, where('userId', '==', userId));
     
     const querySnapshot = await getDocs(q);
     const orders = [];
     
     querySnapshot.forEach((doc) => {
       orders.push({ id: doc.id, ...doc.data() });
+    });
+
+    // Keep newest orders first without requiring a composite Firestore index.
+    orders.sort((a, b) => {
+      const aTime = timestampToDate(a.createdAt)?.getTime() || 0;
+      const bTime = timestampToDate(b.createdAt)?.getTime() || 0;
+      return bTime - aTime;
     });
     
     return { 
@@ -207,17 +219,20 @@ export const getAllOrders = async () => {
 export const getOrdersByStatus = async (status) => {
   try {
     const ordersRef = collection(firestore, ORDERS_COLLECTION);
-    const q = query(
-      ordersRef, 
-      where('status', '==', status),
-      orderBy('createdAt', 'desc')
-    );
+    const q = query(ordersRef, where('status', '==', status));
     
     const querySnapshot = await getDocs(q);
     const orders = [];
     
     querySnapshot.forEach((doc) => {
       orders.push({ id: doc.id, ...doc.data() });
+    });
+
+    // Keep newest orders first without requiring a composite Firestore index.
+    orders.sort((a, b) => {
+      const aTime = timestampToDate(a.createdAt)?.getTime() || 0;
+      const bTime = timestampToDate(b.createdAt)?.getTime() || 0;
+      return bTime - aTime;
     });
     
     return { 
@@ -365,7 +380,7 @@ export const formatOrder = (order) => {
   };
 };
 
-export default {
+const orderService = {
   ORDER_STATUS,
   createOrder,
   getOrder,
@@ -378,3 +393,5 @@ export default {
   timestampToDate,
   formatOrder
 };
+
+export default orderService;

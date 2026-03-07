@@ -8,7 +8,6 @@ import { formatPrice, hasDiscount } from '../utils/formatPrice';
 import ImageViewer from '../components/ImageViewer';
 import SharePopup from '../components/SharePopup';
 import { useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext';
 import { getSizesByCategory } from '../utils/getSizesByCategory';
 import sizeInventory from '../data/sizeInventory.json';
 import './ProductDetail.css';
@@ -84,9 +83,10 @@ const ProductDetail = () => {
   );
 
   const { addToCart, items } = useCart();
-  const { showToast } = useToast();
   const [selectedSize, setSelectedSize] = useState(defaultSize);
   const [quantity, setQuantity] = useState(1);
+  const [selectionError, setSelectionError] = useState('');
+  const [selectionSuccess, setSelectionSuccess] = useState('');
 
   const colorsFromProduct = useMemo(() => 
     Array.isArray(product?.colors) && product.colors.length > 0
@@ -121,6 +121,8 @@ const ProductDetail = () => {
 
   // When color changes we should ensure selected size is available for that color; keep it disabled if not
   const handleColorSelect = (color) => {
+    setSelectionError('');
+    setSelectionSuccess('');
     setSelectedColor(color);
     const colorStocks = color && colorSizeStock[color] ? colorSizeStock[color] : null;
     const currentSizeStock = selectedSize ? (colorStocks ? (colorStocks[selectedSize] || 0) : (sizeStockMap[selectedSize] || 0)) : 0;
@@ -147,12 +149,14 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!selectedSize) {
-      showToast('Veuillez sélectionner une taille', 'warning');
+      setSelectionSuccess('');
+      setSelectionError('Veuillez selectionner une taille');
       return;
     }
 
     if (!isProductInStock || !availableStockForSelection) {
-      showToast("La taille sélectionnée n'est pas disponible pour le moment.", 'warning');
+      setSelectionSuccess('');
+      setSelectionError("La taille selectionnee n'est pas disponible pour le moment.");
       return;
     }
 
@@ -164,9 +168,12 @@ const ProductDetail = () => {
     const existingQty = existing ? existing.quantity : 0;
 
     if (existingQty + quantity > availableStock) {
-      showToast("Vous ne pouvez pas ajouter autant d'articles (stock insuffisant)", 'error');
+      setSelectionSuccess('');
+      setSelectionError("Vous ne pouvez pas ajouter autant d'articles (stock insuffisant)");
       return;
     }
+
+    setSelectionError('');
 
     addToCart({
       ...product,
@@ -176,26 +183,32 @@ const ProductDetail = () => {
       quantity
     });
 
-    showToast(`${product.name} (Taille: ${selectedSize}) x${quantity} ajouté au panier!`, 'success');
+    setSelectionSuccess(`${product.name} (Taille: ${selectedSize}) x${quantity} ajoute au panier.`);
   };
 
   const handleBuyNow = () => {
     if (!selectedSize) {
-      showToast('Veuillez sélectionner une taille', 'warning');
+      setSelectionSuccess('');
+      setSelectionError('Veuillez selectionner une taille');
       return;
     }
 
     if (!isProductInStock || !availableStockForSelection) {
-      showToast("La taille sélectionnée n'est pas disponible pour le moment.", 'warning');
+      setSelectionSuccess('');
+      setSelectionError("La taille selectionnee n'est pas disponible pour le moment.");
       return;
     }
 
     const availableStock = availableStockForSelection;
 
     if (quantity > availableStock) {
-      showToast('Quantité demandée supérieure au stock disponible', 'error');
+      setSelectionSuccess('');
+      setSelectionError('Quantite demandee superieure au stock disponible');
       return;
     }
+
+    setSelectionError('');
+    setSelectionSuccess('');
     
     const checkoutItem = {
       ...product,
@@ -264,7 +277,13 @@ const ProductDetail = () => {
                     <button 
                       key={size} 
                       className={`option-btn size-btn ${selectedSize === size ? 'active' : ''}`} 
-                      onClick={() => getStockForSize(size) > 0 && setSelectedSize(size)}
+                      onClick={() => {
+                        if (getStockForSize(size) > 0) {
+                          setSelectedSize(size);
+                          setSelectionError('');
+                          setSelectionSuccess('');
+                        }
+                      }}
                       disabled={!(getStockForSize(size) > 0)}
                       aria-disabled={!(getStockForSize(size) > 0)}
                       title={!(getStockForSize(size) > 0) ? 'Rupture de stock' : `Taille ${size}`}
@@ -297,10 +316,44 @@ const ProductDetail = () => {
               <p className="muted" style={{marginRight: '1rem'}}>Produit en rupture de stock</p>
             )}
 
+            {selectionError && (
+              <div className="detail-inline-error" role="alert">
+                {selectionError}
+              </div>
+            )}
+
+            {selectionSuccess && (
+              <div className="detail-inline-success" role="status">
+                {selectionSuccess}
+              </div>
+            )}
+
             <div className="quantity-control" role="group" aria-label="Quantity selector">
-              <button className="qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={!selectedSize || quantity <= 1} aria-label="Decrease quantity">−</button>
+              <button
+                className="qty-btn"
+                onClick={() => {
+                  setQuantity(q => Math.max(1, q - 1));
+                  setSelectionError('');
+                  setSelectionSuccess('');
+                }}
+                disabled={!selectedSize || quantity <= 1}
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
               <div className="qty-display" aria-live="polite">{quantity}</div>
-              <button className="qty-btn" onClick={() => setQuantity(q => Math.min(availableStockForSelection || 1, q + 1))} disabled={!selectedSize || (availableStockForSelection <= quantity)} aria-label="Increase quantity">+</button>
+              <button
+                className="qty-btn"
+                onClick={() => {
+                  setQuantity(q => Math.min(availableStockForSelection || 1, q + 1));
+                  setSelectionError('');
+                  setSelectionSuccess('');
+                }}
+                disabled={!selectedSize || (availableStockForSelection <= quantity)}
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
             </div>
 
             <button className="primary-btn" onClick={handleAddToCart} disabled={!isProductInStock}>

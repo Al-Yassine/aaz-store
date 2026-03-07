@@ -61,9 +61,92 @@
   transition: border-color 0.2s ease;
 }
 
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  padding-right: 92px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #C5A46D;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.password-toggle-btn:hover {
+  color: #a0855a;
+}
+
 .form-group input:focus {
   outline: none;
   border-color: #C5A46D;
+}
+
+.form-group input.input-error {
+  border-color: #dc3545;
+}
+
+.signin-field-error {
+  display: block;
+  margin-top: 0.4rem;
+  color: #dc3545;
+  font-size: 0.85rem;
+}
+
+.signin-form-error {
+  background: #ffe9ec;
+  border: 1px solid #f5b8c0;
+  color: #8b1d2c;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.signin-form-success {
+  background: #e9f8ef;
+  border: 1px solid #bfe5cc;
+  color: #176443;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.verification-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.resend-verification-btn {
+  border: 1px solid #d9c8a4;
+  background: #fffaf0;
+  color: #8a6d3b;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resend-verification-btn:hover:not(:disabled) {
+  background: #fdf2d9;
+}
+
+.resend-verification-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .signin-btn {

@@ -301,6 +301,16 @@
   line-height: 1.5;
 }
 
+.checkout-submit-error {
+  background: #ffe9ec;
+  border: 1px solid #f4b7be;
+  color: #8b1d2c;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .confirm-btn {
   background: #0b5ed7;
   color: #ffffff;
@@ -445,6 +455,30 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.secondary-btn {
+  background: #ffffff;
+  color: #0b2340;
+  border: 1px solid #c8d4e4;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+  background: #f2f6fb;
+  transform: translateY(-2px);
+}
+
+.confirmation-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* Order Confirmation */
 .order-confirmation {
   text-align: center;
@@ -494,6 +528,63 @@
   font-size: 1.2rem;
   color: #0b2340;
   margin: 0 0 16px;
+}
+
+.confirmation-items-box {
+  background: #ffffff;
+  border: 1px solid #e0e6ef;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.confirmation-items-box h3 {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+  color: #0b2340;
+}
+
+.confirmation-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.confirmation-item-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #edf1f6;
+}
+
+.confirmation-item-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.confirmation-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.confirmation-item-name {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.confirmation-item-meta {
+  color: #5e6a78;
+  font-size: 0.92rem;
+}
+
+.confirmation-item-total {
+  font-weight: 700;
+  color: #0b2340;
+  white-space: nowrap;
 }
 
 .summary-row {
@@ -559,6 +650,15 @@
   .choice-btn {
     width: 100%;
   }
+
+  .confirmation-actions {
+    flex-direction: column;
+  }
+
+  .secondary-btn,
+  .primary-btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -589,5 +689,18 @@
   
   .order-confirmation h2 {
     font-size: 1.5rem;
+  }
+
+  .confirmation-items-box {
+    padding: 16px;
+  }
+
+  .confirmation-item-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .confirmation-item-total {
+    white-space: normal;
   }
 }

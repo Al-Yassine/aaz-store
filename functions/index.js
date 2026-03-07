@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -10,6 +11,10 @@ admin.initializeApp();
 // firebase functions:config:set gmail.email="your-email@gmail.com" gmail.password="your-app-password"
 const gmailEmail = functions.config().gmail?.email || process.env.GMAIL_EMAIL;
 const gmailPassword = functions.config().gmail?.password || process.env.GMAIL_PASSWORD;
+const sendGridApiKey = functions.config().sendgrid?.key || process.env.SENDGRID_API_KEY;
+const sendGridFromEmail = functions.config().sendgrid?.from_email || process.env.SENDGRID_FROM_EMAIL;
+const storeAdminEmail = functions.config().store?.admin_email || process.env.STORE_ADMIN_EMAIL;
+const dashboardBaseUrl = functions.config().store?.dashboard_url || process.env.STORE_DASHBOARD_URL;
 
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
@@ -21,6 +26,10 @@ const mailTransport = nodemailer.createTransport({
 
 // App name for emails
 const APP_NAME = 'AAZ Store';
+
+if (sendGridApiKey) {
+  sgMail.setApiKey(sendGridApiKey);
+}
 
 // Helper function to get user email from order
 async function getUserEmail(userId) {
@@ -73,6 +82,75 @@ function getPaymentMethodLabel(paymentMethod) {
   return 'NITA/Amana';
 }
 
+function getOrderDisplayNumber(order, orderId) {
+  if (typeof orderId === 'string' && orderId.trim()) {
+    return orderId.trim().slice(-8).toUpperCase();
+  }
+  if (order && typeof order.orderNumber === 'string' && order.orderNumber.trim()) {
+    return order.orderNumber.trim();
+  }
+  return 'N/A';
+}
+
+function escapeHtml(value) {
+  return (value || '')
+    .toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function toSingleLineText(value) {
+  return (value || '').toString().trim().replace(/\s+/g, ' ');
+}
+
+function getMessageDashboardLink(messageId) {
+  if (!dashboardBaseUrl) {
+    return '';
+  }
+
+  const normalizedBase = dashboardBaseUrl.endsWith('/')
+    ? dashboardBaseUrl.slice(0, -1)
+    : dashboardBaseUrl;
+
+  return `${normalizedBase}/admin/dashboard?messageId=${encodeURIComponent(messageId)}`;
+}
+
+async function sendMailWithFallback({ to, subject, html, text }) {
+  if (sendGridApiKey) {
+    const fromEmail = sendGridFromEmail || gmailEmail;
+    if (!fromEmail) {
+      throw new Error('Missing sender email for SendGrid. Configure SENDGRID_FROM_EMAIL or GMAIL_EMAIL.');
+    }
+
+    await sgMail.send({
+      to,
+      from: fromEmail,
+      subject,
+      html,
+      text
+    });
+
+    return 'sendgrid';
+  }
+
+  if (!gmailEmail || !gmailPassword) {
+    throw new Error('No email provider configured. Add SendGrid key or Gmail credentials.');
+  }
+
+  await mailTransport.sendMail({
+    from: `${APP_NAME} <${gmailEmail}>`,
+    to,
+    subject,
+    html,
+    text
+  });
+
+  return 'gmail';
+}
+
 /**
  * Send order confirmation email when a new order is created
  * Callable from client-side
@@ -110,6 +188,7 @@ exports.sendOrderConfirmationEmail = functions.https.onCall(async (data, context
     }
 
     const order = orderDoc.data();
+    const orderNumber = getOrderDisplayNumber(order, orderId);
     const userEmail = await getUserEmail(order.userId);
 
     if (!userEmail) {
@@ -126,7 +205,7 @@ exports.sendOrderConfirmationEmail = functions.https.onCall(async (data, context
     const mailOptions = {
       from: `${APP_NAME} <${gmailEmail}>`,
       to: userEmail,
-      subject: `Confirmation de votre commande #${orderId.slice(-8).toUpperCase()}`,
+      subject: `Confirmation de votre commande ${orderNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #1a1a2e;">Bonjour,</h2>
@@ -134,10 +213,10 @@ exports.sendOrderConfirmationEmail = functions.https.onCall(async (data, context
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="color: #1a1a2e; margin-top: 0;">Détails de la commande</h3>
-            <p><strong>Numéro de commande:</strong> #${orderId.slice(-8).toUpperCase()}</p>
+            <p><strong>Numéro de commande:</strong> ${orderNumber}</p>
             <p><strong>Date:</strong> ${formatDate(order.createdAt)}</p>
             <p><strong>Statut:</strong> ${getStatusLabel(order.status)}</p>
-            <p><strong>Méthode de paiement:</strong> ${order.paymentMethod === 'cod' ? 'Paiement à la livraison' : 'NITA/Amana'}</p>
+            <p><strong>Méthode de paiement:</strong> ${getPaymentMethodLabel(order.paymentMethod)}</p>
           </div>
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -218,6 +297,7 @@ exports.sendOrderStatusUpdateEmail = functions.https.onCall(async (data, context
     }
 
     const order = orderDoc.data();
+    const orderNumber = getOrderDisplayNumber(order, orderId);
     const userEmail = await getUserEmail(order.userId);
 
     if (!userEmail) {
@@ -238,7 +318,7 @@ exports.sendOrderStatusUpdateEmail = functions.https.onCall(async (data, context
     const mailOptions = {
       from: `${APP_NAME} <${gmailEmail}>`,
       to: userEmail,
-      subject: `Mise à jour de votre commande #${orderId.slice(-8).toUpperCase()}`,
+      subject: `Mise a jour de votre commande ${orderNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #1a1a2e;">Bonjour,</h2>
@@ -246,7 +326,7 @@ exports.sendOrderStatusUpdateEmail = functions.https.onCall(async (data, context
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="color: #1a1a2e; margin-top: 0;">Détails de la commande</h3>
-            <p><strong>Numéro de commande:</strong> #${orderId.slice(-8).toUpperCase()}</p>
+            <p><strong>Numéro de commande:</strong> ${orderNumber}</p>
             <p><strong>Nouveau statut:</strong> <span style="color: #1a1a2e; font-weight: bold;">${getStatusLabel(newStatus)}</span></p>
           </div>
           
@@ -278,6 +358,120 @@ exports.sendOrderStatusUpdateEmail = functions.https.onCall(async (data, context
 });
 
 /**
+ * Send contact message notification email to store admin.
+ * Callable from client-side after a contact message is saved.
+ */
+exports.sendContactMessageNotification = functions.https.onCall(async (data) => {
+  const messageId = typeof data?.messageId === 'string' ? data.messageId.trim() : '';
+
+  if (!messageId) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      'Message ID is required.'
+    );
+  }
+
+  try {
+    const messageRef = admin.firestore().collection('contactMessages').doc(messageId);
+    const messageDoc = await messageRef.get();
+
+    if (!messageDoc.exists) {
+      throw new functions.https.HttpsError('not-found', 'Contact message not found.');
+    }
+
+    const messageData = messageDoc.data() || {};
+
+    if (messageData.notificationSentAt) {
+      return { success: true, skipped: true };
+    }
+
+    const recipient = storeAdminEmail || gmailEmail;
+    if (!recipient) {
+      throw new functions.https.HttpsError(
+        'failed-precondition',
+        'Admin recipient email is not configured.'
+      );
+    }
+
+    const senderName = toSingleLineText(messageData.name) || 'N/A';
+    const senderEmail = toSingleLineText(messageData.email) || 'N/A';
+    const subject = toSingleLineText(messageData.subject) || 'Sans sujet';
+    const rawMessage = (messageData.message || '').toString().trim() || 'N/A';
+    const createdAtLabel = formatDate(messageData.createdAt);
+    const dashboardLink = getMessageDashboardLink(messageId);
+
+    const htmlMessageBody = escapeHtml(rawMessage).replace(/\n/g, '<br>');
+    const htmlDashboardBlock = dashboardLink
+      ? `<p><strong>Ouvrir dans le dashboard:</strong> <a href="${escapeHtml(dashboardLink)}">Voir le message</a></p>`
+      : '<p><strong>Dashboard link:</strong> Non configure (STORE_DASHBOARD_URL manquant)</p>';
+
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; color: #1f2937;">
+        <h2 style="margin-bottom: 8px; color: #111827;">Nouveau message client</h2>
+        <p style="margin-top: 0; color: #4b5563;">Un client a envoye un nouveau message via la page Contact.</p>
+
+        <div style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin: 18px 0;">
+          <p><strong>ID message:</strong> ${escapeHtml(messageId)}</p>
+          <p><strong>Date:</strong> ${escapeHtml(createdAtLabel)}</p>
+          <p><strong>Nom:</strong> ${escapeHtml(senderName)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(senderEmail)}</p>
+          <p><strong>Sujet:</strong> ${escapeHtml(subject)}</p>
+          ${htmlDashboardBlock}
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px;">
+          <h3 style="margin-top: 0; margin-bottom: 10px; color: #111827;">Message</h3>
+          <p style="line-height: 1.6; margin: 0; white-space: normal;">${htmlMessageBody}</p>
+        </div>
+      </div>
+    `;
+
+    const textLines = [
+      'Nouveau message client',
+      '',
+      `ID message: ${messageId}`,
+      `Date: ${createdAtLabel}`,
+      `Nom: ${senderName}`,
+      `Email: ${senderEmail}`,
+      `Sujet: ${subject}`,
+      dashboardLink ? `Dashboard: ${dashboardLink}` : 'Dashboard: STORE_DASHBOARD_URL non configure',
+      '',
+      'Message:',
+      rawMessage
+    ];
+
+    const provider = await sendMailWithFallback({
+      to: recipient,
+      subject: `[${APP_NAME}] Nouveau message client: ${subject}`,
+      html: htmlContent,
+      text: textLines.join('\n')
+    });
+
+    await messageRef.set(
+      {
+        notificationSentAt: admin.firestore.FieldValue.serverTimestamp(),
+        notificationProvider: provider,
+        notificationRecipient: recipient
+      },
+      { merge: true }
+    );
+
+    return { success: true, provider };
+  } catch (error) {
+    console.error('Error sending contact notification email:', error);
+
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+
+    throw new functions.https.HttpsError(
+      'internal',
+      'Failed to send contact notification email.'
+    );
+  }
+});
+
+/**
  * Triggered when an order is created - sends confirmation email
  */
 exports.onOrderCreated = functions.firestore
@@ -285,6 +479,7 @@ exports.onOrderCreated = functions.firestore
   .onCreate(async (snap, context) => {
     const order = snap.data();
     const orderId = context.params.orderId;
+    const orderNumber = getOrderDisplayNumber(order, orderId);
 
     try {
       const userEmail = await getUserEmail(order.userId);
@@ -303,7 +498,7 @@ exports.onOrderCreated = functions.firestore
       const mailOptions = {
         from: `${APP_NAME} <${gmailEmail}>`,
         to: userEmail,
-        subject: `Confirmation de votre commande #${orderId.slice(-8).toUpperCase()}`,
+        subject: `Confirmation de votre commande ${orderNumber}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #1a1a2e;">Bonjour,</h2>
@@ -311,7 +506,7 @@ exports.onOrderCreated = functions.firestore
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="color: #1a1a2e; margin-top: 0;">Détails de la commande</h3>
-              <p><strong>Numéro de commande:</strong> #${orderId.slice(-8).toUpperCase()}</p>
+              <p><strong>Numéro de commande:</strong> ${orderNumber}</p>
               <p><strong>Date:</strong> ${formatDate(order.createdAt)}</p>
               <p><strong>Statut:</strong> ${getStatusLabel(order.status)}</p>
               <p><strong>Méthode de paiement:</strong> ${getPaymentMethodLabel(order.paymentMethod)}</p>
@@ -363,6 +558,7 @@ exports.onOrderStatusUpdated = functions.firestore
 
     try {
       const order = change.after.data();
+      const orderNumber = getOrderDisplayNumber(order, orderId);
       const userEmail = await getUserEmail(order.userId);
 
       if (!userEmail) {
@@ -383,7 +579,7 @@ exports.onOrderStatusUpdated = functions.firestore
       const mailOptions = {
         from: `${APP_NAME} <${gmailEmail}>`,
         to: userEmail,
-        subject: `Mise à jour de votre commande #${orderId.slice(-8).toUpperCase()}`,
+        subject: `Mise a jour de votre commande ${orderNumber}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #1a1a2e;">Bonjour,</h2>
@@ -391,7 +587,7 @@ exports.onOrderStatusUpdated = functions.firestore
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="color: #1a1a2e; margin-top: 0;">Détails de la commande</h3>
-              <p><strong>Numéro de commande:</strong> #${orderId.slice(-8).toUpperCase()}</p>
+              <p><strong>Numéro de commande:</strong> ${orderNumber}</p>
               <p><strong>Ancien statut:</strong> ${getStatusLabel(previousStatus)}</p>
               <p><strong>Nouveau statut:</strong> <span style="color: #1a1a2e; font-weight: bold;">${getStatusLabel(newStatus)}</span></p>
             </div>

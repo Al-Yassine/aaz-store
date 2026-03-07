@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext';
 import { formatPrice } from '../utils/formatPrice';
 import './CartItem.css';
 
@@ -15,20 +14,21 @@ const CartItem = ({ item }) => {
   ), 0) : variants.reduce((sum, v) => sum + (v.stock || 0), 0);
 
   const isAtMax = availableStockForSize ? item.quantity >= availableStockForSize : false;
-
-  const { showToast } = useToast();
+  const [quantityError, setQuantityError] = useState('');
 
   const handleQuantityChange = (newQuantity) => {
     if (newQuantity <= 0) {
+      setQuantityError('');
       removeFromCart(itemId);
       return;
     }
 
     if (availableStockForSize && newQuantity > availableStockForSize) {
-      showToast('Quantité demandée supérieure au stock disponible pour cet article', 'warning');
+      setQuantityError('Quantite demandee superieure au stock disponible pour cet article');
       return;
     }
 
+    setQuantityError('');
     updateQuantity(itemId, newQuantity);
   };
 
@@ -66,10 +66,15 @@ const CartItem = ({ item }) => {
             +
           </button>
         </div>
+
+        {quantityError && <span className="cart-item-error">{quantityError}</span>}
         
         <button 
           className="remove-btn"
-          onClick={() => removeFromCart(itemId)}
+          onClick={() => {
+            setQuantityError('');
+            removeFromCart(itemId);
+          }}
         >
           Supprimer
         </button>
