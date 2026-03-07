@@ -38,7 +38,7 @@ const apiKey = missingOrPlaceholderApiKeys.has(apiKeyFromEnv)
 
 if (missingOrPlaceholderApiKeys.has(apiKeyFromEnv)) {
   console.error(
-    '[Firebase config] REACT_APP_FIREBASE_API_KEY is missing/placeholder in this environment. Set deployment env vars and rebuild to enable authentication.'
+    '[Firebase config] REACT_APP_FIREBASE_API_KEY is missing/placeholder in this build environment. Set REACT_APP_FIREBASE_* on your host (Vercel or CI secrets), then rebuild/redeploy to enable authentication.'
   );
 }
 

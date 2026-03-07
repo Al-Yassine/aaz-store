@@ -178,12 +178,22 @@ Comprend:
 
 ## 🔐 Variables d'Environnement
 
-Actuellement, l'application ne nécessite pas de variables d'environnement sensibles.
+Firebase Auth / Firestore necessitent des variables d'environnement React (`REACT_APP_*`) en local **et** en deployment.
 
-Si nécessaire à l'avenir, créez un fichier `.env.local`:
+Copiez `.env.example` vers `.env.local` puis renseignez:
 ```
-REACT_APP_API_URL=https://api.example.com
+REACT_APP_FIREBASE_API_KEY=your_api_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your-project-id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+REACT_APP_FIREBASE_APP_ID=your_app_id
+REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
+
+En deployment, ajoutez les memes variables dans votre plateforme:
+- Vercel: `Project Settings` -> `Environment Variables` -> Redeploy
+- GitHub Actions (Firebase Hosting): `Repository Settings` -> `Secrets and variables` -> `Actions` (meme noms de secrets)
 
 **Note**: Ne commitez JAMAIS `.env.local` sur GitHub
 
