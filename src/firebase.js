@@ -23,17 +23,22 @@ const getEnv = (key, fallback = '') => {
   return value || fallback;
 };
 
-const apiKey = getEnv('REACT_APP_FIREBASE_API_KEY');
-const invalidApiKeys = new Set([
+const apiKeyFromEnv = getEnv('REACT_APP_FIREBASE_API_KEY');
+const missingOrPlaceholderApiKeys = new Set([
   '',
   'your_api_key_here',
-  'your_api_key',
-  'AIzaSyDemoKeyForDevelopmentOnly'
+  'your_api_key'
 ]);
 
-if (invalidApiKeys.has(apiKey)) {
-  throw new Error(
-    '[Firebase config] Invalid REACT_APP_FIREBASE_API_KEY. Add a valid web API key in .env.local (or deployment env vars) and restart the app.'
+// Keep the app renderable even if deploy env vars are missing.
+// Auth actions will surface a clear inline API-key error in the UI.
+const apiKey = missingOrPlaceholderApiKeys.has(apiKeyFromEnv)
+  ? 'AIzaSyDemoKeyForDevelopmentOnly'
+  : apiKeyFromEnv;
+
+if (missingOrPlaceholderApiKeys.has(apiKeyFromEnv)) {
+  console.error(
+    '[Firebase config] REACT_APP_FIREBASE_API_KEY is missing/placeholder in this environment. Set deployment env vars and rebuild to enable authentication.'
   );
 }
 

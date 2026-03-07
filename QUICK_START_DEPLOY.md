@@ -49,7 +49,14 @@ git push -u origin main
 5. **Vercel auto-detects Create React App settings** ✅
    - Build Command: `npm run build`
    - Output Directory: `build`
-   - Environment Variables: (None needed)
+   - Environment Variables: Add Firebase keys if you use auth/orders
+     - `REACT_APP_FIREBASE_API_KEY`
+     - `REACT_APP_FIREBASE_AUTH_DOMAIN`
+     - `REACT_APP_FIREBASE_PROJECT_ID`
+     - `REACT_APP_FIREBASE_STORAGE_BUCKET`
+     - `REACT_APP_FIREBASE_MESSAGING_SENDER_ID`
+     - `REACT_APP_FIREBASE_APP_ID`
+     - `REACT_APP_FIREBASE_MEASUREMENT_ID` (optional)
 6. **Click "Deploy"**
 7. **Wait 2-3 minutes for deployment** ⏳
 8. **Get your live URL**: `https://aazstore.vercel.app`

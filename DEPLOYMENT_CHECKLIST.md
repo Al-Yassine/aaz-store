@@ -80,7 +80,7 @@
 ### Deployment Configuration
 - [x] vercel.json routing configured correctly
 - [x] Node.js version compatible (≥14)
-- [x] Environment variables cleared (if any)
+- [ ] Firebase environment variables configured on host (if auth/orders enabled)
 - [x] Function timeouts not exceeded
 - [x] Memory limits within bounds
 
