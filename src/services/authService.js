@@ -10,6 +10,16 @@ import {
 import { auth } from '../firebase';
 import { createUserDocument } from './userService';
 
+const normalizeErrorCode = (error) => {
+  const code = typeof error?.code === 'string' ? error.code : '';
+
+  if (code.startsWith('auth/api-key-not-valid')) {
+    return 'auth/api-key-not-valid';
+  }
+
+  return code;
+};
+
 /**
  * Sign up a new user with email and password
  * @param {string} email - User's email
@@ -57,11 +67,12 @@ export const signUp = async (email, password, additionalData = {}) => {
       requiresEmailVerification: true
     };
   } catch (error) {
+    const normalizedCode = normalizeErrorCode(error);
     console.error('Error signing up:', error);
     return { 
       success: false, 
-      error: getErrorMessage(error.code),
-      errorCode: error.code
+      error: getErrorMessage(normalizedCode),
+      errorCode: normalizedCode
     };
   }
 };
@@ -94,11 +105,12 @@ export const signIn = async (email, password) => {
 
     return { success: true, user };
   } catch (error) {
+    const normalizedCode = normalizeErrorCode(error);
     console.error('Error signing in:', error);
     return { 
       success: false, 
-      error: getErrorMessage(error.code),
-      errorCode: error.code
+      error: getErrorMessage(normalizedCode),
+      errorCode: normalizedCode
     };
   }
 };
@@ -112,11 +124,12 @@ export const logOut = async () => {
     await signOut(auth);
     return { success: true };
   } catch (error) {
+    const normalizedCode = normalizeErrorCode(error);
     console.error('Error signing out:', error);
     return { 
       success: false, 
-      error: getErrorMessage(error.code),
-      errorCode: error.code
+      error: getErrorMessage(normalizedCode),
+      errorCode: normalizedCode
     };
   }
 };
@@ -131,11 +144,12 @@ export const resetPassword = async (email) => {
     await sendPasswordResetEmail(auth, email);
     return { success: true };
   } catch (error) {
+    const normalizedCode = normalizeErrorCode(error);
     console.error('Error resetting password:', error);
     return { 
       success: false, 
-      error: getErrorMessage(error.code),
-      errorCode: error.code
+      error: getErrorMessage(normalizedCode),
+      errorCode: normalizedCode
     };
   }
 };
@@ -172,11 +186,12 @@ export const resendVerificationEmail = async (email, password) => {
 
     return { success: true };
   } catch (error) {
+    const normalizedCode = normalizeErrorCode(error);
     console.error('Error resending verification email:', error);
     return {
       success: false,
-      error: getErrorMessage(error.code),
-      errorCode: error.code
+      error: getErrorMessage(normalizedCode),
+      errorCode: normalizedCode
     };
   }
 };
@@ -217,7 +232,9 @@ const getErrorMessage = (errorCode) => {
     'auth/email-already-verified': 'Votre adresse email est deja confirmee. Vous pouvez vous connecter.',
     'auth/too-many-requests': 'Trop de tentatives. Veuillez réessayer plus tard.',
     'auth/requires-recent-login': 'Veuillez vous reconnecter pour effectuer cette action.',
-    'auth/network-request-failed': 'Erreur de connexion. Vérifiez votre connexion internet.'
+    'auth/network-request-failed': 'Erreur de connexion. Vérifiez votre connexion internet.',
+    'auth/invalid-api-key': 'Configuration Firebase invalide (API key). Verifiez vos variables d\'environnement et redemarrez l\'application.',
+    'auth/api-key-not-valid': 'Configuration Firebase invalide (API key). Verifiez vos variables d\'environnement et redemarrez l\'application.'
   };
 
   return errorMessages[errorCode] || 'Une erreur est survenue. Veuillez réessayer.';
