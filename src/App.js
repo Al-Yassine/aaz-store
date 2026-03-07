@@ -23,6 +23,7 @@ import Privacy from './pages/Privacy';
 import CGV from './pages/CGV';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
+import { firebaseInitError } from './firebase';
 import './App.css';
 
 function App() {
@@ -94,6 +95,12 @@ function App() {
             <div className="App">
               <Navbar />
               <main className="main-content">
+                {firebaseInitError && (
+                  <div className="firebase-inline-error" role="alert">
+                    Configuration Firebase invalide ({firebaseInitError?.code || 'firebase/init'}). La connexion est indisponible.
+                    Verifiez REACT_APP_FIREBASE_API_KEY dans .env.local puis redemarrez npm start.
+                  </div>
+                )}
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/products" element={<Products />} />

@@ -7,17 +7,48 @@ import {
   onAuthStateChanged,
   updateProfile
 } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, firebaseInitError } from '../firebase';
 import { createUserDocument } from './userService';
 
 const normalizeErrorCode = (error) => {
   const code = typeof error?.code === 'string' ? error.code : '';
 
+  if (code.startsWith('auth/invalid-api-key')) {
+    return 'auth/invalid-api-key';
+  }
+
   if (code.startsWith('auth/api-key-not-valid')) {
     return 'auth/api-key-not-valid';
   }
 
+  if (code.startsWith('app/no-app')) {
+    return 'auth/firebase-init-failed';
+  }
+
   return code;
+};
+
+const getFirebaseInitErrorCode = () => {
+  const normalizedCode = normalizeErrorCode(firebaseInitError);
+  return normalizedCode || 'auth/firebase-init-failed';
+};
+
+const buildAuthUnavailableResult = () => {
+  const errorCode = getFirebaseInitErrorCode();
+
+  return {
+    success: false,
+    error: getErrorMessage(errorCode),
+    errorCode
+  };
+};
+
+const ensureAuthAvailable = () => {
+  if (auth) {
+    return null;
+  }
+
+  return buildAuthUnavailableResult();
 };
 
 /**
@@ -28,6 +59,11 @@ const normalizeErrorCode = (error) => {
  * @returns {Promise<object>} - User credential
  */
 export const signUp = async (email, password, additionalData = {}) => {
+  const unavailable = ensureAuthAvailable();
+  if (unavailable) {
+    return unavailable;
+  }
+
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const { user } = userCredential;
@@ -84,6 +120,11 @@ export const signUp = async (email, password, additionalData = {}) => {
  * @returns {Promise<object>} - User credential
  */
 export const signIn = async (email, password) => {
+  const unavailable = ensureAuthAvailable();
+  if (unavailable) {
+    return unavailable;
+  }
+
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
@@ -120,6 +161,11 @@ export const signIn = async (email, password) => {
  * @returns {Promise<object>} - Result object
  */
 export const logOut = async () => {
+  const unavailable = ensureAuthAvailable();
+  if (unavailable) {
+    return unavailable;
+  }
+
   try {
     await signOut(auth);
     return { success: true };
@@ -140,6 +186,11 @@ export const logOut = async () => {
  * @returns {Promise<object>} - Result object
  */
 export const resetPassword = async (email) => {
+  const unavailable = ensureAuthAvailable();
+  if (unavailable) {
+    return unavailable;
+  }
+
   try {
     await sendPasswordResetEmail(auth, email);
     return { success: true };
@@ -162,6 +213,11 @@ export const resetPassword = async (email) => {
  * @returns {Promise<object>} - Result object
  */
 export const resendVerificationEmail = async (email, password) => {
+  const unavailable = ensureAuthAvailable();
+  if (unavailable) {
+    return unavailable;
+  }
+
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const { user } = userCredential;
@@ -202,6 +258,14 @@ export const resendVerificationEmail = async (email, password) => {
  * @returns {function} - Unsubscribe function
  */
 export const subscribeToAuthChanges = (callback) => {
+  if (!auth) {
+    if (typeof callback === 'function') {
+      setTimeout(() => callback(null), 0);
+    }
+
+    return () => {};
+  }
+
   return onAuthStateChanged(auth, callback);
 };
 
@@ -210,7 +274,7 @@ export const subscribeToAuthChanges = (callback) => {
  * @returns {object|null} - Current user or null
  */
 export const getCurrentUser = () => {
-  return auth.currentUser;
+  return auth?.currentUser || null;
 };
 
 /**
@@ -234,7 +298,8 @@ const getErrorMessage = (errorCode) => {
     'auth/requires-recent-login': 'Veuillez vous reconnecter pour effectuer cette action.',
     'auth/network-request-failed': 'Erreur de connexion. Vérifiez votre connexion internet.',
     'auth/invalid-api-key': 'Configuration Firebase invalide (API key). Verifiez vos variables d\'environnement et redemarrez l\'application.',
-    'auth/api-key-not-valid': 'Configuration Firebase invalide (API key). Verifiez vos variables d\'environnement et redemarrez l\'application.'
+    'auth/api-key-not-valid': 'Configuration Firebase invalide (API key). Verifiez vos variables d\'environnement et redemarrez l\'application.',
+    'auth/firebase-init-failed': 'Configuration Firebase invalide (API key). Verifiez REACT_APP_FIREBASE_API_KEY dans .env.local puis redemarrez npm start.'
   };
 
   return errorMessages[errorCode] || 'Une erreur est survenue. Veuillez réessayer.';

@@ -26,7 +26,7 @@ const getOrderDisplayReference = (orderId) => {
 
 // Align order identity with the real Firebase auth state before hitting Firestore rules.
 const normalizeOrderIdentity = (orderData = {}) => {
-  const firebaseUser = auth.currentUser;
+  const firebaseUser = auth?.currentUser || null;
   const normalizedOrder = { ...orderData };
 
   if (firebaseUser?.uid) {

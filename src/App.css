@@ -60,6 +60,18 @@ img, picture, video, svg {
   min-height: calc(100vh - 60px);
 }
 
+.firebase-inline-error {
+  max-width: 1200px;
+  margin: 0 auto 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d92d20;
+  background-color: #fef3f2;
+  color: #7a271a;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
 .btn {
   display: inline-block;
   padding: 12px 30px;
