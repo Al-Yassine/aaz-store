@@ -21,11 +21,6 @@ const getEnv = (key) => {
   return sanitizeEnvValue(process.env[key]);
 };
 
-requiredEnv.forEach((key) => {
-  if (!process.env[key]) {
-    console.error(`[Firebase config] Missing environment variable: ${key}`);
-  }
-});
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
