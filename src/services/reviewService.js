@@ -1,6 +1,8 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   getDocs,
   query,
   serverTimestamp,
@@ -109,6 +111,64 @@ export const getProductReviews = async (productId) => {
   }
 };
 
+export const getAllProductReviews = async () => {
+  try {
+    const reviewsRef = collection(firestore, PRODUCT_REVIEWS_COLLECTION);
+    const querySnapshot = await getDocs(reviewsRef);
+
+    const reviews = [];
+    querySnapshot.forEach((reviewDoc) => {
+      const normalizedReview = normalizeReview(reviewDoc.id, reviewDoc.data());
+      reviews.push(normalizedReview);
+    });
+
+    reviews.sort((a, b) => reviewToSortableMillis(b) - reviewToSortableMillis(a));
+
+    return {
+      success: true,
+      data: reviews
+    };
+  } catch (error) {
+    console.error('Error getting all product reviews:', error);
+    return {
+      success: false,
+      error: mapFirestoreError(error, 'Impossible de charger les avis produits pour le moment.')
+    };
+  }
+};
+
+export const deleteProductReview = async (reviewId) => {
+  try {
+    const normalizedReviewId = sanitizeText(reviewId);
+
+    if (!normalizedReviewId) {
+      return {
+        success: false,
+        error: 'Identifiant avis invalide.'
+      };
+    }
+
+    const reviewRef = doc(firestore, PRODUCT_REVIEWS_COLLECTION, normalizedReviewId);
+    await deleteDoc(reviewRef);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting product review:', error);
+
+    if (error?.code === 'permission-denied') {
+      return {
+        success: false,
+        error: 'Suppression refusee: seuls les administrateurs peuvent supprimer un avis.'
+      };
+    }
+
+    return {
+      success: false,
+      error: mapFirestoreError(error, 'Impossible de supprimer cet avis pour le moment.')
+    };
+  }
+};
+
 export const createProductReview = async ({ productId, name, email, comment, rating }) => {
   try {
     const normalizedProductId = sanitizeText(productId);
@@ -190,7 +250,9 @@ export const createProductReview = async ({ productId, name, email, comment, rat
 
 const reviewService = {
   getProductReviews,
-  createProductReview
+  getAllProductReviews,
+  createProductReview,
+  deleteProductReview
 };
 
 export default reviewService;

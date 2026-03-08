@@ -221,6 +221,10 @@
   border-left-color: #27ae60;
 }
 
+.stat-card.stat-reviews {
+  border-left-color: #f39c12;
+}
+
 .stat-card.stat-revenue {
   border-left-color: #e74c3c;
 }
@@ -275,6 +279,159 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+}
+
+/* Product Reviews */
+.admin-reviews-section {
+  margin-top: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+}
+
+.reviews-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.reviews-section-header h2 {
+  margin: 0;
+  color: #1a1a2e;
+  font-size: 1.2rem;
+}
+
+.reviews-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5b3a00;
+  background: #fff5df;
+}
+
+.no-reviews-admin {
+  padding: 36px 16px;
+  text-align: center;
+  color: #6c757d;
+  background: #fafbfc;
+  border: 1px dashed #dce1e8;
+  border-radius: 10px;
+}
+
+.reviews-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.reviews-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+
+.reviews-table th,
+.reviews-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #edf0f5;
+  vertical-align: middle;
+}
+
+.reviews-table th {
+  background: #f8f9fa;
+  color: #333;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.reviews-table tr:hover {
+  background: #fafafa;
+}
+
+.review-product-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.review-rating-stars {
+  display: inline-block;
+  color: #b96d00;
+  letter-spacing: 1px;
+  margin-right: 6px;
+}
+
+.review-rating-value {
+  color: #4b5563;
+  font-size: 0.86rem;
+}
+
+.review-comment-cell {
+  max-width: 360px;
+  color: #4a5568;
+  line-height: 1.4;
+}
+
+.review-actions-cell {
+  min-width: 170px;
+}
+
+.review-delete-btn,
+.review-confirm-delete-btn,
+.review-cancel-delete-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.review-delete-btn {
+  background: #ffebee;
+  color: #8b1d2c;
+}
+
+.review-delete-btn:hover:not(:disabled) {
+  background: #ffcdd2;
+}
+
+.review-confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.review-confirm-delete-btn {
+  background: #c62828;
+  color: #ffffff;
+}
+
+.review-confirm-delete-btn:hover:not(:disabled) {
+  background: #b71c1c;
+}
+
+.review-cancel-delete-btn {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.review-cancel-delete-btn:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+.review-delete-btn:disabled,
+.review-confirm-delete-btn:disabled,
+.review-cancel-delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Client Messages */
@@ -945,6 +1102,19 @@
     padding: 16px;
   }
 
+  .admin-reviews-section {
+    padding: 16px;
+  }
+
+  .reviews-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reviews-count-badge {
+    min-width: 0;
+  }
+
   .messages-section-header {
     flex-direction: column;
     align-items: flex-start;
@@ -995,5 +1165,9 @@
   .messages-pagination {
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .review-confirm-actions {
+    flex-direction: column;
   }
 }

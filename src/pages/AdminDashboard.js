@@ -16,6 +16,11 @@ import {
   getAllContactMessages,
   updateContactMessageStatus
 } from '../services/contactService';
+import {
+  deleteProductReview,
+  getAllProductReviews
+} from '../services/reviewService';
+import { products } from '../data/products';
 import { formatPrice } from '../utils/formatPrice';
 import './AdminDashboard.css';
 
@@ -59,6 +64,9 @@ const AdminDashboard = () => {
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [reviewDeleteConfirmId, setReviewDeleteConfirmId] = useState('');
+  const [deletingReviewId, setDeletingReviewId] = useState('');
   const [messages, setMessages] = useState([]);
   const [messageSort, setMessageSort] = useState('date_desc');
   const [messagePage, setMessagePage] = useState(1);
@@ -70,6 +78,21 @@ const AdminDashboard = () => {
   const adminWhatsAppPhone = sanitizePhoneForWhatsApp(
     process.env.REACT_APP_ADMIN_WHATSAPP_NUMBER || DEFAULT_STORE_ADMIN_WHATSAPP
   );
+
+  const productNameLookup = useMemo(() => {
+    const lookup = new Map();
+
+    products.forEach((product) => {
+      const productId = (product?.id ?? '').toString().trim();
+      if (!productId) {
+        return;
+      }
+
+      lookup.set(productId, product?.name || `Produit #${productId}`);
+    });
+
+    return lookup;
+  }, []);
 
   // Debug logging
   useEffect(() => {
@@ -140,17 +163,20 @@ const AdminDashboard = () => {
       setLoading(true);
       setPageError('');
       try {
-        const [ordersResult, statsResult, messagesResult] = await Promise.all([
+        const [ordersResult, statsResult, messagesResult, reviewsResult] = await Promise.all([
           getAllOrders(),
           getOrderStatistics(),
-          getAllContactMessages()
+          getAllContactMessages(),
+          getAllProductReviews()
         ]);
+
+        const loadErrors = [];
         
         if (ordersResult.success) {
           setOrders(ordersResult.data);
           setFilteredOrders(ordersResult.data);
         } else {
-          setPageError('Erreur lors du chargement des commandes');
+          loadErrors.push('Erreur lors du chargement des commandes.');
         }
         
         if (statsResult.success) {
@@ -160,7 +186,18 @@ const AdminDashboard = () => {
         if (messagesResult.success) {
           setMessages(messagesResult.data);
         } else {
-          setPageError('Erreur lors du chargement des messages clients');
+          loadErrors.push('Erreur lors du chargement des messages clients.');
+        }
+
+        if (reviewsResult.success) {
+          setReviews(reviewsResult.data || []);
+        } else {
+          setReviews([]);
+          loadErrors.push('Erreur lors du chargement des avis produits.');
+        }
+
+        if (loadErrors.length > 0) {
+          setPageError(loadErrors.join(' '));
         }
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -255,6 +292,45 @@ const AdminDashboard = () => {
     } finally {
       setShowDeleteConfirm(false);
       setOrderToDelete(null);
+    }
+  };
+
+  const confirmDeleteReview = (reviewId) => {
+    setReviewDeleteConfirmId(reviewId);
+  };
+
+  const cancelDeleteReviewConfirmation = () => {
+    if (deletingReviewId) {
+      return;
+    }
+
+    setReviewDeleteConfirmId('');
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!reviewId || deletingReviewId) {
+      return;
+    }
+
+    setPageError('');
+    setPageSuccess('');
+    setDeletingReviewId(reviewId);
+
+    try {
+      const result = await deleteProductReview(reviewId);
+
+      if (result.success) {
+        setReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
+        setReviewDeleteConfirmId('');
+        setPageSuccess('Avis supprime avec succes.');
+      } else {
+        setPageError(result.error || 'Erreur lors de la suppression de l\'avis.');
+      }
+    } catch (error) {
+      console.error('Error deleting review:', error);
+      setPageError('Erreur lors de la suppression de l\'avis.');
+    } finally {
+      setDeletingReviewId('');
     }
   };
 
@@ -412,8 +488,13 @@ const AdminDashboard = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'N/A';
-    const date = timestampToDate(timestamp);
+
+    const date = timestamp instanceof Date
+      ? timestamp
+      : timestampToDate(timestamp);
+
     if (!date) return 'N/A';
+
     return new Intl.DateTimeFormat('fr-FR', {
       day: '2-digit',
       month: '2-digit',
@@ -463,6 +544,21 @@ const AdminDashboard = () => {
     if (status === CONTACT_MESSAGE_STATUS.READ) return 'message-status-read';
     if (status === CONTACT_MESSAGE_STATUS.RESOLVED) return 'message-status-resolved';
     return '';
+  };
+
+  const getReviewProductName = (productId) => {
+    const normalizedProductId = (productId || '').toString().trim();
+
+    if (!normalizedProductId) {
+      return 'Produit inconnu';
+    }
+
+    return productNameLookup.get(normalizedProductId) || `Produit #${normalizedProductId}`;
+  };
+
+  const getReviewRatingStars = (ratingValue) => {
+    const roundedRating = Math.max(0, Math.min(5, Math.round(Number(ratingValue) || 0)));
+    return `${'★'.repeat(roundedRating)}${'☆'.repeat(5 - roundedRating)}`;
   };
 
   if (authLoading || loading) {
@@ -606,6 +702,10 @@ const AdminDashboard = () => {
               <span className="stat-value">{stats.delivered}</span>
               <span className="stat-label">Livrées</span>
             </div>
+            <div className="stat-card stat-reviews">
+              <span className="stat-value">{reviews.length}</span>
+              <span className="stat-label">Avis Produits</span>
+            </div>
             <div className="stat-card stat-revenue">
               <span className="stat-value">{formatPrice(stats.totalRevenue)}</span>
               <span className="stat-label">Chiffre d'affaires</span>
@@ -710,6 +810,81 @@ const AdminDashboard = () => {
             </table>
           )}
         </div>
+
+        <section className="admin-reviews-section">
+          <div className="reviews-section-header">
+            <h2>Avis Produits</h2>
+            <span className="reviews-count-badge">{reviews.length} avis</span>
+          </div>
+
+          {reviews.length === 0 ? (
+            <div className="no-reviews-admin">
+              <p>Aucun avis produit pour le moment.</p>
+            </div>
+          ) : (
+            <div className="reviews-table-container">
+              <table className="reviews-table">
+                <thead>
+                  <tr>
+                    <th>Produit</th>
+                    <th>Utilisateur</th>
+                    <th>Note</th>
+                    <th>Commentaire</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reviews.map((review) => (
+                    <tr key={review.id}>
+                      <td className="review-product-name">{getReviewProductName(review.productId)}</td>
+                      <td>{review.name || 'N/A'}</td>
+                      <td>
+                        <span className="review-rating-stars" aria-label={`Note ${review.rating || 0} sur 5`}>
+                          {getReviewRatingStars(review.rating)}
+                        </span>
+                        <span className="review-rating-value">{Number(review.rating) || 0}/5</span>
+                      </td>
+                      <td className="review-comment-cell">{review.comment || 'N/A'}</td>
+                      <td>{formatDate(review.createdAt)}</td>
+                      <td className="review-actions-cell">
+                        {reviewDeleteConfirmId === review.id ? (
+                          <div className="review-confirm-actions">
+                            <button
+                              type="button"
+                              className="review-confirm-delete-btn"
+                              onClick={() => handleDeleteReview(review.id)}
+                              disabled={deletingReviewId === review.id}
+                            >
+                              {deletingReviewId === review.id ? 'Suppression...' : 'Confirmer'}
+                            </button>
+                            <button
+                              type="button"
+                              className="review-cancel-delete-btn"
+                              onClick={cancelDeleteReviewConfirmation}
+                              disabled={deletingReviewId === review.id}
+                            >
+                              Annuler
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="review-delete-btn"
+                            onClick={() => confirmDeleteReview(review.id)}
+                            disabled={Boolean(deletingReviewId)}
+                          >
+                            Supprimer
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
 
         <section className="client-messages-section">
           <div className="messages-section-header">
