@@ -21,15 +21,6 @@ const getEnv = (key) => {
   return sanitizeEnvValue(process.env[key]);
 };
 
-const requiredEnv = [
-  'REACT_APP_FIREBASE_API_KEY',
-  'REACT_APP_FIREBASE_AUTH_DOMAIN',
-  'REACT_APP_FIREBASE_PROJECT_ID',
-  'REACT_APP_FIREBASE_STORAGE_BUCKET',
-  'REACT_APP_FIREBASE_MESSAGING_SENDER_ID',
-  'REACT_APP_FIREBASE_APP_ID'
-];
-
 requiredEnv.forEach((key) => {
   if (!process.env[key]) {
     console.error(`[Firebase config] Missing environment variable: ${key}`);
@@ -37,13 +28,13 @@ requiredEnv.forEach((key) => {
 });
 
 const firebaseConfig = {
-  apiKey: getEnv('REACT_APP_FIREBASE_API_KEY'),
-  authDomain: getEnv('REACT_APP_FIREBASE_AUTH_DOMAIN'),
-  projectId: getEnv('REACT_APP_FIREBASE_PROJECT_ID'),
-  storageBucket: getEnv('REACT_APP_FIREBASE_STORAGE_BUCKET'),
-  messagingSenderId: getEnv('REACT_APP_FIREBASE_MESSAGING_SENDER_ID'),
-  appId: getEnv('REACT_APP_FIREBASE_APP_ID'),
-  measurementId: getEnv('REACT_APP_FIREBASE_MEASUREMENT_ID')
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 let app = null;
