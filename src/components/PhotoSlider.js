@@ -10,6 +10,36 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
   const [dragStartTime, setDragStartTime] = useState(0);
   const [hasMoved, setHasMoved] = useState(false);
   const sliderRef = useRef(null);
+  const suppressClickRef = useRef(false);
+  const suppressClickTimeoutRef = useRef(null);
+
+  const clearSuppressClickTimeout = useCallback(() => {
+    if (suppressClickTimeoutRef.current) {
+      clearTimeout(suppressClickTimeoutRef.current);
+      suppressClickTimeoutRef.current = null;
+    }
+  }, []);
+
+  const temporarilySuppressClick = useCallback(() => {
+    suppressClickRef.current = true;
+    clearSuppressClickTimeout();
+    suppressClickTimeoutRef.current = setTimeout(() => {
+      suppressClickRef.current = false;
+      suppressClickTimeoutRef.current = null;
+    }, 160);
+  }, [clearSuppressClickTimeout]);
+
+  const handleSliderImageClick = useCallback((e, imageIndex) => {
+    e.stopPropagation();
+
+    if (suppressClickRef.current || isDragging) {
+      return;
+    }
+
+    if (onImageClick) {
+      onImageClick(imageIndex);
+    }
+  }, [isDragging, onImageClick]);
 
   const prev = useCallback((e) => {
     if (e) e.stopPropagation();
@@ -31,6 +61,8 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
     
     // Only change slides if it was actually a drag (moved more than 10px or took more than 200ms)
     if (wasDragging) {
+      temporarilySuppressClick();
+
       // Swipe threshold: 50px
       if (translateX > 50) {
         prev();
@@ -41,7 +73,7 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
     
     setTranslateX(0);
     setHasMoved(false);
-  }, [isDragging, translateX, dragStartTime, hasMoved, prev, next]);
+  }, [isDragging, translateX, dragStartTime, hasMoved, prev, next, temporarilySuppressClick]);
 
   const handleMouseMove = useCallback((e) => {
     if (!isDragging) return;
@@ -100,6 +132,12 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
       };
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
+
+  useEffect(() => {
+    return () => {
+      clearSuppressClickTimeout();
+    };
+  }, [clearSuppressClickTimeout]);
   
   if (!unique || unique.length === 0) return null;
 
@@ -131,7 +169,7 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
                   alt={`${productName} - ${i + 1}`} 
                   className="slider-image"
                   draggable="false"
-                  onClick={() => onImageClick && onImageClick(i)}
+                  onClick={(e) => handleSliderImageClick(e, i)}
                   style={{ cursor: onImageClick ? 'pointer' : 'default' }}
                   loading={i === 0 ? 'eager' : 'lazy'}
                 />
@@ -202,7 +240,7 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
                   alt={`${productName} - ${i + 1}`} 
                   className="single-image"
                   draggable="false"
-                  onClick={() => onImageClick && onImageClick(i)}
+                  onClick={(e) => handleSliderImageClick(e, i)}
                   style={{ cursor: onImageClick ? 'pointer' : 'default' }}
                   loading={i === 0 ? 'eager' : 'lazy'}
                 />

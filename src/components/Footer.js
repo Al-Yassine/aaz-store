@@ -50,7 +50,7 @@ const Footer = () => {
                 href="mailto:aazstore.niam@gmail.com"
                 aria-label="Envoyer un email à Aaz Store"
               >
-                <span className="footer-contact-icon" aria-hidden="true">
+                <span className="footer-contact-icon footer-contact-icon--mail" aria-hidden="true">
                   <img src="/Images/Icons/icons8-circled-envelope-48.png" alt="Email" />
                 </span>{' '}
                 aazstore.niam@gmail.com

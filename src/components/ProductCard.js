@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import PhotoSlider from './PhotoSlider';
@@ -12,6 +12,17 @@ const ProductCard = ({ product }) => {
   const location = useLocation();
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const imagePointerStateRef = useRef({
+    startX: null,
+    startY: null,
+    hasMoved: false
+  });
+
+  const resetImagePointerState = () => {
+    imagePointerStateRef.current.startX = null;
+    imagePointerStateRef.current.startY = null;
+    imagePointerStateRef.current.hasMoved = false;
+  };
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -21,10 +32,48 @@ const ProductCard = ({ product }) => {
   const handleImageClick = (e) => {
     if (e.target.closest('.slider-arrow') || 
         e.target.closest('.slider-dot')) {
+      resetImagePointerState();
       return;
     }
+
+    if (imagePointerStateRef.current.hasMoved) {
+      resetImagePointerState();
+      return;
+    }
+
+    resetImagePointerState();
     
     navigate(`/product/${product.id}`, { state: { from: `${location.pathname}${location.search}` } });
+  };
+
+  const handleImagePointerDown = (e) => {
+    if (typeof e.button === 'number' && e.button !== 0) {
+      return;
+    }
+
+    imagePointerStateRef.current.startX = e.clientX;
+    imagePointerStateRef.current.startY = e.clientY;
+    imagePointerStateRef.current.hasMoved = false;
+  };
+
+  const handleImagePointerMove = (e) => {
+    if (
+      imagePointerStateRef.current.startX === null ||
+      imagePointerStateRef.current.startY === null
+    ) {
+      return;
+    }
+
+    const deltaX = Math.abs(e.clientX - imagePointerStateRef.current.startX);
+    const deltaY = Math.abs(e.clientY - imagePointerStateRef.current.startY);
+
+    if (deltaX > 8 || deltaY > 8) {
+      imagePointerStateRef.current.hasMoved = true;
+    }
+  };
+
+  const handleImagePointerCancel = () => {
+    resetImagePointerState();
   };
 
   const handleImageFullscreen = (index) => {
@@ -61,7 +110,13 @@ const ProductCard = ({ product }) => {
           {badge.text}
         </span>
       )}
-      <div className="product-image-container" onClick={handleImageClick}>
+      <div
+        className="product-image-container"
+        onClick={handleImageClick}
+        onPointerDown={handleImagePointerDown}
+        onPointerMove={handleImagePointerMove}
+        onPointerCancel={handleImagePointerCancel}
+      >
         <div className="product-image">
           <PhotoSlider 
             images={displayImages} 

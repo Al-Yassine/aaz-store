@@ -7,6 +7,22 @@ const CHEMISE_IMG = '/Images/home-photo/three%20images/chemise.webp';
 const SOULIER_IMG = '/Images/home-photo/three%20images/soulier.webp';
 
 const BrandShowcase = () => {
+  const handleShowcaseCtaClick = () => {
+    const html = document.documentElement;
+    const body = document.body;
+    const previousHtmlBehavior = html.style.scrollBehavior;
+    const previousBodyBehavior = body.style.scrollBehavior;
+
+    html.style.scrollBehavior = 'auto';
+    body.style.scrollBehavior = 'auto';
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+    window.setTimeout(() => {
+      html.style.scrollBehavior = previousHtmlBehavior;
+      body.style.scrollBehavior = previousBodyBehavior;
+    }, 180);
+  };
+
   return (
     <section className="brand-showcase">
       <div className="brand-showcase__inner">
@@ -82,7 +98,7 @@ const BrandShowcase = () => {
 
         {/* ── Global CTA ── */}
         <div className="showcase-cta">
-          <Link to="/products" className="showcase-btn">
+          <Link to="/products" className="showcase-btn" onClick={handleShowcaseCtaClick}>
             Découvrir la sélection
           </Link>
         </div>
