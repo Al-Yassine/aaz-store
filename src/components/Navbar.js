@@ -180,7 +180,7 @@ const Navbar = () => {
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
           <img 
-            src="/Images/logo/aazstore-logo.png" 
+            src="/Images/logo/aazstore-logo.webp" 
             alt="AAZ Store Logo" 
             className="navbar-logo-img"
             loading="eager"
