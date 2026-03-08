@@ -42,9 +42,30 @@ const fallbackFirebaseConfig = {
 
 // Use canonical Firebase web config values for this project as safe defaults.
 // Firebase web SDK keys are public in frontend apps.
-const apiKey = missingOrPlaceholderApiKeys.has(apiKeyFromEnv)
-  ? fallbackFirebaseConfig.apiKey
-  : apiKeyFromEnv;
+const aiZaKeyPattern = /AIza[0-9A-Za-z_-]{30,}/;
+
+const resolveApiKey = (rawValue) => {
+  if (missingOrPlaceholderApiKeys.has(rawValue)) {
+    return fallbackFirebaseConfig.apiKey;
+  }
+
+  const inlineKeyMatch = rawValue.match(aiZaKeyPattern);
+  if (inlineKeyMatch) {
+    return inlineKeyMatch[0];
+  }
+
+  const looksLikeEnvReference = rawValue.startsWith('REACT_APP_') || rawValue.includes('=');
+  if (looksLikeEnvReference) {
+    console.warn(
+      '[Firebase config] REACT_APP_FIREBASE_API_KEY looks malformed (env reference/assignment). Falling back to built-in key.'
+    );
+    return fallbackFirebaseConfig.apiKey;
+  }
+
+  return rawValue;
+};
+
+const apiKey = resolveApiKey(apiKeyFromEnv);
 
 if (missingOrPlaceholderApiKeys.has(apiKeyFromEnv)) {
   console.warn(
