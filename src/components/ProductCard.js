@@ -1,8 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import PhotoSlider from './PhotoSlider';
-import ImageViewer from './ImageViewer';
 import { formatPrice, hasDiscount } from '../utils/formatPrice';
 import './ProductCard.css';
 
@@ -10,13 +9,15 @@ const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imagePointerStateRef = useRef({
     startX: null,
     startY: null,
     hasMoved: false
   });
+
+  const navigateToProductDetails = () => {
+    navigate(`/product/${product.id}`, { state: { from: `${location.pathname}${location.search}` } });
+  };
 
   const resetImagePointerState = () => {
     imagePointerStateRef.current.startX = null;
@@ -43,7 +44,7 @@ const ProductCard = ({ product }) => {
 
     resetImagePointerState();
     
-    navigate(`/product/${product.id}`, { state: { from: `${location.pathname}${location.search}` } });
+    navigateToProductDetails();
   };
 
   const handleImagePointerDown = (e) => {
@@ -76,9 +77,13 @@ const ProductCard = ({ product }) => {
     resetImagePointerState();
   };
 
-  const handleImageFullscreen = (index) => {
-    setCurrentImageIndex(index);
-    setIsImageViewerOpen(true);
+  const handleImagePointerUp = () => {
+    resetImagePointerState();
+  };
+
+  const handleSliderImageClick = () => {
+    resetImagePointerState();
+    navigateToProductDetails();
   };
 
   // Check if product is out of stock
@@ -115,6 +120,7 @@ const ProductCard = ({ product }) => {
         onClick={handleImageClick}
         onPointerDown={handleImagePointerDown}
         onPointerMove={handleImagePointerMove}
+        onPointerUp={handleImagePointerUp}
         onPointerCancel={handleImagePointerCancel}
       >
         <div className="product-image">
@@ -122,7 +128,7 @@ const ProductCard = ({ product }) => {
             images={displayImages} 
             productName={product.name} 
             compact={true}
-            onImageClick={handleImageFullscreen}
+            onImageClick={handleSliderImageClick}
           />
         </div>
       </div>
@@ -147,14 +153,6 @@ const ProductCard = ({ product }) => {
         </button>
       </div>
 
-      {isImageViewerOpen && (
-        <ImageViewer
-          images={displayImages}
-          currentIndex={currentImageIndex}
-          onClose={() => setIsImageViewerOpen(false)}
-          onNavigate={(index) => setCurrentImageIndex(index)}
-        />
-      )}
     </div>
   );
 };
