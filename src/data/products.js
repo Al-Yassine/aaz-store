@@ -1962,21 +1962,21 @@ export const products = [
     "image": "/Images/chaussures/souliers/marco_casseti/marco_casseti_1.jpg",
     "images": [
       "/Images/chaussures/souliers/marco_casseti/marco_casseti_1.jpg",
-      "/Images/chaussures/souliers/marco_casseti/marco_casseti_2.jpg"
+      "/Images/chaussures/souliers/marco_casseti/marco_casseti_1_2.jpg"
     ],
     "variants": [
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "40",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "41",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "42",
         "stock": 1
       },
@@ -1986,12 +1986,12 @@ export const products = [
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "44",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "45",
         "stock": 1
       },
