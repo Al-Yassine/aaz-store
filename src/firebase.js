@@ -8,7 +8,7 @@ import {
   connectFirestoreEmulator 
 } from 'firebase/firestore';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
-
+import { getAnalytics } from 'firebase/analytics';
 const sanitizeEnvValue = (value) => {
   if (typeof value !== 'string') {
     return '';
@@ -57,6 +57,7 @@ const hasSuspiciousApiKeyValue = (value) => {
   return value.startsWith('REACT_APP_') || value.includes('${');
 };
 
+
 const firebaseConfig = {
   apiKey: getFirebaseEnv('REACT_APP_FIREBASE_API_KEY', 'FIREBASE_API_KEY'),
   authDomain: getFirebaseEnv('REACT_APP_FIREBASE_AUTH_DOMAIN', 'FIREBASE_AUTH_DOMAIN'),
@@ -74,6 +75,7 @@ let app = null;
 let auth = null;
 let firestore = null;
 let functions = null;
+let analytics = null;
 let firebaseInitError = null;
 
 try {
@@ -96,6 +98,10 @@ try {
   auth = getAuth(app);
   firestore = getFirestore(app);
   functions = getFunctions(app, 'us-central1');
+  
+  if (typeof window !== 'undefined') {
+  analytics = getAnalytics(app);
+}
 
   if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_EMULATORS === 'true') {
     connectAuthEmulator(auth, 'http://localhost:9099');
@@ -116,4 +122,4 @@ try {
 
 const isFirebaseReady = Boolean(app && auth && firestore && functions);
 
-export { app, auth, firestore, functions, firebaseInitError, isFirebaseReady };
+export { app, auth, firestore, functions, analytics, firebaseInitError, isFirebaseReady };
