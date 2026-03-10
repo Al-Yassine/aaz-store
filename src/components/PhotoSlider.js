@@ -1,17 +1,25 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './PhotoSlider.css';
 
+const DRAG_INTENT_THRESHOLD = 12;
+const SWIPE_COMMIT_THRESHOLD = 60;
+const CLICK_SUPPRESS_MS = 280;
+const POST_DRAG_CLICK_GUARD_MS = 220;
+
 const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }) => {
   const unique = Array.from(new Set(images.map(i => i.replace(/^\/images\//i, '/Images/'))));
   const [index, setIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
-  const [dragStartTime, setDragStartTime] = useState(0);
   const [hasMoved, setHasMoved] = useState(false);
   const sliderRef = useRef(null);
   const suppressClickRef = useRef(false);
   const suppressClickTimeoutRef = useRef(null);
+  const lastInteractionRef = useRef({
+    dragged: false,
+    endedAt: 0
+  });
 
   const clearSuppressClickTimeout = useCallback(() => {
     if (suppressClickTimeoutRef.current) {
@@ -26,59 +34,68 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
     suppressClickTimeoutRef.current = setTimeout(() => {
       suppressClickRef.current = false;
       suppressClickTimeoutRef.current = null;
-    }, 160);
+    }, CLICK_SUPPRESS_MS);
   }, [clearSuppressClickTimeout]);
 
   const handleSliderImageClick = useCallback((e, imageIndex) => {
     e.stopPropagation();
 
-    if (suppressClickRef.current || isDragging) {
+    const elapsedSinceDrag = Date.now() - lastInteractionRef.current.endedAt;
+
+    if (
+      suppressClickRef.current ||
+      isDragging ||
+      hasMoved ||
+      (lastInteractionRef.current.dragged && elapsedSinceDrag < POST_DRAG_CLICK_GUARD_MS)
+    ) {
       return;
     }
 
     if (onImageClick) {
       onImageClick(imageIndex);
     }
-  }, [isDragging, onImageClick]);
+  }, [hasMoved, isDragging, onImageClick]);
 
   const prev = useCallback((e) => {
     if (e) e.stopPropagation();
-    setIndex(i => (i - 1 + unique.length) % unique.length);
-  }, [unique.length]);
+    setIndex(i => Math.max(0, i - 1));
+  }, []);
   
   const next = useCallback((e) => {
     if (e) e.stopPropagation();
-    setIndex(i => (i + 1) % unique.length);
+    setIndex(i => Math.min(unique.length - 1, i + 1));
   }, [unique.length]);
 
   const handleEnd = useCallback(() => {
     if (!isDragging) return;
     
-    const dragDuration = Date.now() - dragStartTime;
-    const wasDragging = hasMoved && (Math.abs(translateX) > 10 || dragDuration > 200);
+    const dragDistance = Math.abs(translateX);
+    const didDrag = hasMoved || dragDistance >= DRAG_INTENT_THRESHOLD;
     
     setIsDragging(false);
+    lastInteractionRef.current.dragged = didDrag;
+    lastInteractionRef.current.endedAt = Date.now();
     
-    // Only change slides if it was actually a drag (moved more than 10px or took more than 200ms)
-    if (wasDragging) {
+    // Suppress click shortly after any drag-like gesture to avoid accidental opens.
+    if (didDrag) {
       temporarilySuppressClick();
 
-      // Swipe threshold: 50px
-      if (translateX > 50) {
+      // Move slide only if swipe distance is intentional.
+      if (translateX > SWIPE_COMMIT_THRESHOLD) {
         prev();
-      } else if (translateX < -50) {
+      } else if (translateX < -SWIPE_COMMIT_THRESHOLD) {
         next();
       }
     }
     
     setTranslateX(0);
     setHasMoved(false);
-  }, [isDragging, translateX, dragStartTime, hasMoved, prev, next, temporarilySuppressClick]);
+  }, [hasMoved, isDragging, next, prev, translateX, temporarilySuppressClick]);
 
   const handleMouseMove = useCallback((e) => {
     if (!isDragging) return;
     const diff = e.clientX - startX;
-    if (Math.abs(diff) > 5) {
+    if (Math.abs(diff) > DRAG_INTENT_THRESHOLD) {
       setHasMoved(true);
     }
     setTranslateX(diff);
@@ -89,15 +106,15 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
   }, [handleEnd]);
 
   // Touch/Mouse drag handlers
-  const handleStart = (clientX, e) => {
+  const handleStart = (clientX) => {
     setIsDragging(true);
     setStartX(clientX);
     setTranslateX(0);
-    setDragStartTime(Date.now());
     setHasMoved(false);
+    lastInteractionRef.current.dragged = false;
   };
 
-  const handleMouseDown = (e) => handleStart(e.clientX, e);
+  const handleMouseDown = (e) => handleStart(e.clientX);
   
   const handleMouseLeave = () => {
     if (isDragging) handleEnd();
@@ -106,12 +123,12 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
   // Touch events
   const handleTouchStart = (e) => {
     e.stopPropagation();
-    handleStart(e.touches[0].clientX, e);
+    handleStart(e.touches[0].clientX);
   };
   const handleTouchMove = (e) => {
     if (!isDragging) return;
     const diff = e.touches[0].clientX - startX;
-    if (Math.abs(diff) > 5) {
+    if (Math.abs(diff) > DRAG_INTENT_THRESHOLD) {
       setHasMoved(true);
       e.stopPropagation();
     }
@@ -138,6 +155,10 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
       clearSuppressClickTimeout();
     };
   }, [clearSuppressClickTimeout]);
+
+  useEffect(() => {
+    setIndex((currentIndex) => Math.min(currentIndex, Math.max(unique.length - 1, 0)));
+  }, [unique.length]);
   
   if (!unique || unique.length === 0) return null;
 
@@ -181,16 +202,18 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
         {unique.length > 1 && (
           <>
             <button 
-              className="slider-arrow slider-arrow-left" 
+              className={`slider-arrow slider-arrow-left ${index === 0 ? 'disabled' : ''}`}
               onClick={prev}
               aria-label="Previous image"
+              disabled={index === 0}
             >
               ‹
             </button>
             <button 
-              className="slider-arrow slider-arrow-right" 
+              className={`slider-arrow slider-arrow-right ${index === unique.length - 1 ? 'disabled' : ''}`}
               onClick={next}
               aria-label="Next image"
+              disabled={index === unique.length - 1}
             >
               ›
             </button>
@@ -251,8 +274,8 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
         
         {unique.length > 1 && (
           <>
-            <button className="slider-btn prev-btn" onClick={prev} aria-label="Previous image">❮</button>
-            <button className="slider-btn next-btn" onClick={next} aria-label="Next image">❯</button>
+            <button className={`slider-btn prev-btn ${index === 0 ? 'disabled' : ''}`} onClick={prev} aria-label="Previous image" disabled={index === 0}>❮</button>
+            <button className={`slider-btn next-btn ${index === unique.length - 1 ? 'disabled' : ''}`} onClick={next} aria-label="Next image" disabled={index === unique.length - 1}>❯</button>
             <div className="image-counter">{index + 1}/{unique.length}</div>
           </>
         )}
