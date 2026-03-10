@@ -68,16 +68,12 @@ const ProductCard = ({ product }) => {
     const deltaX = Math.abs(e.clientX - imagePointerStateRef.current.startX);
     const deltaY = Math.abs(e.clientY - imagePointerStateRef.current.startY);
 
-    if (deltaX > 8 || deltaY > 8) {
+    if (deltaX > 12 || deltaY > 12) {
       imagePointerStateRef.current.hasMoved = true;
     }
   };
 
   const handleImagePointerCancel = () => {
-    resetImagePointerState();
-  };
-
-  const handleImagePointerUp = () => {
     resetImagePointerState();
   };
 
@@ -120,7 +116,6 @@ const ProductCard = ({ product }) => {
         onClick={handleImageClick}
         onPointerDown={handleImagePointerDown}
         onPointerMove={handleImagePointerMove}
-        onPointerUp={handleImagePointerUp}
         onPointerCancel={handleImagePointerCancel}
       >
         <div className="product-image">

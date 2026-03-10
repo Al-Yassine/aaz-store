@@ -2,16 +2,18 @@ import React, { useEffect } from 'react';
 import './ImageViewer.css';
 
 const ImageViewer = ({ images, currentIndex, onClose, onNavigate }) => {
+  const hasMultipleImages = images.length > 1;
+  const canGoPrev = currentIndex > 0;
+  const canGoNext = currentIndex < images.length - 1;
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         onClose();
-      } else if (e.key === 'ArrowLeft') {
-        const prevIndex = (currentIndex - 1 + images.length) % images.length;
-        onNavigate(prevIndex);
-      } else if (e.key === 'ArrowRight') {
-        const nextIndex = (currentIndex + 1) % images.length;
-        onNavigate(nextIndex);
+      } else if (e.key === 'ArrowLeft' && canGoPrev) {
+        onNavigate(currentIndex - 1);
+      } else if (e.key === 'ArrowRight' && canGoNext) {
+        onNavigate(currentIndex + 1);
       }
     };
 
@@ -22,16 +24,22 @@ const ImageViewer = ({ images, currentIndex, onClose, onNavigate }) => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
-  }, [currentIndex, images.length, onClose, onNavigate]);
+  }, [canGoNext, canGoPrev, currentIndex, onClose, onNavigate]);
 
   const handlePrev = () => {
-    const prevIndex = (currentIndex - 1 + images.length) % images.length;
-    onNavigate(prevIndex);
+    if (!canGoPrev) {
+      return;
+    }
+
+    onNavigate(currentIndex - 1);
   };
 
   const handleNext = () => {
-    const nextIndex = (currentIndex + 1) % images.length;
-    onNavigate(nextIndex);
+    if (!canGoNext) {
+      return;
+    }
+
+    onNavigate(currentIndex + 1);
   };
 
   const handleBackdropClick = (e) => {
@@ -45,19 +53,21 @@ const ImageViewer = ({ images, currentIndex, onClose, onNavigate }) => {
       <button className="image-viewer-close" onClick={onClose} aria-label="Fermer">
         ×
       </button>
-      {images.length > 1 && (
+      {hasMultipleImages && (
         <>
           <button 
-            className="image-viewer-nav image-viewer-prev" 
+            className={`image-viewer-nav image-viewer-prev ${canGoPrev ? '' : 'disabled'}`}
             onClick={handlePrev}
             aria-label="Image précédente"
+            disabled={!canGoPrev}
           >
             ‹
           </button>
           <button 
-            className="image-viewer-nav image-viewer-next" 
+            className={`image-viewer-nav image-viewer-next ${canGoNext ? '' : 'disabled'}`}
             onClick={handleNext}
             aria-label="Image suivante"
+            disabled={!canGoNext}
           >
             ›
           </button>
@@ -70,7 +80,7 @@ const ImageViewer = ({ images, currentIndex, onClose, onNavigate }) => {
           className="image-viewer-image"
           loading="eager"
         />
-        {images.length > 1 && (
+        {hasMultipleImages && (
           <div className="image-viewer-counter">
             {currentIndex + 1} / {images.length}
           </div>

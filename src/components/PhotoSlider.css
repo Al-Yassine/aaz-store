@@ -102,7 +102,6 @@
 .slider-arrow:disabled {
   opacity: 0.28;
   cursor: not-allowed;
-  pointer-events: none;
   transform: translateY(-50%);
   box-shadow: none;
 }
@@ -248,7 +247,6 @@
 .slider-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  pointer-events: none;
   background: rgba(0, 0, 0, 0.35);
   transform: translateY(-50%);
   box-shadow: none;

@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './PhotoSlider.css';
 
-const DRAG_INTENT_THRESHOLD = 12;
+const DRAG_INTENT_THRESHOLD = 6;
 const SWIPE_COMMIT_THRESHOLD = 60;
-const CLICK_SUPPRESS_MS = 280;
-const POST_DRAG_CLICK_GUARD_MS = 220;
+const CLICK_SUPPRESS_MS = 420;
+const POST_DRAG_CLICK_GUARD_MS = 420;
 
 const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }) => {
   const unique = Array.from(new Set(images.map(i => i.replace(/^\/images\//i, '/Images/'))));
   const [index, setIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
   const [translateX, setTranslateX] = useState(0);
   const [hasMoved, setHasMoved] = useState(false);
   const sliderRef = useRef(null);
@@ -94,27 +95,29 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
 
   const handleMouseMove = useCallback((e) => {
     if (!isDragging) return;
-    const diff = e.clientX - startX;
-    if (Math.abs(diff) > DRAG_INTENT_THRESHOLD) {
+    const diffX = e.clientX - startX;
+    const diffY = e.clientY - startY;
+    if (Math.abs(diffX) > DRAG_INTENT_THRESHOLD || Math.abs(diffY) > DRAG_INTENT_THRESHOLD) {
       setHasMoved(true);
     }
-    setTranslateX(diff);
-  }, [isDragging, startX]);
+    setTranslateX(diffX);
+  }, [isDragging, startX, startY]);
 
   const handleMouseUp = useCallback(() => {
     handleEnd();
   }, [handleEnd]);
 
   // Touch/Mouse drag handlers
-  const handleStart = (clientX) => {
+  const handleStart = (clientX, clientY) => {
     setIsDragging(true);
     setStartX(clientX);
+    setStartY(clientY);
     setTranslateX(0);
     setHasMoved(false);
     lastInteractionRef.current.dragged = false;
   };
 
-  const handleMouseDown = (e) => handleStart(e.clientX);
+  const handleMouseDown = (e) => handleStart(e.clientX, e.clientY);
   
   const handleMouseLeave = () => {
     if (isDragging) handleEnd();
@@ -123,18 +126,28 @@ const PhotoSlider = ({ images = [], productName, compact = false, onImageClick }
   // Touch events
   const handleTouchStart = (e) => {
     e.stopPropagation();
-    handleStart(e.touches[0].clientX);
+    handleStart(e.touches[0].clientX, e.touches[0].clientY);
   };
   const handleTouchMove = (e) => {
     if (!isDragging) return;
-    const diff = e.touches[0].clientX - startX;
-    if (Math.abs(diff) > DRAG_INTENT_THRESHOLD) {
+    const diffX = e.touches[0].clientX - startX;
+    const diffY = e.touches[0].clientY - startY;
+    if (Math.abs(diffX) > DRAG_INTENT_THRESHOLD || Math.abs(diffY) > DRAG_INTENT_THRESHOLD) {
       setHasMoved(true);
+    }
+
+    // Only block bubbling when horizontal drag is dominant.
+    if (Math.abs(diffX) > DRAG_INTENT_THRESHOLD && Math.abs(diffX) >= Math.abs(diffY)) {
       e.stopPropagation();
     }
-    setTranslateX(diff);
+    setTranslateX(diffX);
   };
   const handleTouchEnd = (e) => {
+    const dragDistance = Math.abs(translateX);
+    const didDrag = hasMoved || dragDistance >= DRAG_INTENT_THRESHOLD;
+    if (didDrag) {
+      e.preventDefault();
+    }
     e.stopPropagation();
     handleEnd();
   };
