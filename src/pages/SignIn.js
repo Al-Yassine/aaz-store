@@ -63,6 +63,10 @@ const SignIn = () => {
     typeof location.state?.redirectTo === 'string' && location.state.redirectTo
       ? location.state.redirectTo
       : '/';
+  const redirectState =
+    location.state?.redirectState && typeof location.state.redirectState === 'object'
+      ? location.state.redirectState
+      : undefined;
 
   useEffect(() => {
     if (location.state?.formSuccess) {
@@ -78,9 +82,9 @@ const SignIn = () => {
 
   useEffect(() => {
     if (currentUser && !loading && !resendLoading) {
-      navigate(redirectAfterSignIn, { replace: true });
+      navigate(redirectAfterSignIn, { replace: true, state: redirectState });
     }
-  }, [currentUser, loading, resendLoading, navigate, redirectAfterSignIn]);
+  }, [currentUser, loading, resendLoading, navigate, redirectAfterSignIn, redirectState]);
 
   // Redirect if already logged in
   if (currentUser && !loading && !resendLoading) {
@@ -243,7 +247,7 @@ const SignIn = () => {
         setSubmitError('');
         setSubmitSuccess('Connexion reussie ! Redirection...');
         setTimeout(() => {
-          navigate(redirectAfterSignIn, { replace: true });
+          navigate(redirectAfterSignIn, { replace: true, state: redirectState });
         }, 1000);
       } else {
         setCanResendVerification(result.errorCode === 'auth/email-not-verified');

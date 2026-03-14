@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -11,26 +11,43 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { items: cartItems, clearCart } = useCart();
   const { currentUser } = useAuth();
+
+  const checkoutRouteState = location.state && typeof location.state === 'object' ? location.state : {};
+  const restoredFormData = checkoutRouteState.formData && typeof checkoutRouteState.formData === 'object'
+    ? checkoutRouteState.formData
+    : {};
+  const restoredPaymentMethod = typeof checkoutRouteState.paymentMethod === 'string'
+    ? checkoutRouteState.paymentMethod
+    : '';
   
-  const checkoutItems = location.state?.items || cartItems || [];
-  const fromBuyNow = location.state?.fromBuyNow || false;
+  const checkoutItems = checkoutRouteState.items || cartItems || [];
+  const fromBuyNow = checkoutRouteState.fromBuyNow || false;
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    region: '',
-    quartier: '',
-    address: '',
-    phone: ''
+    fullName: restoredFormData.fullName || '',
+    region: restoredFormData.region || '',
+    quartier: restoredFormData.quartier || '',
+    address: restoredFormData.address || '',
+    phone: restoredFormData.phone || ''
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [paymentMethod, setPaymentMethod] = useState(
+    ['cod', 'nita', 'amana', 'pickup'].includes(restoredPaymentMethod) ? restoredPaymentMethod : 'cod'
+  );
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
-  const [checkoutMode, setCheckoutMode] = useState(currentUser ? 'account' : 'guest');
+  const [checkoutMode, setCheckoutMode] = useState(currentUser ? 'account' : '');
   const [confirmedOrder, setConfirmedOrder] = useState(null);
+  const [isGuestChoiceLoading, setIsGuestChoiceLoading] = useState(false);
+  const [isGuestChoiceConfirmed, setIsGuestChoiceConfirmed] = useState(false);
+  const [isChoiceClosing, setIsChoiceClosing] = useState(false);
+  const [isChoiceHidden, setIsChoiceHidden] = useState(Boolean(currentUser));
+  const guestChoiceLoadingTimerRef = useRef(null);
+  const guestChoiceConfirmTimerRef = useRef(null);
+  const guestChoiceHideTimerRef = useRef(null);
 
   const isNiameyRegion = formData.region === 'Niamey';
   const isPickupOrder = paymentMethod === 'pickup';
@@ -59,13 +76,71 @@ const Checkout = () => {
 
   useEffect(() => {
     if (currentUser) {
+      if (guestChoiceLoadingTimerRef.current) {
+        window.clearTimeout(guestChoiceLoadingTimerRef.current);
+        guestChoiceLoadingTimerRef.current = null;
+      }
+
+      if (guestChoiceHideTimerRef.current) {
+        window.clearTimeout(guestChoiceHideTimerRef.current);
+        guestChoiceHideTimerRef.current = null;
+      }
+
+      if (guestChoiceConfirmTimerRef.current) {
+        window.clearTimeout(guestChoiceConfirmTimerRef.current);
+        guestChoiceConfirmTimerRef.current = null;
+      }
+
       setCheckoutMode('account');
+      setIsGuestChoiceLoading(false);
+      setIsGuestChoiceConfirmed(false);
+      setIsChoiceClosing(false);
+      setIsChoiceHidden(true);
       setFormData(prev => ({
         ...prev,
         fullName: prev.fullName || currentUser.displayName || ''
       }));
+    } else {
+      setIsChoiceHidden(false);
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    return () => {
+      if (guestChoiceLoadingTimerRef.current) {
+        window.clearTimeout(guestChoiceLoadingTimerRef.current);
+      }
+
+      if (guestChoiceHideTimerRef.current) {
+        window.clearTimeout(guestChoiceHideTimerRef.current);
+      }
+
+      if (guestChoiceConfirmTimerRef.current) {
+        window.clearTimeout(guestChoiceConfirmTimerRef.current);
+      }
+    };
+  }, []);
+
+  const scrollToTopInstant = () => {
+    const root = document.documentElement;
+    const body = document.body;
+    const previousRootBehavior = root.style.scrollBehavior;
+    const previousBodyBehavior = body ? body.style.scrollBehavior : '';
+
+    root.style.scrollBehavior = 'auto';
+    if (body) {
+      body.style.scrollBehavior = 'auto';
+    }
+
+    window.scrollTo(0, 0);
+
+    requestAnimationFrame(() => {
+      root.style.scrollBehavior = previousRootBehavior;
+      if (body) {
+        body.style.scrollBehavior = previousBodyBehavior;
+      }
+    });
+  };
 
   if (!orderConfirmed && (!checkoutItems || checkoutItems.length === 0)) {
     return (
@@ -82,6 +157,48 @@ const Checkout = () => {
       </div>
     );
   }
+
+  const handleGuestChoice = () => {
+    if (isGuestChoiceLoading || isGuestChoiceConfirmed || isChoiceClosing || isChoiceHidden) {
+      return;
+    }
+
+    setCheckoutMode('guest');
+    setIsGuestChoiceLoading(true);
+    setIsGuestChoiceConfirmed(false);
+
+    if (guestChoiceLoadingTimerRef.current) {
+      window.clearTimeout(guestChoiceLoadingTimerRef.current);
+      guestChoiceLoadingTimerRef.current = null;
+    }
+
+    if (guestChoiceConfirmTimerRef.current) {
+      window.clearTimeout(guestChoiceConfirmTimerRef.current);
+      guestChoiceConfirmTimerRef.current = null;
+    }
+
+    if (guestChoiceHideTimerRef.current) {
+      window.clearTimeout(guestChoiceHideTimerRef.current);
+      guestChoiceHideTimerRef.current = null;
+    }
+
+    guestChoiceLoadingTimerRef.current = window.setTimeout(() => {
+      guestChoiceLoadingTimerRef.current = null;
+      setIsGuestChoiceLoading(false);
+      setIsGuestChoiceConfirmed(true);
+
+      guestChoiceConfirmTimerRef.current = window.setTimeout(() => {
+        guestChoiceConfirmTimerRef.current = null;
+        setIsChoiceClosing(true);
+
+        guestChoiceHideTimerRef.current = window.setTimeout(() => {
+          guestChoiceHideTimerRef.current = null;
+          setIsChoiceHidden(true);
+          setIsChoiceClosing(false);
+        }, 340);
+      }, 480);
+    }, 580);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -158,7 +275,7 @@ const Checkout = () => {
     const orderData = {
       userId: currentUser?.uid || null,
       isGuest: !currentUser,
-      checkoutMode: currentUser ? 'account' : checkoutMode,
+      checkoutMode: currentUser ? 'account' : (checkoutMode || 'guest'),
       customerEmail: currentUser?.email || "",
       products: (checkoutItems || []).map(item => ({
         id: item?.id || "",
@@ -188,6 +305,8 @@ const Checkout = () => {
     setLoading(false);
 
     if (result.success) {
+      scrollToTopInstant();
+
       setConfirmedOrder({
         items: checkoutItems.map(item => ({
           id: item?.id || '',
@@ -311,26 +430,48 @@ const Checkout = () => {
           {/* Customer Information Form */}
           <div className="checkout-form-section">
             {!currentUser && (
-              <div className="checkout-account-choice">
-                <h2 className="choice-title">Comment souhaitez-vous continuer ?</h2>
-                <p className="choice-subtitle">
-                  Vous pouvez commander sans compte, ou vous connecter pour retrouver vos commandes plus facilement.
-                </p>
+              <div className={`checkout-account-choice ${isChoiceClosing ? 'closing' : ''} ${isChoiceHidden ? 'compact' : ''}`}>
+                {!isChoiceClosing && !isChoiceHidden && (
+                  <>
+                    <h2 className="choice-title">Comment souhaitez-vous continuer ?</h2>
+                    <p className="choice-subtitle">
+                      Vous pouvez commander sans compte, ou vous connecter pour retrouver vos commandes plus facilement.
+                    </p>
+                  </>
+                )}
                 <div className="choice-actions">
                   <button
                     type="button"
-                    className={`choice-btn ${checkoutMode === 'guest' ? 'active' : ''}`}
-                    onClick={() => setCheckoutMode('guest')}
+                    className={`choice-btn ${checkoutMode === 'guest' ? 'active' : ''} ${isGuestChoiceLoading ? 'is-loading' : ''} ${isGuestChoiceConfirmed ? 'is-confirmed' : ''}`}
+                    aria-pressed={checkoutMode === 'guest'}
+                    disabled={isGuestChoiceLoading || isGuestChoiceConfirmed || isChoiceClosing || isChoiceHidden}
+                    onClick={handleGuestChoice}
                   >
-                    Continuer en tant qu'invité
+                    Poursivre sans compte
+                    {isGuestChoiceLoading && <span className="choice-btn-loader" aria-hidden="true" />}
+                    {isGuestChoiceConfirmed && <span className="choice-btn-check" aria-hidden="true" />}
                   </button>
-                  <button
-                    type="button"
-                    className="choice-btn secondary"
-                    onClick={() => navigate('/signin', { state: { from: 'checkout' } })}
-                  >
-                    Se connecter / Creer un compte
-                  </button>
+                  {!isChoiceClosing && !isChoiceHidden && (
+                    <button
+                      type="button"
+                      className="choice-btn secondary"
+                      disabled={isGuestChoiceLoading || isGuestChoiceConfirmed || isChoiceClosing}
+                      onClick={() => navigate('/signin', {
+                        state: {
+                          from: 'checkout',
+                          redirectTo: '/checkout',
+                          redirectState: {
+                            fromBuyNow,
+                            items: checkoutItems,
+                            formData,
+                            paymentMethod
+                          }
+                        }
+                      })}
+                    >
+                      Se connecter / Creer un compte
+                    </button>
+                  )}
                 </div>
               </div>
             )}

@@ -1981,7 +1981,7 @@ export const products = [
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "43",
         "stock": 1
       },
@@ -2230,32 +2230,32 @@ export const products = [
     ],
     "variants": [
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "40",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "41",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "42",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "43",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "44",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "45",
         "stock": 1
       },
@@ -2308,37 +2308,37 @@ export const products = [
     ],
     "variants": [
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "40",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "41",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "42",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "43",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "44",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "45",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "46",
         "stock": 1
       },
@@ -3397,29 +3397,39 @@ export const products = [
     ],
     "variants": [
       {
-        "color": "#210202",
+        "color": "#531702",
+        "size": "40",
+        "stock": 0
+      },
+      {
+        "color": "#531702",
         "size": "41",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "42",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "43",
         "stock": 3
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "44",
         "stock": 1
       },
       {
+        "color": "#531702",
+        "size": "45",
+        "stock": 0
+      },
+      {
         "color": "#000000",
         "size": "40",
-        "stock": 1
+        "stock": 0
       },
       {
         "color": "#000000",
@@ -3430,6 +3440,16 @@ export const products = [
         "color": "#000000",
         "size": "42",
         "stock": 1
+      },
+      {
+        "color": "#000000",
+        "size": "43",
+        "stock": 0
+      },
+      {
+        "color": "#000000",
+        "size": "44",
+        "stock": 0
       },
       {
         "size": "45",
@@ -3450,28 +3470,28 @@ export const products = [
     ],
     "variants": [
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "40",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "41",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "42",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "43",
         "stock": 1
       },
       {
-        "color": "#210202",
-        "size": "40",
+        "color": "#531702",
+        "size": "44",
         "stock": 0
       },
       {
@@ -3499,10 +3519,7 @@ export const products = [
         "size": "44",
         "stock": 0
       },
-      {
-        "size": "45",
-        "stock": 0
-      }
+      
     ],
     "description": "Sublimez votre collection de chaussures avec nos mocassins élégants en cuir naturel pour homme, conçus pour allier sophistication et confort.",
     "category": "Chaussures"
@@ -3542,27 +3559,27 @@ export const products = [
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "40",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "41",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "42",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "43",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "44",
         "stock": 1
       },
@@ -3855,37 +3872,37 @@ export const products = [
     ],
     "variants": [
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "40",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "41",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "42",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "43",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "44",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "45",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "46",
         "stock": 0
       },
@@ -4010,37 +4027,37 @@ export const products = [
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "40",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "41",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "42",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "43",
         "stock": 2
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "44",
         "stock": 1
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "45",
         "stock": 0
       },
       {
-        "color": "#210202",
+        "color": "#531702",
         "size": "46",
         "stock": 0
       }

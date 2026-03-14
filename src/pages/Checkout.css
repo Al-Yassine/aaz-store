@@ -39,6 +39,22 @@
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 20px;
+  max-height: 420px;
+  overflow: hidden;
+  transition: max-height 0.34s ease, padding 0.34s ease, border-color 0.34s ease, background-color 0.34s ease;
+}
+
+.checkout-account-choice.closing,
+.checkout-account-choice.compact {
+  max-height: 72px;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: transparent;
+  border-color: transparent;
+}
+
+.checkout-account-choice.compact {
+  border-width: 0;
 }
 
 .choice-title {
@@ -61,6 +77,10 @@
 }
 
 .choice-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border: 1px solid #0b5ed7;
   background: #ffffff;
   color: #0b5ed7;
@@ -78,6 +98,52 @@
 .choice-btn.active {
   background: #0b5ed7;
   color: #ffffff;
+  border-color: #084eb3;
+  box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.18);
+}
+
+.choice-btn.is-loading {
+  cursor: wait;
+}
+
+.choice-btn.is-confirmed {
+  background: #198754;
+  border-color: #157347;
+  color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+}
+
+.choice-btn:disabled {
+  opacity: 0.85;
+}
+
+.checkout-account-choice.compact .choice-btn:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.choice-btn-loader {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: choice-btn-spin 0.65s linear infinite;
+}
+
+.choice-btn-check {
+  width: 5px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  margin-top: -1px;
+}
+
+@keyframes choice-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .choice-btn.secondary {
