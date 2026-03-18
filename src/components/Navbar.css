@@ -316,6 +316,19 @@
   gap: 1rem;
 }
 
+/* Desktop-only: widen navbar content so left and right groups sit closer to screen corners */
+@media (min-width: 1025px) {
+  .navbar-container {
+    max-width: none;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .navbar-right {
+    gap: 0.85rem;
+  }
+}
+
 .navbar-cart-link {
   position: relative;
   display: flex;

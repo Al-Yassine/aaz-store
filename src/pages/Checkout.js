@@ -486,7 +486,7 @@ const Checkout = () => {
               {isPickupOrder ? 'Informations de reservation' : 'Informations de livraison'}
             </h2>
             
-            <form onSubmit={handleConfirmOrder} className="checkout-form" noValidate>
+            <form id="checkout-form" onSubmit={handleConfirmOrder} className="checkout-form" noValidate>
               <div className="form-group">
                 <label htmlFor="fullName">Nom complet *</label>
                 <input
@@ -671,19 +671,6 @@ const Checkout = () => {
                 )}
               </div>
 
-              {submitError && (
-                <div className="checkout-submit-error" role="alert">
-                  {submitError}
-                </div>
-              )}
-
-              <button 
-                type="submit" 
-                className="confirm-btn"
-                disabled={loading || (!isPickupOrder && !formData.region)}
-              >
-                {loading ? 'Traitement en cours...' : 'Confirmer ma commande'}
-              </button>
             </form>
           </div>
 
@@ -747,6 +734,23 @@ const Checkout = () => {
                 <span>Total</span>
                 <span>{formatPrice(total)}</span>
               </div>
+            </div>
+
+            <div className="order-summary-submit">
+              {submitError && (
+                <div className="checkout-submit-error" role="alert">
+                  {submitError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                form="checkout-form"
+                className="confirm-btn"
+                disabled={loading || (!isPickupOrder && !formData.region)}
+              >
+                {loading ? 'Traitement en cours...' : 'Confirmer ma commande'}
+              </button>
             </div>
           </div>
         </div>

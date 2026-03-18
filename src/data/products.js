@@ -716,7 +716,7 @@ export const products = [
       },
       {
         "size": "50",
-        "stock": 1
+        "stock": 2
       },
       {
         "size": "54",
@@ -728,7 +728,7 @@ export const products = [
       },
       {
         "size": "58",
-        "stock": 0
+        "stock": 1
       },
       {
         "size": "44",
@@ -4284,7 +4284,7 @@ export const products = [
       },
       {
         "size": "45",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "46",
@@ -4356,7 +4356,7 @@ export const products = [
     "variants": [
       {
         "size": "42",
-        "stock": 1
+        "stock": 0
       },
       {
         "size": "43",
