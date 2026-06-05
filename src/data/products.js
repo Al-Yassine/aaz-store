@@ -1489,7 +1489,7 @@
   },
    {
     "id": 31,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage1.jpg",
     "category": "Chemises",
@@ -1515,7 +1515,7 @@
   },
    {
     "id": 32,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage2.jpg",
     "category": "Chemises",
@@ -1541,7 +1541,7 @@
   },
    {
     "id": 33,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage3.jpg",
     "category": "Chemises",
@@ -1567,7 +1567,7 @@
   },
    {
     "id": 34,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage4.jpg",
     "category": "Chemises",
@@ -1593,7 +1593,7 @@
   },
    {
     "id": 35,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage5.jpg",
     "category": "Chemises",
@@ -1619,7 +1619,7 @@
   },
    {
     "id": 36,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage6.jpg",
     "category": "Chemises",
@@ -1645,7 +1645,7 @@
   },
    {
     "id": 37,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage7.jpg",
     "category": "Chemises",
@@ -1671,7 +1671,7 @@
   },
    {
     "id": 38,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage8.jpg",
     "category": "Chemises",
@@ -1697,7 +1697,7 @@
   },
    {
     "id": 39,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage9.jpg",
     "category": "Chemises",
@@ -1723,7 +1723,7 @@
   },
    {
     "id": 40,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage10.jpg",
     "category": "Chemises",
@@ -1749,7 +1749,7 @@
   },
    {
     "id": 41,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage11.jpg",
     "category": "Chemises",
@@ -1775,7 +1775,7 @@
   },
    {
     "id": 42,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage12.jpg",
     "category": "Chemises",
@@ -1801,7 +1801,7 @@
   },
    {
     "id": 43,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage13.jpg",
     "category": "Chemises",
@@ -1827,7 +1827,7 @@
   },
    {
     "id": 44,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage14.jpg",
     "category": "Chemises",
@@ -1853,7 +1853,7 @@
   },
    {
     "id": 45,
-    "name": "Chemise Bleue ciel Business",
+    "name": "Chemise premium made in turkey",
     "price": 22000,
     "image": "/Images/chemises/nouvelarrivage/nouvelarrivage15.jpg",
     "category": "Chemises",
