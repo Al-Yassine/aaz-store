@@ -1,4 +1,4 @@
-export const products = [
+﻿export const products = [
   {
     "id": 1,
     "name": "Costume gris foncé à fines rayures",
@@ -1487,8 +1487,398 @@ export const products = [
       }
     ]
   },
-  {
+   {
     "id": 31,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage1.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 32,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage2.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 33,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage3.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 34,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage4.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 35,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage5.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 36,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage6.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 37,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage7.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 38,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage8.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 39,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage9.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 40,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage10.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 41,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage11.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 42,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage12.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 43,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage13.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 44,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage14.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+   {
+    "id": 45,
+    "name": "Chemise Bleue ciel Business",
+    "price": 22000,
+    "image": "/Images/chemises/nouvelarrivage/nouvelarrivage15.jpg",
+    "category": "Chemises",
+    "isNew": true,
+    "variants": [
+      {
+        "size": "M",
+        "stock": 2
+      },
+      {
+        "size": "L",
+        "stock": 2
+      },
+      {
+        "size": "XL",
+        "stock": 2
+      },
+      {
+        "size": "XXL",
+        "stock": 2
+      },
+    ]
+  },
+  {
+    "id": 46,
     "name": "Chemise Bleue ciel Business",
     "price": 16000,
     "originalPrice": 18000,
@@ -1526,7 +1916,7 @@ export const products = [
     ]
   },
   {
-    "id": 32,
+    "id": 87,
     "name": "Chemise Blanche Classique",
     "price": 16000,
     "originalPrice": 18000,
@@ -1565,7 +1955,7 @@ export const products = [
     ]
   },
   {
-    "id": 33,
+    "id": 88,
     "name": "Chemise Bleue ciel Business",
     "price": 16000,
     "originalPrice": 18000,
@@ -1606,7 +1996,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 34,
+    "id": 89,
     "name": "Chemise Blanche Classique",
     "price": 16000,
     "originalPrice": 18000,
@@ -1644,7 +2034,7 @@ export const products = [
     ]
   },
   {
-    "id": 35,
+    "id": 90,
     "name": "Chemise Blanche Classique, Slim Fit",
     "price": 16000,
     "originalPrice": 18000,
@@ -1685,7 +2075,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 36,
+    "id": 91,
     "name": "Chemise Premium",
     "price": 16000,
     "originalPrice": 18000,
@@ -1722,7 +2112,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 37,
+    "id": 92,
     "name": "Chemise Premium",
     "price": 16000,
     "originalPrice": 18000,
@@ -1763,7 +2153,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 38,
+    "id": 93,
     "name": "Chemise Premium",
     "price": 16000,
     "originalPrice": 18000,
@@ -1800,7 +2190,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 39,
+    "id": 94,
     "name": "Chemise Premium",
     "price": 16000,
     "originalPrice": 18000,
@@ -1837,7 +2227,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 40,
+    "id": 95,
     "name": "Chemise Premium",
     "price": 16000,
     "originalPrice": 18000,
@@ -1878,7 +2268,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 41,
+    "id": 96,
     "name": "Chemise Premium",
     "price": 16000,
     "originalPrice": 18000,
@@ -1915,7 +2305,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 42,
+    "id": 97,
     "name": "Chemise Premium",
     "price": 16000,
     "originalPrice": 18000,
@@ -1956,7 +2346,7 @@ export const products = [
     "category": "Chemises"
   },
   {
-    "id": 43,
+    "id": 98,
     "name": "Marco Cassetti Exclusive",
     "price": 60000,
     "image": "/Images/chaussures/souliers/marco_casseti/marco_casseti_1.jpg",
@@ -2030,7 +2420,7 @@ export const products = [
     "category": "Chaussures"
   },
   {
-    "id": 44,
+    "id": 99,
     "name": "Marco Cassetti Exclusive",
     "price": 60000,
     "image": "/Images/chaussures/souliers/marco_casseti/marco_casseti_2.jpg",
@@ -2073,7 +2463,7 @@ export const products = [
     "category": "Chaussures"
   },
   {
-    "id": 45,
+    "id": 100,
     "name": "Marco Cassetti Exclusive",
     "price": 60000,
     "image": "/Images/chaussures/souliers/marco_casseti/marco_casseti_3.jpg",
@@ -2110,7 +2500,7 @@ export const products = [
     "category": "Chaussures"
   },
   {
-    "id": 46,
+    "id": 101,
     "name": "Marco Cassetti Exclusive",
     "price": 60000,
     "image": "/Images/chaussures/souliers/marco_casseti/marco_casseti_4.jpg",
